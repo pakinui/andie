@@ -1,4 +1,3 @@
-//Jamie Comment
 package cosc202.andie;
 
 import java.io.*;
