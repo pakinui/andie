@@ -3,6 +3,10 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import java.awt.*;
 
 /**
  * <p>
@@ -35,6 +39,8 @@ public class ColourActions {
     public ColourActions() {
         actions = new ArrayList<Action>();
         actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", Integer.valueOf(KeyEvent.VK_G)));
+        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", Integer.valueOf(KeyEvent.VK_U)));
+
     }
 
     /**
@@ -93,6 +99,149 @@ public class ColourActions {
             target.getImage().apply(new ConvertToGrey());
             target.repaint();
             target.getParent().revalidate();
+        }
+
+    }
+
+    public class BrightnessAction extends ImageAction{
+        int brightness = 0;
+        int contrast = 0;
+        
+
+        /**
+         * <p>
+         * Create a new convert-to-grey action.
+         * </p>
+         * 
+         * @param name The name of the action (ignored if null).
+         * @param icon An icon to use to represent the action (ignored if null).
+         * @param desc A brief description of the action  (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         */
+        BrightnessAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for when the convert-to-grey action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the ConvertToGreyAction is triggered.
+         * It changes the image to greyscale.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        public void actionPerformed(ActionEvent e) {
+
+            int bright;
+            int cont;
+            JFrame frame = new JFrame();
+            frame.setLayout(new GridLayout(3,0));
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            JPanel brightPanel = new JPanel();
+            JPanel contPanel = new JPanel();
+
+            JLabel cLabel = new JLabel("contrast");
+            JLabel bLabel = new JLabel("brightness");
+
+            brightPanel.add(bLabel);
+            contPanel.add(cLabel);
+
+            JRadioButton[] radioOne = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
+            //JRadioButton bneg = new JRadioButton("-25%");
+            //JRadioButton bmid = new JRadioButton("0%", true);
+            //JRadioButton bpos = new JRadioButton("25%");
+
+            JRadioButton[] radioTwo = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
+            
+            //JRadioButton cneg = new JRadioButton("-25%");
+            //JRadioButton cmid = new JRadioButton("0%", true);
+            //JRadioButton cpos = new JRadioButton("25%");
+
+            
+
+            ActionListener brightListener = new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    AbstractButton a = (AbstractButton) e.getSource();
+                    String pick = a.getText();
+                    if(pick.equals("-25%")) brightness = -25;
+                    if(pick.equals("0%")) brightness = 0;
+                    if(pick.equals("25%")) brightness = 25;
+                    
+                }
+                
+            };
+
+            ActionListener contListener = new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    AbstractButton a = (AbstractButton) e.getSource();
+                    String pick = a.getText();
+                    if(pick.equals("-25%")) brightness = -25;
+                    if(pick.equals("0%")) brightness = 0;
+                    if(pick.equals("25%")) brightness = 25;
+                    
+                }
+                
+            };
+
+            ButtonGroup b = new ButtonGroup();
+            for(JRadioButton j : radioOne){
+                b.add(j);
+                j.addActionListener(brightListener);
+                brightPanel.add(j);
+            }
+            //b.add(bneg);
+           // b.add(bmid);
+            //b.add(bpos);
+            
+
+            ButtonGroup c = new ButtonGroup();
+           // c.add(cneg);
+            //c.add(cmid);
+            //c.add(cpos);
+            for(JRadioButton rb : radioTwo){
+                c.add(rb);
+                rb.addActionListener(contListener);
+                contPanel.add(rb);
+            }
+
+            
+                
+            
+
+            frame.add(brightPanel);
+            frame.add(contPanel);
+
+            frame.setSize(300,200);
+            frame.pack();
+            frame.setVisible(true);
+
+            JButton close = new JButton("okay");
+            close.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.setVisible(false);
+                    // Create and apply the filter
+                     target.getImage().apply(new BrightnessUp(brightness, contrast));
+                     target.repaint();
+                     target.getParent().revalidate();
+                    
+                }
+
+            });
+            frame.add(close);
+            
+            
+            
+            
         }
 
     }
