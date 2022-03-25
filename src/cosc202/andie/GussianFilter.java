@@ -13,8 +13,8 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
     double variance = (1 / 3) * radius;
     int sizex;
     int sizey;
-    int xmiddle = (sizex / 2);
-    int ymiddle = (sizey / 2);
+    int xmiddle = (radius - 1);
+    int ymiddle = (radius - 1);
 
     GussianFilter(int radius) {
         this.radius = radius;
@@ -26,28 +26,33 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
         double two = Math.exp(-((Math.pow(y, 2) + (Math.pow(x, 2)))) / (2 * (Math.pow(variance, 2))));
         double three = one * two;
         float fin = (float) three;
-
+        System.out.print(fin);
         return fin;
+
     }
 
     public BufferedImage apply(BufferedImage input) {
 
-        float[][] gussian = new float[9][2];
+        float[][] matrix = new float[2 * radius + 1][2 * radius + 1];
+        float[] flat = new float[(2 * radius + 1) * (2 * radius + 1)];
+        int i = 0;
 
-        float[] gussian2 = {
-                0.000f, 0.011f, 0.000f,
-                0.011f, 0.957f, 0.011f,
-                0.000f, 0.011f, 0.000f
-        };
-
-        Kernel kernel = new Kernel(3, 3, gussian2);
-        ConvolveOp convOp = new ConvolveOp(kernel);
-
-        for (int x = 0; x < gussian.length; x++) {
-            for (int y = 0; y < gussian.height; y++)
-                GussianEquation(x, y, 1 / 3 * radius);
-
+        for (int y = 0; y < matrix.length; y++) {
+            for (int x = 0; x < matrix[y].length; x++) {
+                matrix[y][x] = GussianEqaution(xmiddle + x - matrix.length / 2, ymiddle + y - matrix.length / 2,
+                        1 / 3 * radius);
+            }
         }
+
+        for (int y = 0; y < matrix.length; y++) {
+            for (int x = 0; x < matrix[y].length; x++) {
+                flat[i] = matrix[y][x];
+                System.out.print(flat[i]);
+                i++;
+
+            }
+        }
+        return input;
 
     }
 
