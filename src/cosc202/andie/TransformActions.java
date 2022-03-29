@@ -21,6 +21,7 @@ public class TransformActions {
         actions.add(new Rotate("Rotate", null, "Rotate Image 180 Degrees", Integer.valueOf(KeyEvent.VK_R)));
         actions.add(new RotateR("Rotate Right", null, "Rotate Image 90 Degrees Right", null));
         actions.add(new RotateL("Rotate Left", null, "Rotate Image 90 Degrees Left", null));
+        actions.add(new Scale("Scale", null, "Scale by a %", null));
         
     }
 
@@ -128,6 +129,50 @@ public class TransformActions {
             target.repaint();
             target.getParent().revalidate();
             
+        }
+    }
+
+     
+
+    public class Scale extends ImageAction {
+
+        /**
+         * create a flip action
+         * 
+         * @param name name of action(if ignored, null)
+         * @param icon an icon to rep the action (if ignored, null)
+         * @param desc brief desc of ation (if ignored, null)
+         * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
+         */
+
+        Scale(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        /**
+         * callback for when vertical flip is triggered
+         * this method will flip the image vertically
+         * 
+         * @param e event triggering this callback
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int scale=0;
+            SpinnerNumberModel scaleModel = new SpinnerNumberModel(0, 0, 100, 10);
+            JSpinner scaleSpinner = new JSpinner(scaleModel);
+            double option = JOptionPane.showOptionDialog(null,scaleSpinner, "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+            // Check the return value from the dialog box.
+            if (option == JOptionPane.CANCEL_OPTION) {
+                return;
+            } else if (option == JOptionPane.OK_OPTION) {
+                scale = scaleModel.getNumber().intValue();
+                
+            }
+            target.getImage().apply(new Resize(scale));
+            target.repaint();
+            target.getParent().revalidate();
         }
     }
 }
