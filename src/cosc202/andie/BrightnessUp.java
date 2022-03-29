@@ -12,6 +12,7 @@ import java.awt.*;
  * 
  * @author Poppy Schlaadt
  * @version 1.0
+ * @see #rgbMath(int)
  */
  public class BrightnessUp implements ImageOperation, java.io.Serializable {
 
@@ -36,9 +37,13 @@ import java.awt.*;
       }
 
       /**
-       * makes the image light by raising RGB value of pixel by 10?
+       * <p>
+       * This method applies the percentage of {@code brightness} and {@code contrast}
+       * initalised in the contructor ({@code BrigtnessUp}). 
        * @param input the image to be brightned
        * @return resulting brighter image
+       * @see #rgbMath(int)
+       * @see #inside(int)
        */
       public BufferedImage apply(BufferedImage input){
           
@@ -68,15 +73,17 @@ import java.awt.*;
                 input.setRGB(x, y, finalColour);
             }
         }
-        
         return input;
     }
 
    /**
+    * <p>
     * a method to calculate the new R,G or B value for the brightness and contrast
     * variables initalised in the constructor
     * @param v value to be changed
     * @return changed value
+    * @see #inside(int)
+    * </p>
     */
     public int rgbMath( int v){
         
@@ -92,6 +99,7 @@ import java.awt.*;
      * if x<0 x becomes 0 and if x>255 it becomes 255
      * @param x integer to check
      * @return checked integer between 0 and 255
+     * @see #rgbMath(int)
      */
     public int inside(int x){
         if(x<0) x =0;
