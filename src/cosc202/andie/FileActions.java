@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -93,7 +94,19 @@ public class FileActions {
          * @param e The event triggering this callback.
          */
         public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
+            JFileChooser fileChooser = new JFileChooser(){
+
+                @Override
+                public void approveSelection(){
+                    File f = getSelectedFile();
+                    if(!f.exists() ){                   
+                        JOptionPane.showMessageDialog(null, "Error");                   
+                    }
+                    if(!f.getName().endsWith(".JPEG")){
+                        JOptionPane.showMessageDialog(null, "Error wrong file format");
+                    }
+                }           
+            };
             int result = fileChooser.showOpenDialog(target);
 
             if (result == JFileChooser.APPROVE_OPTION) {
