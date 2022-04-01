@@ -159,9 +159,9 @@ public class TransformActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             int scale=0;
-            SpinnerNumberModel scaleModel = new SpinnerNumberModel(0, 0, 100, 10);
+            SpinnerNumberModel scaleModel = new SpinnerNumberModel(0, 0, 500, 10);
             JSpinner scaleSpinner = new JSpinner(scaleModel);
-            double option = JOptionPane.showOptionDialog(null,scaleSpinner, "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            double option = JOptionPane.showOptionDialog(null,scaleSpinner, "Scale %", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             // Check the return value from the dialog box.
             if (option == JOptionPane.CANCEL_OPTION) {
