@@ -3,6 +3,7 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * <p>
@@ -222,4 +223,4 @@ public class ColourActions {
 }
 
 
-}
+
