@@ -7,10 +7,10 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class GussianFilter implements ImageOperation, java.io.Serializable {
-    private int radius;
+    int radius;
     double value = 0;
     double distance = 0;
-    double variance = (1 / 3) * radius;
+    double variance = (0.33 * radius);
     int sizex;
     int sizey;
     int xmiddle = (radius - 1);
@@ -23,14 +23,18 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
     /*
      * In this section we are creating the equation. Split the equation into two
      * separate parts in order to make it easier to read and then printing it
+     * THE CURRENT PROBLEM IM HAVING IS THAT VARIANCE IS EQUALLING TO ZERO, IM THINKING THIS IS A PROBLEM TO DO WITH RADIUS.
      */
     public float GussianEqaution(int x, int y, double variance) {
 
         double one = (1 / (2 * Math.PI * Math.pow(variance, 2))); // part1
-        double two = Math.exp(-((Math.pow(y, 2) + (Math.pow(x, 2)))) / (2 * (Math.pow(variance, 2)))); // part 2
+        System.out.println(one);
+        System.out.println("Varance :" + variance);
+        double two = Math.exp(-((Math.pow(y, 2) + (Math.pow(x, 2)))) / (2 * (Math.pow(variance, 2)))); // part 2\
+        System.out.println(two);
         double three = one * two; // multiplying them together.
         float fin = (float) three;
-        System.out.print(fin);
+        System.out.println(fin);
         return fin;
 
     }
