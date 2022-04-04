@@ -8,9 +8,11 @@ import javax.swing.*;
 
 public class GussianFilter implements ImageOperation, java.io.Serializable {
     int radius;
-    double value = 0;
-    double distance = 0;
-    double variance = (0.33 * radius);
+    double rad;
+    double value = 0.0;
+    double distance = 0.0;
+    //int variance = (0.33 * radius);
+    double variance;
     int sizex;
     int sizey;
     int xmiddle = (radius - 1);
@@ -18,6 +20,8 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
 
     GussianFilter(int radius) {
         this.radius = radius;
+        rad = (double) radius; // use a double for radius so it works in the equations with doubles an floats
+        variance = (rad/3);
     }
 
     /*
@@ -27,14 +31,26 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
      */
     public float GussianEqaution(int x, int y, double variance) {
 
-        double one = (1 / (2 * Math.PI * Math.pow(variance, 2))); // part1
-        System.out.println(one);
-        System.out.println("Varance :" + variance);
-        double two = Math.exp(-((Math.pow(y, 2) + (Math.pow(x, 2)))) / (2 * (Math.pow(variance, 2)))); // part 2\
-        System.out.println(two);
-        double three = one * two; // multiplying them together.
+        // double one = (1 / (2 * Math.PI * Math.pow(variance, 2))); // part1
+        // System.out.println("one: " + one);
+        // System.out.println("Variance :" + variance);
+        // double two = Math.exp(-((Math.pow(y, 2) + (Math.pow(x, 2)))) / (2 * (Math.pow(variance, 2)))); // part 2\
+        // System.out.println("two: " + two);
+        // double three = one * two; // multiplying them together.
+        // float fin = (float) three;
+        // System.out.println("fin: " + fin);
+        // return fin;
+        
+        //System.out.println("variance: " + variance);
+        double one = 1 / (2*Math.PI*Math.pow(variance, 2));
+        //System.out.print("one: " + one);
+        double two = Math.exp(-((Math.pow(x,2) + Math.pow(y,2))/(2*Math.pow(variance,2))));
+        //System.out.print("\t two: " + two);
+        double three = one * two;
+        //System.out.print("\tthree: " + three);
+        //System.out.println();
+
         float fin = (float) three;
-        System.out.println(fin);
         return fin;
 
     }
@@ -53,7 +69,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[y].length; x++) {
                 matrix[y][x] = GussianEqaution(xmiddle + x - matrix.length / 2, ymiddle + y - matrix.length / 2,
-                        1 / 3 * radius);
+                        variance);
             }
 
         }
