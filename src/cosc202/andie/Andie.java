@@ -91,11 +91,43 @@ public class Andie {
         TransformActions transformActions = new TransformActions();
         menuBar.add(transformActions.createMenu());
 
+        //Make the toolBar
+        JToolBar toolBar = new JToolBar();
 
-        
+        // Open Button
+        JButton openButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/openIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        openButton.addActionListener(fileActions.actions.get(0));
+        toolBar.add(openButton);
+
+        // Save Button
+        JButton saveButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/saveIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        saveButton.addActionListener(fileActions.actions.get(1));
+        toolBar.add(saveButton);
+
+        // undo Button
+        JButton undoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/undoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        undoButton.addActionListener(editActions.actions.get(0));
+        toolBar.add(undoButton);
+
+        // redo Button
+        JButton redoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/redoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        redoButton.addActionListener(editActions.actions.get(1));
+        toolBar.add(redoButton);
+
+        // horizontal Flip Button
+        JButton hFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/horizontalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        hFlipButton.addActionListener(transformActions.actions.get(1));
+        toolBar.add(hFlipButton);
+
+        // vertical flip Button
+        JButton vFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        vFlipButton.addActionListener(transformActions.actions.get(1));
+        toolBar.add(vFlipButton);
+
         frame.setJMenuBar(menuBar);
         frame.pack();
         frame.setVisible(true);
+        frame.add(toolBar, BorderLayout.NORTH);
     }
 
     /**
