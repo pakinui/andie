@@ -25,7 +25,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             direction = '3';
         }else{
             // make this do something
-            System.out.println("error");
+            System.out.println("error2");
         }
 
     }

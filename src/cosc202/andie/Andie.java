@@ -2,6 +2,9 @@ package cosc202.andie;
 
 import java.io.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.imageio.*;
 
@@ -116,13 +119,25 @@ public class Andie {
 
         // horizontal Flip Button
         JButton hFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/horizontalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
-        hFlipButton.addActionListener(transformActions.actions.get(1));
+        hFlipButton.addActionListener(transformActions.actions.get(4));
         toolBar.add(hFlipButton);
 
         // vertical flip Button
         JButton vFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
-        vFlipButton.addActionListener(transformActions.actions.get(1));
+        vFlipButton.addActionListener(transformActions.actions.get(5));
         toolBar.add(vFlipButton);
+
+        //right rotate button
+        //need to change icon
+        JButton rightButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        rightButton.addActionListener(transformActions.actions.get(2));
+        toolBar.add(rightButton);
+
+        //left rotate button
+        //need to change icon
+        JButton leftButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        leftButton.addActionListener(transformActions.actions.get(3));
+        toolBar.add(leftButton);
 
         frame.setJMenuBar(menuBar);
         frame.pack();
