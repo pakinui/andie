@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * <p>
@@ -94,21 +95,11 @@ public class FileActions {
          * @param e The event triggering this callback.
          */
         public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser(){
-
-                @Override
-                public void approveSelection(){
-                    File f = getSelectedFile();
-                    if(!f.exists() ){                   
-                        JOptionPane.showMessageDialog(null, "Error");                   
-                    }
-                    if(!f.getName().endsWith(".JPEG")){
-                        JOptionPane.showMessageDialog(null, "Error wrong file format");
-                    }
-                }           
-            };
+            FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPG file","jpg");
+            JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(target);
-
+            fileChooser.addChoosableFileFilter(jpgFilter);
+            
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();

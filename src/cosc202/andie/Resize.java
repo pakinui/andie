@@ -1,13 +1,13 @@
 package cosc202.andie;
 
 import java.awt.image.*;
-import java.awt.geom.AffineTransform;
+import java.awt.*;
 
 public class Resize implements ImageOperation, java.io.Serializable {
-    double scale;
+    int scale;
 
 
-    Resize(double scale){
+    Resize(int scale){
        this.scale = scale;
     }
     /**
@@ -20,11 +20,15 @@ public class Resize implements ImageOperation, java.io.Serializable {
     public BufferedImage apply(BufferedImage input){
         final int w = input.getWidth();
         final int h = input.getHeight();
-        BufferedImage scaledImage = new BufferedImage((int)(w * scale), (int)(h * scale), BufferedImage.TYPE_INT_ARGB);
-        final AffineTransform at = AffineTransform.getScaleInstance(scale, scale);
-        final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-        scaledImage = ato.filter(input, scaledImage);
+        int newW  = (int)((double)scale/100.0 * w);
+        int newH = (int)((double)scale/100.0 * h);
 
-        return input;
+       Image tmp = input.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return dimg;
     }
 }

@@ -10,6 +10,8 @@ import javax.imageio.*;
  * <p>
  * Main class for A Non-Destructive Image Editor (ANDIE).
  * </p>
+ * 
+ * <p>
  * //change to code for lab 5
  * <p>//this is for lab 5.5
  * This class is the entry point for the program.
@@ -84,6 +86,11 @@ public class Andie {
         // Actions that affect the representation of colour in the image
         ColourActions colourActions = new ColourActions();
         menuBar.add(colourActions.createMenu());
+
+        //Actions that transform the image
+        TransformActions transformActions = new TransformActions();
+        menuBar.add(transformActions.createMenu());
+
 
         
         frame.setJMenuBar(menuBar);
