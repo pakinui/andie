@@ -2,6 +2,9 @@ package cosc202.andie;
 
 import java.io.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.imageio.*;
 
@@ -10,6 +13,8 @@ import javax.imageio.*;
  * <p>
  * Main class for A Non-Destructive Image Editor (ANDIE).
  * </p>
+ * 
+ * <p>
  * //change to code for lab 5
  * <p>//this is for lab 5.5
  * This class is the entry point for the program.
@@ -89,10 +94,55 @@ public class Andie {
         TransformActions transformActions = new TransformActions();
         menuBar.add(transformActions.createMenu());
 
-        
+        //Make the toolBar
+        JToolBar toolBar = new JToolBar();
+
+        // Open Button
+        JButton openButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/openIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        openButton.addActionListener(fileActions.actions.get(0));
+        toolBar.add(openButton);
+
+        // Save Button
+        JButton saveButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/saveIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        saveButton.addActionListener(fileActions.actions.get(1));
+        toolBar.add(saveButton);
+
+        // undo Button
+        JButton undoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/undoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        undoButton.addActionListener(editActions.actions.get(0));
+        toolBar.add(undoButton);
+
+        // redo Button
+        JButton redoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/redoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        redoButton.addActionListener(editActions.actions.get(1));
+        toolBar.add(redoButton);
+
+        // horizontal Flip Button
+        JButton hFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/horizontalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        hFlipButton.addActionListener(transformActions.actions.get(5));
+        toolBar.add(hFlipButton);
+
+        // vertical flip Button
+        JButton vFlipButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        vFlipButton.addActionListener(transformActions.actions.get(6));
+        toolBar.add(vFlipButton);
+
+        //right rotate button
+        //need to change icon
+        JButton rightButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        rightButton.addActionListener(transformActions.actions.get(3));
+        toolBar.add(rightButton);
+
+        //left rotate button
+        //need to change icon
+        JButton leftButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        leftButton.addActionListener(transformActions.actions.get(4));
+        toolBar.add(leftButton);
+
         frame.setJMenuBar(menuBar);
         frame.pack();
         frame.setVisible(true);
+        frame.add(toolBar, BorderLayout.NORTH);
     }
 
     /**

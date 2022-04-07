@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
 /**
@@ -53,12 +54,13 @@ public class Flip implements ImageOperation, java.io.Serializable{
     Flip(char c){
         
         if(Character.toUpperCase(c) == 'H'){ 
+
             direction = 'H'; // if c is 'H' set it to the direction.
         }else if(Character.toUpperCase(c) == 'V'){
             direction = 'V'; // if c is 'V' set it to the direction.
         }else{
             direction = 'H'; // if there is an error set the direction th the default 'H'
-            System.out.println("error");
+            System.out.println("errorsss");
         }
         
     }
@@ -131,5 +133,6 @@ public class Flip implements ImageOperation, java.io.Serializable{
         }
         return input;
     }
+
 }
 

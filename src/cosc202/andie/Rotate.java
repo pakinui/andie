@@ -13,10 +13,12 @@ public class Rotate implements ImageOperation, java.io.Serializable{
     // 3 = 180
 
     Rotate(){
+        
         direction = '1';
     }
 
     Rotate(char c){
+
         if(Character.compare(c, '1') == 0){
             direction = '1';
         }else if(Character.compare(c, '2') == 0){
@@ -25,9 +27,8 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             direction = '3';
         }else{
             // make this do something
-            System.out.println("error");
+            System.out.println("error2");
         }
-
     }
 
     @Override

@@ -18,6 +18,8 @@ public class TransformActions {
 
     //list of actions in transform menu
     protected ArrayList<Action> actions;
+    JFrame frame;
+    JPanel mainPanel;
     
     public TransformActions(){
         actions = new ArrayList<Action>();
@@ -27,13 +29,22 @@ public class TransformActions {
         actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
         actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
         actions.add(new ResizeAction("Resize", null, "Resize Image", Integer.valueOf(KeyEvent.VK_R)));
-    }   
+       
+        //rotateActions = new ArrayList<Action>();
+        actions.add(new RotateRight(null,null,null,null));
+        actions.add(new RotateLeft(null,null,null,null));
+        actions.add(new FlipHorizontal(null,null,null,null));
+        actions.add(new FlipVertical(null,null,null,null));
+        actions.add(new RotateFull(null, null, null, null));
+        
+    }
 
     public JMenu createMenu(){
         JMenu transformMenu = new JMenu("Transform");
 
-        for(Action action: actions){
-            transformMenu.add(new JMenuItem(action));
+        //for(Action action: actions){
+            for(int i = 0; i < 3 ; i++){
+            transformMenu.add(new JMenuItem(actions.get(i)));
         }
         return transformMenu;
     }
@@ -54,7 +65,7 @@ public class TransformActions {
         public void actionPerformed(ActionEvent e) {
             
             //frame
-            JFrame frame = new JFrame();
+            frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             //components
@@ -62,55 +73,33 @@ public class TransformActions {
             panel.setLayout(new GridLayout(3,1));
             JPanel buttonPanel = new JPanel(); // panel for buttons
             buttonPanel.setLayout(new GridLayout(1,3));
-            JButton done = new JButton("Done");
+            
             JLabel label = new JLabel("Which direction would you like to rotate the image?");
-            JRadioButton left = new JRadioButton("Left 90º");
-            JRadioButton right = new JRadioButton("Right 90º");
-            JRadioButton full = new JRadioButton("180º");
+            JButton left = new JButton("Left 90º");
+            JButton right = new JButton("Right 90º");
+            JButton full = new JButton("180º");
             ButtonGroup group = new ButtonGroup();
             group.add(left);
             group.add(right);
             group.add(full);
-            ActionListener listen = new ActionListener(){
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    AbstractButton a = (AbstractButton) e.getSource();
-                    String text = a.getText();
-                    if(text.equals("Left 90º")) direction = '2';
-                    if(text.equals("Right 90º")) direction = '1';
-                    if(text.equals("180º")) direction = '3';
-                    
-                }
-
-                
-            };
-
-            done.setMaximumSize(new Dimension(100,50));
-            done.setBorder(new EmptyBorder(30,0,30,0));
-            done.addActionListener(new ActionListener(){
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                   
-                   //create and apply filter
-                   target.getImage().apply(new Rotate(direction));
-                   target.repaint();
-                   target.getParent().revalidate();
-                   //frame.setVisible(false);
-                   frame.dispose();
-                    
-                }
-                
-            });
-
-            left.addActionListener(listen);
-            right.addActionListener(listen);
-            full.addActionListener(listen);
+            left.addActionListener(actions.get(4));
+            right.addActionListener(actions.get(3));
+            full.addActionListener(actions.get(7));
 
             buttonPanel.add(left);
             buttonPanel.add(right);
             buttonPanel.add(full);
+
+            JButton done = new JButton("Done");
+            done.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.dispose(); 
+                }
+
+            });
 
 
             panel.add(label);
@@ -139,10 +128,10 @@ public class TransformActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            JFrame frame = new JFrame();
+            frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-            JPanel mainPanel = new JPanel();
+            mainPanel = new JPanel();
             mainPanel.setPreferredSize(new Dimension(300,200));
             mainPanel.setLayout(new GridLayout(3,1));
 
@@ -150,41 +139,27 @@ public class TransformActions {
             buttonPanel.setLayout(new GridLayout(1,2));
             
             //buttons
-            JRadioButton vert = new JRadioButton("Vertical");
-            JRadioButton hor = new JRadioButton("Horizontal");
-            JButton done = new JButton("Done");
+            JButton vert = new JButton("Vertical");
+            JButton hor = new JButton("Horizontal");
             ButtonGroup group = new ButtonGroup();
             group.add(vert);
             group.add(hor);
 
-            ActionListener listen = new ActionListener(){
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                    if(e.getSource() == hor) direction = 'H';
-                    else direction = 'V';
-                    
-                }
-                
-            };
-            vert.addActionListener(listen);
-            hor.addActionListener(listen);
-
+            JButton done = new JButton("Done");
             done.addActionListener(new ActionListener(){
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    // Create and apply the filter
-                     target.getImage().apply(new Flip(direction));
-                     target.repaint();
-                     target.getParent().revalidate();
-                     frame.dispose();
-                    
+                    frame.dispose(); 
                 }
-                
+
             });
+
+
+            vert.addActionListener(actions.get(6));
+            hor.addActionListener(actions.get(5));
+
+
 
             JLabel label = new JLabel("Which direction would you like to flip the image?");
             mainPanel.add(label);
@@ -196,8 +171,8 @@ public class TransformActions {
             mainPanel.add(done);
 
             frame.add(mainPanel);
-            frame.setVisible(true);
             frame.pack();
+            frame.setVisible(true);
 
 
 
@@ -209,12 +184,10 @@ public class TransformActions {
 
         ResizeAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
             JFrame frame = new JFrame();
             JPanel panel = new JPanel();
             JLabel label = new JLabel("What percentage would you like to resize the image?");
@@ -272,7 +245,101 @@ public class TransformActions {
             frame.pack();
             frame.setVisible(true);
             
+        
+            
         }
+    }
+    
+    public class RotateFull extends ImageAction{
+
+        RotateFull(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            target.getImage().apply(new Rotate('3'));
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+
+        
+    }
+
+    public class RotateRight extends ImageAction{
+
+        RotateRight(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().apply(new Rotate('2'));
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+
+        
+    }
+
+    public class RotateLeft extends ImageAction{
+
+        RotateLeft(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().apply(new Rotate('1'));
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+
+        
+    }
+
+    public class FlipHorizontal extends ImageAction{
+
+        FlipHorizontal(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            target.getImage().apply(new Flip('H'));
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+
+        
+    }
+
+    public class FlipVertical extends ImageAction{
+
+        FlipVertical(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            target.getImage().apply(new Flip('V'));
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+
         
     }
 
@@ -280,127 +347,4 @@ public class TransformActions {
 
 }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // public class Rotate extends ImageAction {
-
-    //     /**
-    //      * create a flip action
-    //      * 
-    //      * @param name name of action(if ignored, null)
-    //      * @param icon an icon to rep the action (if ignored, null)
-    //      * @param desc brief desc of ation (if ignored, null)
-    //      * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
-    //      */
-
-    //     Rotate(String name, ImageIcon icon, String desc, Integer mnemonic) {
-    //         super(name, icon, desc, mnemonic);
-            
-    //     }
-
-    //     /**
-    //      * callback for when vertical flip is triggered
-    //      * this method will flip the image vertically
-    //      * 
-    //      * @param e event triggering this callback
-    //      */
-    //     @Override
-    //     public void actionPerformed(ActionEvent e) {
-    //         target.getImage().apply(new Rotate180());
-    //         target.repaint();
-    //         target.getParent().revalidate();
-            
-    //     }
-    // }
-
-//     public class RotateR extends ImageAction {
-
-//         /**
-//          * create a flip action
-//          * 
-//          * @param name name of action(if ignored, null)
-//          * @param icon an icon to rep the action (if ignored, null)
-//          * @param desc brief desc of ation (if ignored, null)
-//          * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
-//          */
-
-//         RotateR(String name, ImageIcon icon, String desc, Integer mnemonic) {
-//             super(name, icon, desc, mnemonic);
-            
-//         }
-
-//         /**
-//          * callback for when vertical flip is triggered
-//          * this method will flip the image vertically
-//          * 
-//          * @param e event triggering this callback
-//          */
-//         @Override
-//         public void actionPerformed(ActionEvent e) {
-//             target.getImage().apply(new RotateRight());
-//             target.repaint();
-//             target.getParent().revalidate();
-            
-//         }
-//     }
-
-//     public class RotateL extends ImageAction {
-
-//         /**
-//          * create a flip action
-//          * 
-//          * @param name name of action(if ignored, null)
-//          * @param icon an icon to rep the action (if ignored, null)
-//          * @param desc brief desc of ation (if ignored, null)
-//          * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
-//          */
-
-//         RotateL(String name, ImageIcon icon, String desc, Integer mnemonic) {
-//             super(name, icon, desc, mnemonic);
-            
-//         }
-
-//         /**
-//          * callback for when vertical flip is triggered
-//          * this method will flip the image vertically
-//          * 
-//          * @param e event triggering this callback
-//          */
-//         @Override
-//         public void actionPerformed(ActionEvent e) {
-//             target.getImage().apply(new RotateLeft());
-//             target.repaint();
-//             target.getParent().revalidate();
-            
-//         }
-//     }
-// }
 
