@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -97,18 +98,20 @@ public class FileActions {
             FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPG file","jpg");
             FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG file","png");
             FileNameExtensionFilter jpegFilter = new FileNameExtensionFilter("JPEG file","jpeg");
-            JFileChooser fileChooser = new JFileChooser();
+            JFileChooser fileChooser = new JFileChooser(){};
+
             int result = fileChooser.showOpenDialog(target);
             fileChooser.addChoosableFileFilter(jpgFilter);
             fileChooser.addChoosableFileFilter(pngFilter);
             fileChooser.addChoosableFileFilter(jpegFilter);
-            
+
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
                     target.getImage().open(imageFilepath);
                 } catch (Exception ex) {
-                    System.exit(1);
+
+                    JOptionPane.showMessageDialog(null, "Error unaccepted file type");
                 }
             }
 
