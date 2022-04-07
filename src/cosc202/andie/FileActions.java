@@ -1,6 +1,5 @@
 package cosc202.andie;
 
-import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -110,8 +109,7 @@ public class FileActions {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
                     target.getImage().open(imageFilepath);
                 } catch (Exception ex) {
-
-                    JOptionPane.showMessageDialog(null, "Error unaccepted file type");
+                    JOptionPane.showMessageDialog(null, "Error unaccepted file type, please select a JPEG, JPG or PNG");
                 }
             }
 
