@@ -12,7 +12,7 @@ public class Resize implements ImageOperation, java.io.Serializable {
     }
     /**
      * Method to resize the image by a scale factor
-     * @param image being rotated
+     * @param input image being rotated
      * @return rotated image
      */
 
