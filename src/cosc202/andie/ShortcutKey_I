@@ -2,7 +2,7 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-public class ShortcutKey_I {
+public class ShortcutKey_I extends ViewActions{
     private static volatile boolean wPressed = false;
     public static boolean isWPressed() {
         synchronized (ShortcutKey_I.class) {
@@ -12,8 +12,6 @@ public class ShortcutKey_I {
 
     public static void main(String[] args) {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-
-            @Override
             public boolean dispatchKeyEvent(KeyEvent ke) {
                 synchronized (ShortcutKey_I.class) {
                     switch (ke.getID()) {
@@ -34,4 +32,20 @@ public class ShortcutKey_I {
             }
         });
     }
+
+public class ZoomOutAction extends ImageAction {
+    ZoomOutAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        super(name, icon, desc, mnemonic);
+    }
+
+    public void actionPerformed(ActionEvent e) {\
+        if(ShortcutKey_I.isWPressed()){
+        target.setZoom(target.getZoom()-10);
+        target.repaint();
+        target.getParent().revalidate();
+        }
+    }
+}
+
+
 }
