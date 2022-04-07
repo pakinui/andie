@@ -3,6 +3,9 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.*;
+import java.awt.image.*;
+import javax.imageio.*;
 
 /**
  * <p>
@@ -37,7 +40,9 @@ public class FileActions {
         actions.add(new FileOpenAction("Open", null, "Open a file", Integer.valueOf(KeyEvent.VK_O)));
         actions.add(new FileSaveAction("Save", null, "Save the file", Integer.valueOf(KeyEvent.VK_S)));
         actions.add(new FileSaveAsAction("Save As", null, "Save a copy", Integer.valueOf(KeyEvent.VK_A)));
+        actions.add(new FileExportAction("Export Image", null, "Export the image", Integer.valueOf(1)));
         actions.add(new FileExitAction("Exit", null, "Exit the program", Integer.valueOf(0)));
+        
     }
 
     /**
@@ -247,5 +252,42 @@ public class FileActions {
         }
 
     }
+
+
+    public class FileExportAction extends ImageAction {
+
+        FileExportAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(target);
+            EditableImage editImage =  target.getImage();
+            BufferedImage finalImage = editImage.getCurrentImage();
+            File file;
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
+
+                    if(!imageFilepath.contains(".png") || imageFilepath.contains(".jpg")){
+                        imageFilepath = imageFilepath + (".png");
+                    }
+                    file = new File(imageFilepath);
+                    ImageIO.write(finalImage, "png", file);
+                    
+                } catch (Exception ex) {
+                    System.exit(1);
+                }
+            }
+            
+        }
+        
+    }
+
 
 }
