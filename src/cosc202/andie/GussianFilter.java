@@ -67,15 +67,15 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
         int mid = radius+1;
         for(int i = (radius*-1) ; i <= radius ; i++){
             for(int ii = (radius*-1) ; ii <= radius ; ii++){
-                System.out.println("i: " + i + " | ii: " + ii);
+                //System.out.println("i: " + i + " | ii: " + ii);
 
                 int iMid = i;// length from middle i
                 int iiMid = ii;// length from middle ii
                 if(i < 0) iMid = i*-1;
                 if(ii < 0) iiMid = ii*-1;
-                System.out.println("iP: " + iMid + " | iiP: " + iiMid);
+               // System.out.println("iP: " + iMid + " | iiP: " + iiMid);
                 arr[index] = GussianEqaution(iMid, iiMid, variance); 
-                System.out.println("arr: " + arr[index]);
+                //System.out.println("arr: " + arr[index]);
                 index++;
             }
 
@@ -85,7 +85,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
         for(float a : arr){
             sum += a;
         }
-        System.out.println("sum: " + sum);
+        //System.out.println("sum: " + sum);
         float[] fin = new float[arr.length];
         for(int f = 0; f < fin.length ; f++){
             fin[f] = arr[f]/sum;
@@ -132,7 +132,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
             
             float[] arr = new float[size];
             arr = arrFill(arr);
-            System.out.println(Arrays.toString(arr));
+            //System.out.println(Arrays.toString(arr));
 
             Kernel kernel = new Kernel(length,length, arr);
             ConvolveOp conOp = new ConvolveOp(kernel);
