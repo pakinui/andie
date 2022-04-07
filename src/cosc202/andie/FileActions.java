@@ -1,6 +1,5 @@
 package cosc202.andie;
 
-import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -96,9 +95,13 @@ public class FileActions {
          */
         public void actionPerformed(ActionEvent e) {
             FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPG file","jpg");
+            FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG file","png");
+            FileNameExtensionFilter jpegFilter = new FileNameExtensionFilter("JPEG file","jpeg");
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(target);
             fileChooser.addChoosableFileFilter(jpgFilter);
+            fileChooser.addChoosableFileFilter(pngFilter);
+            fileChooser.addChoosableFileFilter(jpegFilter);
             
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
