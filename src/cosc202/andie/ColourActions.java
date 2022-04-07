@@ -104,7 +104,7 @@ public class ColourActions {
      * Action to change the brightness and contrast values of an image.
      * </p>
      *
-     * @see #BrightnessContrast
+     * @see BrightnessContrast
      */
     public class BrightnessAction extends ImageAction{
         //brightness and contrast percentage cahnge values - ask the user

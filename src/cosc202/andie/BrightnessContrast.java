@@ -74,7 +74,7 @@ import java.awt.*;
      * By default the image remains the same.
      * </p>
      * 
-     * @see #BrightnessContrast(int, int)
+     * @see BrightnessContrast(int, int)
      */
     BrightnessContrast(){
         brightness = 0;

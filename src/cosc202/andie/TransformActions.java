@@ -245,7 +245,7 @@ public class TransformActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            target.getImage().apply(new Rotate('2'));
+            target.getImage().apply(new Rotate('1'));
             target.repaint();
             target.getParent().revalidate();
             
@@ -263,7 +263,7 @@ public class TransformActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            target.getImage().apply(new Rotate('1'));
+            target.getImage().apply(new Rotate('2'));
             target.repaint();
             target.getParent().revalidate();
             
