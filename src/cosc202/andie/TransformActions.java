@@ -3,7 +3,6 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 
@@ -23,12 +22,9 @@ public class TransformActions {
     
     public TransformActions(){
         actions = new ArrayList<Action>();
-       // actions.add(new Rotate("Rotate", null, "Rotate Image 180 Degrees", Integer.valueOf(KeyEvent.VK_R)));
-       // actions.add(new RotateR("Rotate Right", null, "Rotate Image 90 Degrees Right", null));
-        //actions.add(new RotateL("Rotate Left", null, "Rotate Image 90 Degrees Left", null));
         actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
         actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
-        actions.add(new ResizeAction("Resize", null, "Resize Image", Integer.valueOf(KeyEvent.VK_R)));
+        actions.add(new Scale("Scale", null, "Scale by a %", null));
        
         //rotateActions = new ArrayList<Action>();
         actions.add(new RotateRight(null,null,null,null));
@@ -115,7 +111,6 @@ public class TransformActions {
         
     }
     
-
     public class FlipAction extends ImageAction{
 
         char direction;
@@ -180,73 +175,45 @@ public class TransformActions {
 
     }
 
-    public class ResizeAction extends ImageAction{
+    public class Scale extends ImageAction {
 
-        ResizeAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        /**
+         * create a flip action
+         * 
+         * @param name name of action(if ignored, null)
+         * @param icon an icon to rep the action (if ignored, null)
+         * @param desc brief desc of ation (if ignored, null)
+         * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
+         */
+
+        Scale(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            
         }
 
+        /**
+         * callback for when vertical flip is triggered
+         * this method will flip the image vertically
+         * 
+         * @param e event triggering this callback
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame();
-            JPanel panel = new JPanel();
-            JLabel label = new JLabel("What percentage would you like to resize the image?");
-            JPanel buttonPanel = new JPanel();
-            JButton small = new JButton("50%");
-            JButton big = new JButton("150%");
-            ButtonGroup group = new ButtonGroup();
-            group.add(small);
+            int scale=0;
+            SpinnerNumberModel scaleModel = new SpinnerNumberModel(100, 0, 200, 10);
+            JSpinner scaleSpinner = new JSpinner(scaleModel);
+            double option = JOptionPane.showOptionDialog(null,scaleSpinner, "Scale %", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-            group.add(big);
-
-            ActionListener listen = new ActionListener(){
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if(e.getSource() == small){
-                        target.getImage().apply(new Resize(0.5));
-                    }else if(e.getSource() == big){
-                        target.getImage().apply(new Resize(1.5));
-                    }
-                    target.repaint();
-                    target.getParent().revalidate();
-                    //frame.setVisible(false);
-
-                }
+            // Check the return value from the dialog box.
+            if (option == JOptionPane.CANCEL_OPTION) {
+                return;
+            } else if (option == JOptionPane.OK_OPTION) {
+                scale = scaleModel.getNumber().intValue();
                 
-            };
-            small.addActionListener(listen);
-            big.addActionListener(listen);
-
-            panel.setLayout(new GridLayout(3,1));
-            buttonPanel.setLayout(new GridLayout(1,2));
-
-            buttonPanel.add(small);
-            buttonPanel.add(big);
-
-            JButton done = new JButton("Done");
-            done.addActionListener(new ActionListener(){
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    frame.dispose();
-                    
-                }
-                
-            });
-
-            
-            frame.setSize(300,200);
-            panel.add(label);
-            panel.add(buttonPanel);
-            panel.add(done);
-
-            frame.add(panel);
-            frame.pack();
-            frame.setVisible(true);
-            
-        
-            
+            }
+            target.getImage().apply(new Resize(scale));
+            target.repaint();
+            target.getParent().revalidate();
         }
     }
     
@@ -342,7 +309,6 @@ public class TransformActions {
 
         
     }
-
 
 
 }
