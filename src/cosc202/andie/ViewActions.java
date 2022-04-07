@@ -1,5 +1,8 @@
 package cosc202.andie;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -100,6 +103,8 @@ public class ViewActions {
             target.getParent().revalidate();
         }
 
+
+
     }
 
     /**
@@ -144,7 +149,13 @@ public class ViewActions {
             target.repaint();
             target.getParent().revalidate();
         }
-
+        public void zoomShortcut(ActionEvent e) {
+            if(ShortcutKey_I.isWPressed()){
+                target.setZoom(target.getZoom()-10);
+                target.repaint();
+                target.getParent().revalidate();
+            }
+        }
     }
 
     /**
@@ -192,6 +203,38 @@ public class ViewActions {
 
     }
 
-
+    public class ShortcutKey_I {
+        private static volatile boolean wPressed = false;
+        public static boolean isWPressed() {
+            synchronized (ShortcutKey_I.class) {
+                return wPressed;
+            }
+        }
+    
+        public static void main(String[] args) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+    
+                @Override
+                public boolean dispatchKeyEvent(KeyEvent ke) {
+                    synchronized (ShortcutKey_I.class) {
+                        switch (ke.getID()) {
+                        case KeyEvent.KEY_PRESSED:
+                            if (ke.getKeyCode() == KeyEvent.VK_I) {
+                                wPressed = true;
+                            }
+                            break;
+    
+                        case KeyEvent.KEY_RELEASED:
+                            if (ke.getKeyCode() == KeyEvent.VK_I) {
+                                wPressed = false;
+                            }
+                            break;
+                        }
+                        return false;
+                    }
+                }
+            });
+        }
+    }
 
 }

@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 public class ShortcutKey_I {
     private static volatile boolean wPressed = false;
     public static boolean isWPressed() {
-        synchronized (IsKeyPressed.class) {
+        synchronized (ShortcutKey_I.class) {
             return wPressed;
         }
     }
@@ -15,7 +15,7 @@ public class ShortcutKey_I {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent ke) {
-                synchronized (IsKeyPressed.class) {
+                synchronized (ShortcutKey_I.class) {
                     switch (ke.getID()) {
                     case KeyEvent.KEY_PRESSED:
                         if (ke.getKeyCode() == KeyEvent.VK_I) {
