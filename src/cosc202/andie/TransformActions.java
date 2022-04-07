@@ -26,7 +26,8 @@ public class TransformActions {
         //actions.add(new RotateL("Rotate Left", null, "Rotate Image 90 Degrees Left", null));
         actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
         actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
-    }
+        actions.add(new ResizeAction("Resize", null, "Resize Image", Integer.valueOf(KeyEvent.VK_R)));
+    }   
 
     public JMenu createMenu(){
         JMenu transformMenu = new JMenu("Transform");
@@ -204,8 +205,76 @@ public class TransformActions {
 
     }
 
+    public class ResizeAction extends ImageAction{
 
+        ResizeAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
 
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFrame frame = new JFrame();
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("What percentage would you like to resize the image?");
+            JPanel buttonPanel = new JPanel();
+            JButton small = new JButton("50%");
+            JButton big = new JButton("150%");
+            ButtonGroup group = new ButtonGroup();
+            group.add(small);
+
+            group.add(big);
+
+            ActionListener listen = new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == small){
+                        target.getImage().apply(new Resize(0.5));
+                    }else if(e.getSource() == big){
+                        target.getImage().apply(new Resize(1.5));
+                    }
+                    target.repaint();
+                    target.getParent().revalidate();
+                    //frame.setVisible(false);
+
+                }
+                
+            };
+            small.addActionListener(listen);
+            big.addActionListener(listen);
+
+            panel.setLayout(new GridLayout(3,1));
+            buttonPanel.setLayout(new GridLayout(1,2));
+
+            buttonPanel.add(small);
+            buttonPanel.add(big);
+
+            JButton done = new JButton("Done");
+            done.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.dispose();
+                    
+                }
+                
+            });
+
+            
+            frame.setSize(300,200);
+            panel.add(label);
+            panel.add(buttonPanel);
+            panel.add(done);
+
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
+            
+        }
+        
+    }
 
 
 

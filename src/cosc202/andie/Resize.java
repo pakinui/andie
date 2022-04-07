@@ -25,6 +25,6 @@ public class Resize implements ImageOperation, java.io.Serializable {
         final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
         scaledImage = ato.filter(input, scaledImage);
 
-        return input;
+        return scaledImage; // return new scaled image
     }
 }
