@@ -32,6 +32,7 @@ public class TransformActions {
         actions.add(new FlipHorizontal(null,null,null,null));
         actions.add(new FlipVertical(null,null,null,null));
         actions.add(new RotateFull(null, null, null, null));
+    
         
     }
 

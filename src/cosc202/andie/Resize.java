@@ -23,7 +23,7 @@ public class Resize implements ImageOperation, java.io.Serializable {
         int newW  = (int)((double)scale/100.0 * w);
         int newH = (int)((double)scale/100.0 * h);
 
-        Image tmp = input.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+       Image tmp = input.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = dimg.createGraphics();

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.io.*;
 import java.awt.image.*;
 import javax.imageio.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * <p>
@@ -98,15 +99,22 @@ public class FileActions {
          * @param e The event triggering this callback.
          */
         public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPG file","jpg");
+            FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG file","png");
+            FileNameExtensionFilter jpegFilter = new FileNameExtensionFilter("JPEG file","jpeg");
+            JFileChooser fileChooser = new JFileChooser(){};
+
             int result = fileChooser.showOpenDialog(target);
+            fileChooser.addChoosableFileFilter(jpgFilter);
+            fileChooser.addChoosableFileFilter(pngFilter);
+            fileChooser.addChoosableFileFilter(jpegFilter);
 
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
                     target.getImage().open(imageFilepath);
                 } catch (Exception ex) {
-                    System.exit(1);
+                    JOptionPane.showMessageDialog(null, "Error unaccepted file type, please select a JPEG, JPG or PNG");
                 }
             }
 
