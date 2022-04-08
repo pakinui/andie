@@ -35,8 +35,8 @@ public class ColourActions {
      */
     public ColourActions() {
         actions = new ArrayList<Action>();
-        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", Integer.valueOf(KeyEvent.VK_G)));
-        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", Integer.valueOf(KeyEvent.VK_U)));
+        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", Integer.valueOf(KeyEvent.VK_Y)));
+        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", Integer.valueOf(KeyEvent.VK_B)));
     }
 
     /**
@@ -47,13 +47,18 @@ public class ColourActions {
      * @return The colour menu UI element.
      */
     public JMenu createMenu() {
-        JMenu fileMenu = new JMenu("Colour");
+        JMenu colourMenu = new JMenu("Colour");
 
         for(Action action: actions) {
-            fileMenu.add(new JMenuItem(action));
+            JMenuItem menu = new JMenuItem(action);
+
+            int i = (int) action.getValue("MnemonicKey");
+            char mn = (char) i;
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            colourMenu.add(menu);
         }
 
-        return fileMenu;
+        return colourMenu;
     }
 
     /**

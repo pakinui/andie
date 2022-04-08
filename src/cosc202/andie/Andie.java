@@ -4,7 +4,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import javax.swing.*;
 import javax.imageio.*;
 
@@ -78,6 +78,7 @@ public class Andie {
         EditActions editActions = new EditActions();
         menuBar.add(editActions.createMenu());
 
+
         // View actions control how the image is displayed, but do not alter its actual content
         ViewActions viewActions = new ViewActions();
         menuBar.add(viewActions.createMenu());
@@ -111,6 +112,12 @@ public class Andie {
         JButton undoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/undoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         undoButton.addActionListener(editActions.actions.get(0));
         toolBar.add(undoButton);
+
+        //undoButton.setMnemonic(Integer.valueOf(KeyEvent.VK_Z));
+        //undoButton.setDisplayedMnemonicIndex(0);
+
+        //KeyStroke undoKey = KeyStroke.getKeyStroke('Z');
+        //undoKey.addActionListener(editActions.actions.get(0));
 
         // redo Button
         JButton redoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/redoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));

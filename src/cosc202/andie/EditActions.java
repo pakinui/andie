@@ -49,7 +49,14 @@ public class EditActions {
         JMenu editMenu = new JMenu("Edit");
 
         for (Action action: actions) {
-            editMenu.add(new JMenuItem(action));
+
+            JMenuItem menu = new JMenuItem(action);
+
+            int i = (int) action.getValue("MnemonicKey");
+            char mn = (char) i;
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            editMenu.add(menu);
+
         }
 
         return editMenu;
@@ -76,6 +83,8 @@ public class EditActions {
          */
         UndoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            putValue(MNEMONIC_KEY, mnemonic);
+            //setAccelerator(KeyStroke.getKeyStroke((KeyEvent.VK_Z),InputEvent.CTRL_DOWN_MASK);
         }
 
         /**

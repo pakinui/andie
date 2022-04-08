@@ -39,7 +39,7 @@ public class FilterActions {
         actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_M)));
 
         actions.add(
-                new GussianFilterAction("Gussian filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_M)));
+                new GussianFilterAction("Gussian filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_G)));
 
         actions.add(
                 new MedianFilterAction("Median filter", null, "Apply a median filter", Integer.valueOf(KeyEvent.VK_N)));
@@ -56,13 +56,18 @@ public class FilterActions {
      * @return The filter menu UI element.
      */
     public JMenu createMenu() {
-        JMenu fileMenu = new JMenu("Filter");
+        JMenu filterMenu = new JMenu("Filter");
 
         for (Action action : actions) {
-            fileMenu.add(new JMenuItem(action));
+            JMenuItem menu = new JMenuItem(action);
+
+            int i = (int) action.getValue("MnemonicKey");
+            char mn = (char) i;
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            filterMenu.add(menu);
         }
 
-        return fileMenu;
+        return filterMenu;
     }
 
     /**

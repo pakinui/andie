@@ -41,7 +41,7 @@ public class FileActions {
         actions.add(new FileOpenAction("Open", null, "Open a file", Integer.valueOf(KeyEvent.VK_O)));
         actions.add(new FileSaveAction("Save", null, "Save the file", Integer.valueOf(KeyEvent.VK_S)));
         actions.add(new FileSaveAsAction("Save As", null, "Save a copy", Integer.valueOf(KeyEvent.VK_A)));
-        actions.add(new FileExportAction("Export Image", null, "Export the image", Integer.valueOf(1)));
+        actions.add(new FileExportAction("Export Image", null, "Export the image", Integer.valueOf(KeyEvent.VK_E)));
         actions.add(new FileExitAction("Exit", null, "Exit the program", Integer.valueOf(0)));
         
     }
@@ -57,7 +57,14 @@ public class FileActions {
         JMenu fileMenu = new JMenu("File");
 
         for(Action action: actions) {
-            fileMenu.add(new JMenuItem(action));
+
+            JMenuItem menu = new JMenuItem(action);
+
+            int i = (int) action.getValue("MnemonicKey");
+            char mn = (char) i;
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            fileMenu.add(menu);
+
         }
 
         return fileMenu;
@@ -84,6 +91,7 @@ public class FileActions {
          */
         FileOpenAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+        
         }
 
         /**
@@ -241,6 +249,7 @@ public class FileActions {
             super(name, icon);
             putValue(SHORT_DESCRIPTION, desc);
             putValue(MNEMONIC_KEY, mnemonic);
+
         }
 
          /**

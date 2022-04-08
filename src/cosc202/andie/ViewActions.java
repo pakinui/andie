@@ -36,9 +36,9 @@ public class ViewActions {
      */
     public ViewActions() {
         actions = new ArrayList<Action>();
-        actions.add(new ZoomInAction("Zoom In", null, "Zoom In", Integer.valueOf(KeyEvent.VK_PLUS)));
+        actions.add(new ZoomInAction("Zoom In", null, "Zoom In", Integer.valueOf(KeyEvent.VK_EQUALS)));
         actions.add(new ZoomOutAction("Zoom Out", null, "Zoom Out", Integer.valueOf(KeyEvent.VK_MINUS)));
-        actions.add(new ZoomFullAction("Zoom Full", null, "Zoom Full", Integer.valueOf(KeyEvent.VK_1)));
+        actions.add(new ZoomFullAction("Zoom Full", null, "Zoom Full", Integer.valueOf(KeyEvent.VK_EXCLAMATION_MARK)));
     }
 
     /**
@@ -52,7 +52,13 @@ public class ViewActions {
         JMenu viewMenu = new JMenu("View");
 
         for (Action action: actions) {
-            viewMenu.add(new JMenuItem(action));
+            JMenuItem menu = new JMenuItem(action);
+
+            int i = (int) action.getValue("MnemonicKey");
+            char mn = (char) i;
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            viewMenu.add(menu);
+
         }
 
         return viewMenu;
