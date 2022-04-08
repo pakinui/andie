@@ -4,6 +4,7 @@ import java.util.*;
 import java.io.*;
 import java.awt.image.*;
 import javax.imageio.*;
+import javax.swing.JOptionPane;
 
 /**
  * <p>
@@ -231,8 +232,12 @@ class EditableImage {
      * </p>
      */
     public void undo() {
-        redoOps.push(ops.pop());
-        refresh();
+        if(ops.empty()){
+            JOptionPane.showMessageDialog(null, "Nothing to undo");
+        }else{
+            redoOps.push(ops.pop());
+         refresh();   
+        }
     }
 
     /**
@@ -241,7 +246,11 @@ class EditableImage {
      * </p>
      */
     public void redo()  {
-        apply(redoOps.pop());
+        if(redoOps.empty()){
+            JOptionPane.showMessageDialog(null, "Nothing to redo");
+        }else{
+            apply(redoOps.pop());   
+        }  
     }
 
     /**
