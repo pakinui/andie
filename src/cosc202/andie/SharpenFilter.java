@@ -13,9 +13,9 @@ public class SharpenFilter implements ImageOperation, java.io.Serializable {
     public BufferedImage apply(BufferedImage input) {
 
         float[] sharpen = {
-                0, -1 / 2, 0,
-                -1 / 2, 3, -1 / 2,
-                0, -1 / 2, 0
+                0.0f, -0.5f, 0.0f,
+                -0.5f, 3.0f, -0.5f,
+                0.0f, -0.5f, 0.5f,
         };
 
         Kernel kernel = new Kernel(3, 3, sharpen);
