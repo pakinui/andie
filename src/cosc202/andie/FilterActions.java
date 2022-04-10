@@ -163,7 +163,7 @@ public class FilterActions {
         public void actionPerformed(ActionEvent e) {
 
             // Determine the radius - ask the user.
-            int radius = 1;
+            int radius = 0;
 
             // Pop-up dialog box to ask for the radius value.
             SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 10, 1);
@@ -218,7 +218,7 @@ public class FilterActions {
         public void actionPerformed(ActionEvent e) {
 
             // Determine the radius - ask the user.
-            int radius = 1;
+            int radius = 0;
 
             // Pop-up dialog box to ask for the radius value.
             SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 10, 1);

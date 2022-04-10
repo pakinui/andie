@@ -139,6 +139,8 @@ class EditableImage {
         File imageFile = new File(imageFilename);
         original = ImageIO.read(imageFile);
         current = deepCopy(original);
+        ops.clear();
+        redoOps.clear();
         
         try {
             FileInputStream fileIn = new FileInputStream(this.opsFilename);
@@ -152,9 +154,7 @@ class EditableImage {
             // which there is actually a type mismatch for one of the
             // elements within the Stack, i.e., a non-ImageOperation.
             @SuppressWarnings("unchecked")
-            Stack<ImageOperation> opsFromFile = (Stack<ImageOperation>) objIn.readObject();
-            ops = opsFromFile;
-            redoOps.clear();
+            Stack<ImageOperation> opsFromFile = (Stack<ImageOperation>) objIn.readObject();            
             objIn.close();
             fileIn.close();
         } catch (Exception ex) {
