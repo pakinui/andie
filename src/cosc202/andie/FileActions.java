@@ -9,6 +9,7 @@ import javax.imageio.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
+
 /**
  * <p>
  * Actions provided by the File menu.
@@ -19,6 +20,17 @@ import java.awt.*;
  * and there are several items that the user will expect to find here.
  * Opening and saving files is an obvious one, but also exiting the program.
  * </p>
+ * 
+ * <p>
+ * File actions include:
+ * </p>
+ * <ul>
+ * <li> {@link FileOpenAction}</li>
+ * <li> {@link FileSaveAction}</li>
+ * <li> {@link FileSaveAsAction}</li>
+ * <li> {@link FileExitAction}</li>
+ * <li> {@link FileExportAction}</li>
+ * </ul>
  * 
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
@@ -50,6 +62,10 @@ public class FileActions {
     /**
      * <p>
      * Create a menu contianing the list of File actions.
+     * </p>
+     * 
+     * <p>
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
      * </p>
      * 
      * @return The File menu UI element.
@@ -109,16 +125,16 @@ public class FileActions {
          * @param e The event triggering this callback.
          */
         public void actionPerformed(ActionEvent e) {
-            FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPG file","jpg");
-            FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG file","png");
-            FileNameExtensionFilter jpegFilter = new FileNameExtensionFilter("JPEG file","jpeg");
+           
+            FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("JPEG, JPG & PNG images","jpeg", "png", "jpeg");
             JFileChooser fileChooser = new JFileChooser(){};
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
+            fileChooser.addChoosableFileFilter(fileFilter);
+            fileChooser.setAcceptAllFileFilterUsed(false);
             int result = fileChooser.showOpenDialog(target);
-            fileChooser.addChoosableFileFilter(jpgFilter);
-            fileChooser.addChoosableFileFilter(pngFilter);
-            fileChooser.addChoosableFileFilter(jpegFilter);
 
+        
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
@@ -285,6 +301,8 @@ public class FileActions {
         public void actionPerformed(ActionEvent e) {
 
             JFileChooser fileChooser = new JFileChooser();
+
+
             int result = fileChooser.showSaveDialog(target);
             EditableImage editImage =  target.getImage();
             BufferedImage finalImage = editImage.getCurrentImage();
