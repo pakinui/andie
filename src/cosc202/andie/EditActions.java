@@ -11,10 +11,13 @@ import java.awt.*;
  * </p>
  * 
  * <p>
- * The Edit menu is very common across a wide range of applications.
- * There are a lot of operations that a user might expect to see here.
- * In the sample code there are Undo and Redo actions, but more may need to be added.
+ * Edit actions include:
  * </p>
+ * 
+ * <ul>
+ * <li> {@link UndoAction} </li>
+ * <li> {@link RedoAction} </li>
+ * </ul>
  * 
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
@@ -42,6 +45,10 @@ public class EditActions {
     /**
      * <p>
      * Create a menu contianing the list of Edit actions.
+     * </p>
+     * 
+     * <p>
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
      * </p>
      * 
      * @return The edit menu UI element.
