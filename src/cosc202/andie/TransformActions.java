@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Actions provided by the Transform menu
+ * Actions provided by the Transform menu.
  * 
  * The Transform menu contains actions that change the how the image is displayed, 
  * and the contents of the image.
@@ -131,9 +131,9 @@ public class TransformActions {
          * </p>
          * 
          * <ul>
-         * <li> left 90 degrees: calls {@link #RotateLeftAction}</li>
-         * <li> right 90 degrees: calls {@link #RotateRightAction} </li>
-         * <li> 180 degrees: calls {@link #RotateFullAction} </li>
+         * <li> left 90 degrees: calls {@link #RotateLeft}</li>
+         * <li> right 90 degrees: calls {@link #RotateRight} </li>
+         * <li> 180 degrees: calls {@link #RotateFull} </li>
          * </ul>
          * 
          * @param e The event triggering this callback.
