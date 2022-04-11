@@ -5,58 +5,64 @@ import java.awt.*;
 
 /**
  * <p>
- * ImageOperation to change the brightness and contrast of an image.
+ * ImageOperation to change the {@code brightness} and {@code contrast} of an image.
  * </p>
  * 
  * <p>
- * A colour value filter to change the brightness and/or contrast by changing each pixel's
- * RGB values based of an equation provided in the lab book on
- * BlackBoard (page 99).
- * </p>
- * 
- * <p>
+ * A colour value filter to change the {@code brightness} and/or {@code contrast} by changing
+ *  each pixel's RGB values based of an equation provided in the lab book on BlackBoard (page 99).
  * <a href= "https://cosc202.cspages.otago.ac.nz/lab-book/COSC202LabBook.pdf">COSC202 LabBook</a>
  * </p>
  * 
  * @author Poppy Schlaadt
  * @version 1.0
  * @see #rgbMath(int)
+ * @see #inside(int)
  */
  public class BrightnessContrast implements ImageOperation, java.io.Serializable {
 
     /**
-    * The percentage (-25%, 0% or +25%) of brightness/contrast to
+    * The percentage (-25%, 0% or +25%) of {@code contrast} to
     * apply to the image.
     */
     int contrast;
+    /**
+    * The percentage (-25%, 0% or +25%) of {@code brightness} to
+    * apply to the image.
+    */
     int brightness; 
 
   
     
     /**
      * <p>
-     * Change the brightness and/or contrast values of an image.
+     * Change the {@code brightness} and/or {@code contrast} values of an image.
      * </p>
      * 
      * <p>
-     * The percentage to change the brightness can be either positive
+     * The percentage to change the {@code brightness} can be either positive
      * or negative making the image brighter or darker, respectively.
-     * The percentage to change the contrast can be either positive 
+     * The percentage to change the {@code contrast} can be either positive 
      * or negative making the image more saturated or less saturated,
      * respectively.
-     * The values may also be a 0 in which case the brightness and/or
-     * contrast levels do not change.
+     *</p>
+     *
+     * <p>
+     * The {@code brightness} and {@code contrast} values may also be a 0 in 
+     * which case the {@code brightness} and/or {@code contrast} levels do not change.
      * </p>
      * 
      * <p>
      * There are three percentage options:
-     * 1. -25% = (int) -25
-     * 2. 0% = (int) 0
-     * 3. +25% = (int) 25
+     * <ol>
+     * <li> -25% = (int) -25 </li>
+     * <li> 0% = (int) 0 </li>
+     * <li> +25% = (int) 25 </li>
+     * </ol>
      * </p>
      * 
-     * @param b The brightness percentage change to apply to the image.
-     * @param c The contrast percentage change to apply to the image.
+     * @param b The {@code brightness} percentage change to apply to the image.
+     * @param c The {@code contrast} percentage change to apply to the image.
      */
     BrightnessContrast(int b, int c){
         brightness = b;
@@ -67,30 +73,18 @@ import java.awt.*;
      * <p>
      * Default constructor for changing the brightness and contrast of
      * an image.
-     * It is is set to 0 for both brightness and contrast.
+     * It is is set to 0 for both {@code brightness} and {@code contrast}.
      * </p>
      * 
      * <p>
      * By default the image remains the same.
      * </p>
      * 
-     * @see BrightnessContrast(int, int)
      */
     BrightnessContrast(){
         brightness = 0;
         contrast = 0;
     }
-
-        /**
-    * <p>
-    * This method applies the percentage of {@code brightness} and {@code contrast}
-    * initalised in the contructor ({@code BrigtnessUp}).
-    * 
-    * @param input the image to be brightned
-    * @return resulting brighter image
-    * @see #rgbMath(int)
-    * @see #inside(int)
-    */
 
     /**
      * <p>
@@ -98,20 +92,35 @@ import java.awt.*;
      * </p>
      * 
      * <p>
-     * It apllies the percentage of {@code brightness} and {@code contrast}
-     * initalised in the constructor({@code BrightnessContrast}) to the image.
+     * It applies the percentage of {@code brightness} and {@code contrast}
+     * initalised in the constructor to the image.
      * </p>
      * 
      * <p>
-     * It goes though and changes the RGB values of each pixel separately.
-     * It then changes the colour or each pixel according to the new RGB values.
+     * It iterates though each pixel in the image and changes the RGB values of each 
+     * pixel separately.
+     * This is done by collecting the RGB values of each pixel and then passing them 
+     * individually to the {@link #rgbMath} method which finds the new RGB value of that 
+     * pixel determined by the {@code brightness} and {@code contrast} variables the user 
+     * selects.
+     * </p>
+     * 
+     * <p>
+     * The RGB values of each pixel is changed with respect to the {@code brightness} and 
+     * {@code contrast} percentages and the resulting image is returned.
      * </p>
      * 
      * @param input The image to have its colour values changed.
      * @return The resulting (changed) image.
+     * @see #rgbMath(int)
+     * @see #inside(int)
      */
     public BufferedImage apply(BufferedImage input){
-          
+
+        //if brightness and contrast are both 0 return the input(no change to the image)
+        if (brightness == 0 && contrast == 0) return input;
+
+        //iterate through every pixel in the image  
         for (int y = 0; y < input.getHeight(); ++y) {
             for (int x = 0; x < input.getWidth(); ++x) {
 
@@ -146,7 +155,7 @@ import java.awt.*;
     * <p>
     * A method to calculate the new R,G or B values which need to change 
     * based on the {@code brightness} and {@code contrast} values 
-    * initialised in the constructor ({@code BrightnessContrast(int, int)}).
+    * initialised in the constructor ({@code BrightnessContrast}).
     * </p>
     *
     *<p>
@@ -155,17 +164,17 @@ import java.awt.*;
     *</p>
     *
     * <p>
-    * Uses a method called {@link inside(int)} to make sure that the value
-    * remains in the valid range of 0-255.
+    * Uses a method called {@link #inside} to make sure that the every pixel
+    * value remains in the valid range for RGB colours of 0-255.
     * </p>
     *
     * @param v The RGB value to be changed.
     * @return The new changed RBG value.
     * @see #inside(int)
     */
-    public int rgbMath( int v){
+    public int rgbMath(int v){
         
-        //using the equation provided in the lab book
+        //using the equation provided in the lab book to find the new RGB value
         int fin = (int)Math.round(((1+(contrast/100.0)) * (v-127.5)) + (127.5 * (1+(brightness/100.0)))); 
         fin = inside(fin);
 
@@ -179,11 +188,11 @@ import java.awt.*;
      * </p>
      * 
      * <p>
-     * If the value is less than 0, the value gets changed to 0.
-     * If the value if more than 255, the value gets changed to 255.
+     * If the RGB value is less than 0, the value gets changed to 0.
+     * If the RGB value if more than 255, the value gets changed to 255.
      * </p>
      * 
-     * @param x Integer to check is in range.
+     * @param x Integer to check is in the range of 0-255.
      * @return Checked integer between 0 and 255.
      * @see #rgbMath(int)
      */
