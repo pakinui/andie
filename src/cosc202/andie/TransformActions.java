@@ -131,9 +131,9 @@ public class TransformActions {
          * </p>
          * 
          * <ul>
-         * <li> left 90 degrees: calls {@link #RotateLeft}</li>
-         * <li> right 90 degrees: calls {@link #RotateRight} </li>
-         * <li> 180 degrees: calls {@link #RotateFull} </li>
+         * <li> left 90 degrees: calls {@link RotateLeft}</li>
+         * <li> right 90 degrees: calls {@link RotateRight} </li>
+         * <li> 180 degrees: calls {@link RotateFull} </li>
          * </ul>
          * 
          * @param e The event triggering this callback.
