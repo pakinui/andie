@@ -16,6 +16,16 @@ import java.awt.Toolkit;
  * These actions do not affect the contents of the image itself, just the way it is displayed.
  * </p>
  * 
+ * <p>
+ * View actions include:
+ * </p>
+ * 
+ * <ul>
+ * <li> {@link ZoomInAction} </li>
+ * <li> {@link ZoomOutAction} </li>
+ * <li> {@link ZoomFullAction} </li>
+ * </ul>
+ * 
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
  * </p>
@@ -45,6 +55,10 @@ public class ViewActions {
     /**
      * <p>
      * Create a menu containing the list of View actions.
+     * </p>
+     * 
+     * <p>
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
      * </p>
      * 
      * @return The view menu UI element.
