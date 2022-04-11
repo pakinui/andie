@@ -3,7 +3,7 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
-
+import java.awt.*;
 /**
  * <p>
  * Actions provided by the Filter menu.
@@ -60,10 +60,10 @@ public class FilterActions {
 
         for (Action action : actions) {
             JMenuItem menu = new JMenuItem(action);
-
+            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
             int i = (int) action.getValue("MnemonicKey");
             char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));
             filterMenu.add(menu);
         }
 

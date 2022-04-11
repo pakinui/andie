@@ -42,12 +42,12 @@ public class TransformActions {
         //for(Action action: actions){
             for(int i = 0; i < 3 ; i++){
                 JMenuItem menu = new JMenuItem(actions.get(i));
-
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
                 //if shortcut is not null add shortcut
                 if(actions.get(i).getValue("MnemonicKey") != null){
                     int idx = (int) actions.get(i).getValue("MnemonicKey");
                     char mn = (char) idx;
-                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
                 }
                 transformMenu.add(menu);
             }
