@@ -51,10 +51,10 @@ public class ColourActions {
 
         for(Action action: actions) {
             JMenuItem menu = new JMenuItem(action);
-
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
+            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+            int i = (int) action.getValue("MnemonicKey");// retrieve the integer of the MnemonicKey
+            char mn = (char) i;// turn into ASCII character
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));//set the keyboard shortcut to the JMenuItem
             colourMenu.add(menu);
         }
 
