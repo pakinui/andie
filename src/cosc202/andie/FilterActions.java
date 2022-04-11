@@ -4,6 +4,7 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+
 /**
  * <p>
  * Actions provided by the Filter menu.
@@ -39,13 +40,15 @@ public class FilterActions {
         actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_M)));
 
         actions.add(
-                new GussianFilterAction("Gussian filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_G)));
+                new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter",
+                        Integer.valueOf(KeyEvent.VK_G)));
 
         actions.add(
                 new MedianFilterAction("Median filter", null, "Apply a median filter", Integer.valueOf(KeyEvent.VK_N)));
-        
+
         actions.add(
-                new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", Integer.valueOf(KeyEvent.VK_P)));
+                new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter",
+                        Integer.valueOf(KeyEvent.VK_P)));
     }
 
     /**
@@ -63,7 +66,7 @@ public class FilterActions {
             int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
             int i = (int) action.getValue("MnemonicKey");
             char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));
+            menu.setAccelerator(KeyStroke.getKeyStroke(mn, menuKey));
             filterMenu.add(menu);
         }
 
@@ -271,7 +274,6 @@ public class FilterActions {
          * @param e The event triggering this callback.
          */
         public void actionPerformed(ActionEvent e) {
-
 
             // Create and apply the filter
             target.getImage().apply(new SharpenFilter());
