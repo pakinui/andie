@@ -1,6 +1,5 @@
 package cosc202.andie;
 
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
 /**
@@ -9,9 +8,10 @@ import java.awt.image.BufferedImage;
  * </p>
  * 
  * <p>
- * This operation flips the pixels(pixel by pixel) in an image either 
- * vertically or horizontally.
- * The direction is specified by the user.
+ * This operation flips the pixels from one end of a row (horizontal flip)
+ * or column (vertical flip) with one from the other end. This results in an
+ * image flipped either vertically or horizontally.
+ * The direction is specified by the user and initalised in the constructor.
  * </p>
  * 
  * @author Poppy Schlaadt
@@ -28,7 +28,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * Flip the image in the default direction(horizontal).
+     * Flip the image in the default {@code direction} (horizontal).
      * </p>
      * 
      * @see #Flip(char)
@@ -39,53 +39,53 @@ public class Flip implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * Flip the image in a given directino.
+     * Flip the image in a given direction.
      * </p>
      * 
      * <p>
-     * The direction is provided by the user.
-     * 'H' for a Horizontal Flip.
-     * 'C' for a Vertical Flip.
+     * The {@code direction} is provided by the user.
      * </p>
+     * <ul>
+     * <li>'H' for a Horizontal Flip.</li>
+     * <li>'C' for a Vertical Flip.</li>
+     * </ul>
      * 
-     * @param c The character representing the direction to flip.
+     * @param c The character representing the {@code direction} to flip.
      * @see #Flip()
      */
     Flip(char c){
         
         if(Character.toUpperCase(c) == 'H'){ 
-
             direction = 'H'; // if c is 'H' set it to the direction.
         }else if(Character.toUpperCase(c) == 'V'){
             direction = 'V'; // if c is 'V' set it to the direction.
         }else{
-            direction = 'H'; // if there is an error set the direction th the default 'H'
-            System.out.println("errorsss");
+            direction = 'H'; // if there is an error set the direction the the default 'H'
         }
-        
     }
 
     /**
      * <p>
-     * Apply a Flip to an image.
+     * Flip an image.
      * </p>
      * 
      * <p>
-     * The direction the the flip is determined by whatever the {@link Flip}
-     * method has initalised the char variable {@code direction} to.
+     * The {@code direction} of the flip is determined by the constructors.
      * The appropriate flip will be applied.
      * </p>
      * 
      * <p>
-     * The nested for-loops loop through every row (height), but only half-way
-     * though the columns(width).
+     * For a horizontal flip the nested for-loops, loop through every row 
+     * (height), but only half-way though the columns(width). For a vertical
+     * flip the nested for-loops, loop through every column(width), but only
+     * half-way through the rows(height).
      * This is to ensure that pixels are flipped around the half-way point.
      * </p>
      * 
      * <p>
-     * If the nested for-loops looped through the whole column, then after the
-     * half-way point the pixel values would be switched back to its original
-     * spot.
+     * If the nested for-loops looped through the whole column and row, then 
+     * after the half-way point the pixel values would be switched back to its
+     * original spot.
      * This would result in the pixel values being changed (and then changed 
      * back to where they started) but the image would not look any different.
      * </p>
@@ -99,8 +99,8 @@ public class Flip implements ImageOperation, java.io.Serializable{
         if(direction == 'H'){ // horizontal flip
             
             int pixel_hold; // temporary pixel
-            int height = input.getHeight()-1;
-            int width = input.getWidth()-1;
+            int height = input.getHeight()-1; //number of pixels tall
+            int width = input.getWidth()-1; //number of pixels wide
 
             //looping through every row and half way though columns
             for(int y = 0; y< height; y++){
@@ -119,15 +119,15 @@ public class Flip implements ImageOperation, java.io.Serializable{
             int height = input.getHeight()-1;
             int width = input.getWidth()-1;
 
-            //looping through every row and half way though columns
-            for(int x = 0; x< height; x++){
-                for(int y = 0; y< (width/2); y++){
+            //looping through every column and half way though rows
+            for(int y = 0; y < (height/2); y++){
+                for(int x = 0; x < width; x++){
                     int a = input.getRGB(x, y);//RGB value of pixel a
-                    int b = input.getRGB(x, (width-y));// RGB value of pixel b
+                    int b = input.getRGB(x, (height-y));// RGB value of pixel b
 
                     pixel_hold = a;// temporary element hold RGB value of pixel a
                     input.setRGB(x, y, b);//set a's values to b's values
-                    input.setRGB(x, (width-y), pixel_hold);// set b's values to temporary element(a)'s values
+                    input.setRGB(x, (height-y), pixel_hold);// set b's values to temporary element(a)'s values
                 }
             }
         }

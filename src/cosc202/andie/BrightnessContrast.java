@@ -54,12 +54,12 @@ import java.awt.*;
      * 
      * <p>
      * There are three percentage options:
+     * </p>
      * <ol>
      * <li> -25% = (int) -25 </li>
      * <li> 0% = (int) 0 </li>
      * <li> +25% = (int) 25 </li>
      * </ol>
-     * </p>
      * 
      * @param b The {@code brightness} percentage change to apply to the image.
      * @param c The {@code contrast} percentage change to apply to the image.
