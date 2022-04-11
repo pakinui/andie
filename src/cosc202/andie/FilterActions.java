@@ -37,18 +37,10 @@ public class FilterActions {
      */
     public FilterActions() {
         actions = new ArrayList<Action>();
-        actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_M)));
-
-        actions.add(
-                new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter",
-                        Integer.valueOf(KeyEvent.VK_G)));
-
-        actions.add(
-                new MedianFilterAction("Median filter", null, "Apply a median filter", Integer.valueOf(KeyEvent.VK_N)));
-
-        actions.add(
-                new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter",
-                        Integer.valueOf(KeyEvent.VK_P)));
+        actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", null));
+        actions.add(new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter", null));
+        actions.add(new MedianFilterAction("Median filter", null, "Apply a median filter", null));
+        actions.add(new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", null));
     }
 
     /**
@@ -60,16 +52,10 @@ public class FilterActions {
      */
     public JMenu createMenu() {
         JMenu filterMenu = new JMenu("Filter");
-
-        for (Action action : actions) {
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn, menuKey));
-            filterMenu.add(menu);
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                filterMenu.add(new JMenuItem(action));
+            }
         return filterMenu;
     }
 

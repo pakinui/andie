@@ -49,17 +49,18 @@ public class EditActions {
     public JMenu createMenu() {
         JMenu editMenu = new JMenu("Edit");
 
-        for (Action action: actions) {
-
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
-            editMenu.add(menu);
-
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                editMenu.add(menu);
+            }
         return editMenu;
     }
 

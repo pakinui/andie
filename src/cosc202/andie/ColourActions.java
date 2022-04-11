@@ -35,8 +35,8 @@ public class ColourActions {
      */
     public ColourActions() {
         actions = new ArrayList<Action>();
-        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", Integer.valueOf(KeyEvent.VK_Y)));
-        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", Integer.valueOf(KeyEvent.VK_B)));
+        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", null));
+        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", null));
     }
 
     /**
@@ -49,15 +49,18 @@ public class ColourActions {
     public JMenu createMenu() {
         JMenu colourMenu = new JMenu("Colour");
 
-        for(Action action: actions) {
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");// retrieve the integer of the MnemonicKey
-            char mn = (char) i;// turn into ASCII character
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));//set the keyboard shortcut to the JMenuItem
-            colourMenu.add(menu);
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                colourMenu.add(menu);
+            }
         return colourMenu;
     }
 

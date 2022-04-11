@@ -39,7 +39,7 @@ public class ViewActions {
         actions = new ArrayList<Action>();
         actions.add(new ZoomInAction("Zoom In", null, "Zoom In", Integer.valueOf(KeyEvent.VK_EQUALS)));
         actions.add(new ZoomOutAction("Zoom Out", null, "Zoom Out", Integer.valueOf(KeyEvent.VK_MINUS)));
-        actions.add(new ZoomFullAction("Zoom Full", null, "Zoom Full", Integer.valueOf(KeyEvent.VK_EXCLAMATION_MARK)));
+        actions.add(new ZoomFullAction("Zoom Full", null, "Zoom Full", null));
     }
 
     /**
@@ -52,16 +52,18 @@ public class ViewActions {
     public JMenu createMenu() {
         JMenu viewMenu = new JMenu("View");
 
-        for (Action action: actions) {
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));
-            viewMenu.add(menu);
-
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                viewMenu.add(menu);
+            }
         return viewMenu;
     }
 

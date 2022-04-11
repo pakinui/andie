@@ -24,9 +24,9 @@ public class TransformActions {
         actions = new ArrayList<Action>();
         actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
         actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
-        actions.add(new Scale("Scale", null, "Scale by a %", null));
+        actions.add(new Scale("Scale", null, "Scale the size of an image", null));
        
-        //rotateActions = new ArrayList<Action>();
+        
         actions.add(new RotateRight(null,null,null,null));
         actions.add(new RotateLeft(null,null,null,null));
         actions.add(new FlipHorizontal(null,null,null,null));

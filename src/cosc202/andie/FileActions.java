@@ -41,9 +41,9 @@ public class FileActions {
         actions = new ArrayList<Action>();
         actions.add(new FileOpenAction("Open", null, "Open a file", Integer.valueOf(KeyEvent.VK_O)));
         actions.add(new FileSaveAction("Save", null, "Save the file", Integer.valueOf(KeyEvent.VK_S)));
-        actions.add(new FileSaveAsAction("Save As", null, "Save a copy", Integer.valueOf(KeyEvent.VK_A)));
+        actions.add(new FileSaveAsAction("Save As", null, "Save a copy", null));
         actions.add(new FileExportAction("Export Image", null, "Export the image", Integer.valueOf(KeyEvent.VK_E)));
-        actions.add(new FileExitAction("Exit", null, "Exit the program", Integer.valueOf(0)));
+        actions.add(new FileExitAction("Exit", null, "Exit the program", null));
         
     }
 
@@ -57,17 +57,18 @@ public class FileActions {
     public JMenu createMenu() {
         JMenu fileMenu = new JMenu("File");
 
-        for(Action action: actions) {
-
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn , menuKey));
-            fileMenu.add(menu);
-
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                fileMenu.add(menu);
+            }
         return fileMenu;
     }
 
