@@ -126,7 +126,7 @@ public class FileActions {
          */
         public void actionPerformed(ActionEvent e) {
            
-            FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("JPEG, JPG & PNG images","jpeg", "png", "jpeg");
+            FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("JPEG, JPG & PNG images","jpeg", "png", "jpg");
             JFileChooser fileChooser = new JFileChooser(){};
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
@@ -289,14 +289,59 @@ public class FileActions {
     }
 
 
+    /**
+     * <p>
+     * Action to export the current image.
+     * </p>
+     * 
+     * <p>
+     * Exports the current image (as opposed to saving the original image and
+     * remembering the operations that were applied).
+     * </p>
+     * 
+     * <p>
+     * Image must be exported as one of:
+     * </p>
+     * <ul>
+     * <li>.jpg file </li>
+     * <li> .jpeg file </li>
+     * <li> .png file </li>
+     * </ul>
+     * 
+     * <p>
+     * If the user does not provide a file extension when exporting the image
+     * the file will automatically be given the file extension 'png'.
+     * </p>
+     */
     public class FileExportAction extends ImageAction {
-
+        /**
+         * <p>
+         * Create a new file-exit action.
+         * </p>
+         * 
+         * @param name The name of the action (ignored if null).
+         * @param icon An icon to use to represent the action (ignored if null).
+         * @param desc A brief description of the action  (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         */
         FileExportAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
         }
 
 
 
+         /**
+         * <p>
+         * Callback for when the file-export-image action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the FileExportAction is triggered.
+         * It exports the image as a image file.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
