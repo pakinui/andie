@@ -58,7 +58,7 @@ public class ViewActions {
      * </p>
      * 
      * <p>
-     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
+     * Add a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
      * </p>
      * 
      * @return The view menu UI element.
