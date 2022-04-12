@@ -2,7 +2,14 @@ package cosc202.andie;
 
 import java.awt.image.BufferedImage;
 
-//need to make sure this is okay and delete the other three rotate classes
+/**
+     * Rotate operation allows user to rotate the image 90, 180 or 270 degrees 
+     * determined by the number they select (integer {@code direction}) in the transform menu. This class uses
+     *  {@link ImageOperation} to apply the operation to the input image. 
+     * @param input image being rotated
+     * @author  Poppy
+     * @return rotated image
+     */
 
 
 public class Rotate implements ImageOperation, java.io.Serializable{

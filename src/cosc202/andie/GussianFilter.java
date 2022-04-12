@@ -6,6 +6,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.*;
 
 import javax.swing.*;
+/**
+     * Method to apply a gaussian blur to images, implementing the blur equation and applying it 
+     * to a kernel to apply the blur. This class uses {@link ImageOperation} to apply the 
+     * operation to the input image. The filter is applied using the {@link BufferedImage} class. 
+     * @param input image 
+     * @author Pippi Priestley King
+     * @return blurred image
+     */
+
 
 public class GussianFilter implements ImageOperation, java.io.Serializable {
     int radius;
@@ -27,13 +36,9 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
         variance = (rad/3);
         size = (2*radius + 1) * (2*radius+1);
         length = (2*radius+1);
-    }
+    }//determines the radius for the filter
 
-    /*
-     * In this section we are creating the equation. Split the equation into two
-     * separate parts in order to make it easier to read and then printing it
-     * THE CURRENT PROBLEM IM HAVING IS THAT VARIANCE IS EQUALLING TO ZERO, IM THINKING THIS IS A PROBLEM TO DO WITH RADIUS.
-     */
+   //this creates the equation which takes three variables
     public float GussianEqaution(int x, int y, double variance) {
 
         // double one = (1 / (2 * Math.PI * Math.pow(variance, 2))); // part1
@@ -132,7 +137,8 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
             
             float[] arr = new float[size];
             arr = arrFill(arr);
-            //System.out.println(Arrays.toString(arr));
+            
+            //applies the filter using the kernel
 
             Kernel kernel = new Kernel(length,length, arr);
             ConvolveOp conOp = new ConvolveOp(kernel);
@@ -140,7 +146,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
                     input.isAlphaPremultiplied(), null);
                     conOp.filter(input, output);
             
-
+            //blurred image is outputted
         return output;
 
     }

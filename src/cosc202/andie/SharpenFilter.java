@@ -2,6 +2,15 @@ package cosc202.andie;
 
 import java.awt.image.*;
 import java.awt.image.Kernel.*;
+ /**
+     * Method to sharpern images allowing the user to make the image appear more defined, using a kernel. This class uses
+     *  {@link ImageOperation} to apply the operation to the input image. 
+     * @param input image 
+     * @author Pippi Priestley King
+     * @return sharpened image
+     */
+
+
 
 public class SharpenFilter implements ImageOperation, java.io.Serializable {
 

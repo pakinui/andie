@@ -7,10 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * actions provided in the transform menu
- * 
- * view menu contains actions that change the how the image is displayed, and
- * the contents of the image.
+ * This is the class for the actions provided in the transform menu. Uses {@link Jpanel} to implement 
+ * the buttons. As well as {@link JSlider} and {@link JFrame}.
+ * View menu contains actions that change the how the image is displayed, and
+ * the contents of the image. All rotate and resize operations contained in this menu to improve accessbility and 
+ * create a clean interface for the user. 
+ * @author Pippi 
  */
 
 public class TransformActions {
@@ -185,10 +187,8 @@ public class TransformActions {
     }
 
     public class Scale extends ImageAction {
-
+// Scale button
         /**
-         * create a flip action
-         * 
          * @param name name of action(if ignored, null)
          * @param icon an icon to rep the action (if ignored, null)
          * @param desc brief desc of ation (if ignored, null)
@@ -209,23 +209,25 @@ public class TransformActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             int scale=0;
-            SpinnerNumberModel scaleModel = new SpinnerNumberModel(100, 0, 200, 10);
+            SpinnerNumberModel scaleModel = new SpinnerNumberModel(100, 10, 200, 10);
+            // percentages between 10 and 200% only can be selected to ensure appropriate value
             JSpinner scaleSpinner = new JSpinner(scaleModel);
+            // jspinner for user to select the value for the scale - forces them to choose an appropriate value
             double option = JOptionPane.showOptionDialog(null,scaleSpinner, "Scale %", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-            // Check the return value from the dialog box.
             if (option == JOptionPane.CANCEL_OPTION) {
                 return;
             } else if (option == JOptionPane.OK_OPTION) {
                 scale = scaleModel.getNumber().intValue();
-                
-            }
+                //scale value determined when they click okay
+            }//new image presented on the screen
             target.getImage().apply(new Resize(scale));
             target.repaint();
             target.getParent().revalidate();
         }
     }
     
+    //Rotate button
     public class RotateFull extends ImageAction{
 
         RotateFull(String name, ImageIcon icon, String desc, Integer mnemonic) {
@@ -235,7 +237,7 @@ public class TransformActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+                // full rotation - no extra data needed from user
             target.getImage().apply(new Rotate('3'));
             target.repaint();
             target.getParent().revalidate();
@@ -245,6 +247,7 @@ public class TransformActions {
         
     }
 
+    //Right rotate button
     public class RotateRight extends ImageAction{
 
         RotateRight(String name, ImageIcon icon, String desc, Integer mnemonic) {
@@ -281,6 +284,7 @@ public class TransformActions {
         
     }
 
+    // Horizontal flip button
     public class FlipHorizontal extends ImageAction{
 
         FlipHorizontal(String name, ImageIcon icon, String desc, Integer mnemonic) {
@@ -300,6 +304,7 @@ public class TransformActions {
         
     }
 
+    //Vertical button
     public class FlipVertical extends ImageAction{
 
         FlipVertical(String name, ImageIcon icon, String desc, Integer mnemonic) {
