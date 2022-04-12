@@ -13,9 +13,16 @@ import java.awt.*;
  * <p>
  * The Colour menu contains actions that affect the colour of each pixel directly 
  * without reference to the rest of the image.
- * This includes conversion to greyscale in the sample code, but more operations will need to be added.
  * </p>
  * 
+ * <p>
+ * Colour actions include:
+ * </p>
+ * 
+ * <ul>
+ * <li> {@link BrightnessContrast} </li>
+ * <li> {@link ConvertToGrey} </li>
+ * </ul>
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
  * </p>
@@ -35,8 +42,8 @@ public class ColourActions {
      */
     public ColourActions() {
         actions = new ArrayList<Action>();
-        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", Integer.valueOf(KeyEvent.VK_Y)));
-        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", Integer.valueOf(KeyEvent.VK_B)));
+        actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", null));
+        actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", null));
     }
 
     /**
@@ -44,20 +51,27 @@ public class ColourActions {
      * Create a menu contianing the list of Colour actions.
      * </p>
      * 
+     * <p>
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
+     * </p>
+     * 
      * @return The colour menu UI element.
      */
     public JMenu createMenu() {
         JMenu colourMenu = new JMenu("Colour");
 
-        for(Action action: actions) {
-            JMenuItem menu = new JMenuItem(action);
-
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,InputEvent.CTRL_DOWN_MASK));
-            colourMenu.add(menu);
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                colourMenu.add(menu);
+            }
         return colourMenu;
     }
 
@@ -136,11 +150,15 @@ public class ColourActions {
          * </p>
          * 
          * <p>
-         * This method is called whenever the BrightnessAction is triggered.
+         * This method is called whenever the {@code BrightnessAction} is triggered.
          * It prompts the user for the brightness and contrast percentage
          * they would like to change the image.
          * It then calls the {@link BrightnessContrast} class, providing the 
          * selected percentage values for changes in brightness and contrast.
+         * </p>
+         * 
+         * <p>
+         * It changes the contrast and brightness of the image
          * </p>
          * 
          * @param e The event triggering this callback.
@@ -149,17 +167,17 @@ public class ColourActions {
 
             //create a Jframe to ask the user the changes they would like
             JFrame frame = new JFrame();
-            frame.setLayout(new GridLayout(3,0));
+            frame.setLayout(new GridLayout(5,0));
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // close only the pop-up window 
 
             //brightness components
             JPanel brightPanel = new JPanel(); // panel with brightness buttons
             JLabel bLabel = new JLabel("Brightness Adjustment");
-            brightPanel.add(bLabel);
+            
             //create JradioButtons for percentage selection - brightness
             JRadioButton[] brightnessButtons = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
+           //brightness button listeners
             ActionListener brightListener = new ActionListener(){
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     AbstractButton a = (AbstractButton) e.getSource();
@@ -176,14 +194,15 @@ public class ColourActions {
                 brightPanel.add(j);//add to brightness panel
             }
 
+
             //contrast components
             JPanel contPanel = new JPanel(); //panel with contrast buttons
             JLabel cLabel = new JLabel("Contrast Adjustment");
-            contPanel.add(cLabel);
+            
             //create JradioButtons for percentage selection - contrast
             JRadioButton[] contrastButtons = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
+            //contrast button listeners
             ActionListener contListener = new ActionListener(){
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     AbstractButton a = (AbstractButton) e.getSource();
@@ -200,24 +219,23 @@ public class ColourActions {
                 contPanel.add(rb); // add to contrast panel
             }
 
-            //done button to confirm value selection
-            JButton close = new JButton("okay");
-            close.addActionListener(new ActionListener(){
 
+            //done button to confirm value selection
+            JButton close = new JButton("Done");
+            close.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
                     // call BrightnessContrast(int, int), with user selected percentages
                      target.getImage().apply(new BrightnessContrast(brightness, contrast)); 
                      target.repaint();
                      target.getParent().revalidate();
                      frame.dispose(); // close the pop-up
-                    
                 }
-
             });
-
+            //building the frame
+            frame.add(bLabel);
             frame.add(brightPanel);
+            frame.add(cLabel);
             frame.add(contPanel);
             frame.add(close);
             frame.setSize(300,200);

@@ -11,10 +11,13 @@ import java.awt.*;
  * </p>
  * 
  * <p>
- * The Edit menu is very common across a wide range of applications.
- * There are a lot of operations that a user might expect to see here.
- * In the sample code there are Undo and Redo actions, but more may need to be added.
+ * Edit actions include:
  * </p>
+ * 
+ * <ul>
+ * <li> {@link UndoAction} </li>
+ * <li> {@link RedoAction} </li>
+ * </ul>
  * 
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
@@ -44,22 +47,27 @@ public class EditActions {
      * Create a menu contianing the list of Edit actions.
      * </p>
      * 
+     * <p>
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
+     * </p>
+     * 
      * @return The edit menu UI element.
      */
     public JMenu createMenu() {
         JMenu editMenu = new JMenu("Edit");
 
-        for (Action action: actions) {
-
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
-            editMenu.add(menu);
-
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                JMenuItem menu = new JMenuItem(action);
+                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
+                //if shortcut is not null add shortcut
+                if(action.getValue("MnemonicKey") != null){
+                    int key = (int) action.getValue("MnemonicKey");
+                    char mn = (char) key;//shortcut key
+                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
+                }
+                editMenu.add(menu);
+            }
         return editMenu;
     }
 

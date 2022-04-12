@@ -3,7 +3,7 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.*;
+
 
 /**
  * <p>
@@ -13,9 +13,18 @@ import java.awt.*;
  * <p>
  * The Filter menu contains actions that update each pixel in an image based on
  * some small local neighbourhood.
- * This includes a mean filter (a simple blur) in the sample code, but more
- * operations will need to be added.
  * </p>
+ * 
+ * <p>
+ * Filter actions include:
+ * </p>
+ * 
+ * <ul>
+ * <li> {@link MeanFilter} </li>
+ * <li> {@link MedianFilter} </li>
+ * <li> {@link SharpenFilter} </li>
+ * <li> {@link GussianFilter} </li>
+ * </ul>
  * 
  * <p>
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA
@@ -37,18 +46,10 @@ public class FilterActions {
      */
     public FilterActions() {
         actions = new ArrayList<Action>();
-        actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", Integer.valueOf(KeyEvent.VK_M)));
-
-        actions.add(
-                new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter",
-                        Integer.valueOf(KeyEvent.VK_G)));
-
-        actions.add(
-                new MedianFilterAction("Median filter", null, "Apply a median filter", Integer.valueOf(KeyEvent.VK_N)));
-
-        actions.add(
-                new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter",
-                        Integer.valueOf(KeyEvent.VK_P)));
+        actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", null));
+        actions.add(new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter", null));
+        actions.add(new MedianFilterAction("Median filter", null, "Apply a median filter", null));
+        actions.add(new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", null));
     }
 
     /**
@@ -60,16 +61,10 @@ public class FilterActions {
      */
     public JMenu createMenu() {
         JMenu filterMenu = new JMenu("Filter");
-
-        for (Action action : actions) {
-            JMenuItem menu = new JMenuItem(action);
-            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            int i = (int) action.getValue("MnemonicKey");
-            char mn = (char) i;
-            menu.setAccelerator(KeyStroke.getKeyStroke(mn, menuKey));
-            filterMenu.add(menu);
-        }
-
+        //for(Action action: actions){
+            for(Action action : actions){
+                filterMenu.add(new JMenuItem(action));
+            }
         return filterMenu;
     }
 
@@ -134,11 +129,18 @@ public class FilterActions {
         }
     }
 
+    /**
+     * <p>
+     * Action to blur an image with a gaussian filter.
+     * </p>
+     * 
+     * @see GussianFilter
+     */
     public class GussianFilterAction extends ImageAction {
 
         /**
          * <p>
-         * Create a new mean-filter action.
+         * Create a new gaussian-filter action.
          * </p>
          * 
          * @param name     The name of the action (ignored if null).
@@ -152,13 +154,13 @@ public class FilterActions {
 
         /**
          * <p>
-         * Callback for when the convert-to-grey action is triggered.
+         * Callback for when the gaussian-filter action is triggered.
          * </p>
          * 
          * <p>
-         * This method is called whenever the MeanFilterAction is triggered.
+         * This method is called whenever the GaussianFilterAction is triggered.
          * It prompts the user for a filter radius, then applys an appropriately sized
-         * {@link MeanFilter}.
+         * {@link GussianFilter}.
          * </p>
          * 
          * @param e The event triggering this callback.
@@ -189,6 +191,13 @@ public class FilterActions {
 
     }
 
+    /**
+     * <p>
+     * Action to blur an image with a median filter.
+     * </p>
+     * 
+     * @see MedianFilter
+     */
     public class MedianFilterAction extends ImageAction {
 
         /**
@@ -207,13 +216,13 @@ public class FilterActions {
 
         /**
          * <p>
-         * Callback for when the convert-to-grey action is triggered.
+         * Callback for when the median action is triggered.
          * </p>
          * 
          * <p>
-         * This method is called whenever the MeanFilterAction is triggered.
+         * This method is called whenever the MedianFilterAction is triggered.
          * It prompts the user for a filter radius, then applys an appropriately sized
-         * {@link MeanFilter}.
+         * {@link MedianFilter}.
          * </p>
          * 
          * @param e The event triggering this callback.
@@ -244,11 +253,18 @@ public class FilterActions {
 
     }
 
+    /**
+     * <p>
+     * Action to sharpen an image with a sharpen filter.
+     * </p>
+     * 
+     * @see SharpenFilter
+     */
     public class SharpenFilterAction extends ImageAction {
 
         /**
          * <p>
-         * Create a new median-filter action.
+         * Create a new sharpen-filter action.
          * </p>
          * 
          * @param name     The name of the action (ignored if null).
@@ -262,13 +278,12 @@ public class FilterActions {
 
         /**
          * <p>
-         * Callback for when the convert-to-grey action is triggered.
+         * Callback for when the sharpen-filter action is triggered.
          * </p>
          * 
          * <p>
-         * This method is called whenever the MeanFilterAction is triggered.
-         * It prompts the user for a filter radius, then applys an appropriately sized
-         * {@link MeanFilter}.
+         * This method is called whenever the SharpenFilterAction is triggered.
+         * It applys an appropriately sized {@link SharpenFilter}.
          * </p>
          * 
          * @param e The event triggering this callback.
