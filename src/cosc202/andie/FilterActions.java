@@ -23,7 +23,7 @@ import javax.swing.*;
  * <li> {@link MeanFilter} </li>
  * <li> {@link MedianFilter} </li>
  * <li> {@link SharpenFilter} </li>
- * <li> {@link GussianFilter} </li>
+ * <li> {@link GaussianFilter} </li>
  * </ul>
  * 
  * <p>
@@ -47,7 +47,7 @@ public class FilterActions {
     public FilterActions() {
         actions = new ArrayList<Action>();
         actions.add(new MeanFilterAction("Mean filter", null, "Apply a mean filter", null));
-        actions.add(new GussianFilterAction("Gussian filter", null, "Apply a Gussian filter", null));
+        actions.add(new GaussianFilterAction("Gaussian filter", null, "Apply a Gaussian filter", null));
         actions.add(new MedianFilterAction("Median filter", null, "Apply a median filter", null));
         actions.add(new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", null));
     }
@@ -134,9 +134,9 @@ public class FilterActions {
      * Action to blur an image with a gaussian filter.
      * </p>
      * 
-     * @see GussianFilter
+     * @see GaussianFilter
      */
-    public class GussianFilterAction extends ImageAction {
+    public class GaussianFilterAction extends ImageAction {
 
         /**
          * <p>
@@ -148,7 +148,7 @@ public class FilterActions {
          * @param desc     A brief description of the action (ignored if null).
          * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
-        GussianFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        GaussianFilterAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
         }
 
@@ -160,7 +160,7 @@ public class FilterActions {
          * <p>
          * This method is called whenever the GaussianFilterAction is triggered.
          * It prompts the user for a filter radius, then applys an appropriately sized
-         * {@link GussianFilter}.
+         * {@link GaussianFilter}.
          * </p>
          * 
          * @param e The event triggering this callback.
@@ -184,7 +184,7 @@ public class FilterActions {
             }
 
             // Create and apply the filter
-            target.getImage().apply(new GussianFilter(radius));
+            target.getImage().apply(new GaussianFilter(radius));
             target.repaint();
             target.getParent().revalidate();
         }

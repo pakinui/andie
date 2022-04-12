@@ -16,7 +16,7 @@ import javax.swing.*;
      */
 
 
-public class GussianFilter implements ImageOperation, java.io.Serializable {
+public class GaussianFilter implements ImageOperation, java.io.Serializable {
     int radius;
     double rad;
     double value = 0.0;
@@ -30,7 +30,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
     int size; // number of elements in kernel
     int length; // length of edges
 
-    GussianFilter(int radius) {
+    GaussianFilter(int radius) {
         this.radius = radius;
         rad = (double) radius; // use a double for radius so it works in the equations with doubles an floats
         variance = (rad/3);
@@ -39,7 +39,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
     }//determines the radius for the filter
 
    //this creates the equation which takes three variables
-    public float GussianEqaution(int x, int y, double variance) {
+    public float GaussianEqaution(int x, int y, double variance) {
 
         // double one = (1 / (2 * Math.PI * Math.pow(variance, 2))); // part1
         // System.out.println("one: " + one);
@@ -79,7 +79,7 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
                 if(i < 0) iMid = i*-1;
                 if(ii < 0) iiMid = ii*-1;
                // System.out.println("iP: " + iMid + " | iiP: " + iiMid);
-                arr[index] = GussianEqaution(iMid, iiMid, variance); 
+                arr[index] = GaussianEqaution(iMid, iiMid, variance); 
                 //System.out.println("arr: " + arr[index]);
                 index++;
             }
@@ -108,11 +108,11 @@ public class GussianFilter implements ImageOperation, java.io.Serializable {
 
         // /*
         //  * Creating a for loop that goes through the 2d float and adds the
-        //  * GussianEquation to each x,y point on the kernal.
+        //  * GaussianEquation to each x,y point on the kernal.
         //  */
         // for (int y = 0; y < matrix.length; y++) {
         //     for (int x = 0; x < matrix[y].length; x++) {
-        //         matrix[y][x] = GussianEqaution(xmiddle + x - matrix.length / 2, ymiddle + y - matrix.length / 2,
+        //         matrix[y][x] = GaussianEqaution(xmiddle + x - matrix.length / 2, ymiddle + y - matrix.length / 2,
         //                 variance);
         //     }
 
