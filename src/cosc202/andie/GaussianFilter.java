@@ -91,7 +91,7 @@ import java.awt.image.*;
         /**
          * <p>
          * A method to fill an array of floats with the new Gaussian values
-         * caluculated in the {@link #GaussianEquation} method.
+         * caluculated in the {@link #gaussianEquation} method.
          * </p>
          * 
          * <p>

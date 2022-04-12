@@ -123,7 +123,6 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
-         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
            
@@ -185,7 +184,6 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
-         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
             try {
@@ -231,7 +229,6 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
-         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
@@ -342,7 +339,6 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
-         * @throws Exception if something goes wrong
          */
         @Override
         public void actionPerformed(ActionEvent e) {
