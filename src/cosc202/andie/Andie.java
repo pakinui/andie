@@ -2,9 +2,6 @@ package cosc202.andie;
 
 import java.io.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.imageio.*;
 
@@ -50,6 +47,7 @@ public class Andie {
      * @see ViewActions
      * @see FilterActions
      * @see ColourActions
+     * @see TransformActions
      * 
      * @throws Exception if something goes wrong.
      */
@@ -113,12 +111,6 @@ public class Andie {
         undoButton.addActionListener(editActions.actions.get(0));
         toolBar.add(undoButton);
 
-        //undoButton.setMnemonic(Integer.valueOf(KeyEvent.VK_Z));
-        //undoButton.setDisplayedMnemonicIndex(0);
-
-        //KeyStroke undoKey = KeyStroke.getKeyStroke('Z');
-        //undoKey.addActionListener(editActions.actions.get(0));
-
         // redo Button
         JButton redoButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/redoIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         redoButton.addActionListener(editActions.actions.get(1));
@@ -135,13 +127,11 @@ public class Andie {
         toolBar.add(vFlipButton);
 
         //right rotate button
-        //need to change icon
         JButton rightButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         rightButton.addActionListener(transformActions.actions.get(3));
         toolBar.add(rightButton);
 
         //left rotate button
-        //need to change icon
         JButton leftButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         leftButton.addActionListener(transformActions.actions.get(4));
         toolBar.add(leftButton);

@@ -66,12 +66,12 @@ public class Flip implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * Flip an image.
+     * Flips an image.
      * </p>
      * 
      * <p>
-     * The {@code direction} of the flip is determined by the constructors.
-     * The appropriate flip will be applied.
+     * The {@code direction} of the flip is determined by the constructors 
+     * and the appropriate flip will be applied.
      * </p>
      * 
      * <p>

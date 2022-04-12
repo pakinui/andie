@@ -123,14 +123,15 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
+         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
            
             FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("JPEG, JPG & PNG images","jpeg", "png", "jpg");
             JFileChooser fileChooser = new JFileChooser(){};
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // only access files
 
-            fileChooser.addChoosableFileFilter(fileFilter);
+            fileChooser.addChoosableFileFilter(fileFilter); //only see/access/open jpg, jpeg and png images
             fileChooser.setAcceptAllFileFilterUsed(false);
             int result = fileChooser.showOpenDialog(target);
 
@@ -184,6 +185,7 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
+         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
             try {
@@ -229,6 +231,7 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
+         * @throws Exception if something goes wrong
          */
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
@@ -328,8 +331,6 @@ public class FileActions {
             super(name, icon, desc, mnemonic);
         }
 
-
-
          /**
          * <p>
          * Callback for when the file-export-image action is triggered.
@@ -341,12 +342,12 @@ public class FileActions {
          * </p>
          * 
          * @param e The event triggering this callback.
+         * @throws Exception if something goes wrong
          */
         @Override
         public void actionPerformed(ActionEvent e) {
 
             JFileChooser fileChooser = new JFileChooser();
-
 
             int result = fileChooser.showSaveDialog(target);
             EditableImage editImage =  target.getImage();
@@ -355,21 +356,17 @@ public class FileActions {
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     String imageFilepath = fileChooser.getSelectedFile().getCanonicalPath();
-
+                    //if used didnt add a file type extension when saving the image
                     if(!imageFilepath.contains(".png") || imageFilepath.contains(".jpg")){
-                        imageFilepath = imageFilepath + (".png");
+                        imageFilepath = imageFilepath + (".png"); //add '.png' to imageFilePath so it will be saved as a png
                     }
                     file = new File(imageFilepath);
-                    ImageIO.write(finalImage, "png", file);
+                    ImageIO.write(finalImage, "png", file); //write the image to be exported
                     
                 } catch (Exception ex) {
                     System.exit(1);
                 }
             }
-            
-        }
-        
+        }  
     }
-
-
 }

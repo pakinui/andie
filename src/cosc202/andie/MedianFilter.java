@@ -116,20 +116,19 @@ public class MedianFilter implements ImageOperation, java.io.Serializable {
                         kernelIdx++;                      
                     }
                 }
-                kernelIdx = 0;
-
+                kernelIdx = 0; //set to 0 for each new kernel
+                //finding the median RGBA value in the array
                 Arrays.sort(aValues);
                 Arrays.sort(rValues);
                 Arrays.sort(gValues);
                 Arrays.sort(bValues);
-
+                //new colour with median RGBA values
                 Color newCol = new Color(rValues[middle], gValues[middle], bValues[middle], aValues[middle]);
                 input.setRGB(x,y, newCol.getRGB());
             }  
         }       
         return input;
     }
-
 }
 
 

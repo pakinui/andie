@@ -3,15 +3,21 @@ package cosc202.andie;
 import java.awt.image.*;
 import java.awt.*;
 
- /**
+    /**
+     * <p>
+     * ImageOperation to change the size of an image.
+     * </p>
+     * 
+     * <p>
      * Method to resize the image by a scale factor (integer {@code scale} value) 
      * given by the user in the transform menu (percentage). Users can use this operation 
      * to edit the image to be smaller or larger. Implements {@link ImageOperation} 
      * to apply the operation to the image. The edited image is them applied using the 
      * {@link BufferedImage} class. 
-     * @param input image being resized
+     * </p>
+     * 
      * @author Pippi Priestley King
-     * @return scaled image
+     * @version 1.0
      */
 
 

@@ -6,13 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This is the class for the actions provided in the transform menu. Uses {@link Jpanel} to implement 
- * the buttons. As well as {@link JSlider} and {@link JFrame}.
- * View menu contains actions that change the how the image is displayed, and
- * the contents of the image. All rotate and resize operations contained in this menu to improve accessbility and 
- * create a clean interface for the user. 
- * @author Pippi 
+ * <p>
  * Actions provided by the Transform menu.
+ * </p>
+ * 
+ * <p>
+ * The Transform menu contains actions that change the how the image is displayed, 
+ * and the contents of the image.
+ * </p>
  * 
  * <p>
  * Transform actions include:
@@ -302,15 +303,12 @@ public class TransformActions {
      * @see Resize
      */
     public class Scale extends ImageAction {
-// Scale button
+
         /**
-<<<<<<< HEAD
-=======
          * <p>
          * Create a resize action.
          * </p>
          * 
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
          * @param name name of action(if ignored, null)
          * @param icon an icon to rep the action (if ignored, null)
          * @param desc brief desc of ation (if ignored, null)
@@ -361,9 +359,6 @@ public class TransformActions {
         }
     }
     
-<<<<<<< HEAD
-    //Rotate button
-=======
     /**
      * <p>
      * Action to rotate an image 180 degrees.
@@ -371,7 +366,6 @@ public class TransformActions {
      * 
      * @see Rotate#RotateFull
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class RotateFull extends ImageAction{
         /**
          * <p>
@@ -411,9 +405,6 @@ public class TransformActions {
         }
     }
 
-<<<<<<< HEAD
-    //Right rotate button
-=======
     /**
      * <p>
      * Action to rotate an image right 90 degrees.
@@ -421,7 +412,6 @@ public class TransformActions {
      * 
      * @see Rotate#RotateRight
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class RotateRight extends ImageAction{
 
         /**
@@ -514,9 +504,6 @@ public class TransformActions {
         
     }
 
-<<<<<<< HEAD
-    // Horizontal flip button
-=======
     /**
      * <p>
      * Action to flip an image horizontally.
@@ -524,7 +511,6 @@ public class TransformActions {
      * 
      * @see Flip
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class FlipHorizontal extends ImageAction{
         /**
          * <p>
@@ -566,9 +552,6 @@ public class TransformActions {
         }
     }
 
-<<<<<<< HEAD
-    //Vertical button
-=======
     /**
      * <p>
      * Action to flip an image vertically.
@@ -576,7 +559,6 @@ public class TransformActions {
      * 
      * @see Flip
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class FlipVertical extends ImageAction{
 
         /**

@@ -3,14 +3,19 @@ package cosc202.andie;
 import java.awt.image.BufferedImage;
 
 /**
-     * Rotate operation allows user to rotate the image 90, 180 or 270 degrees 
-     * determined by the number they select (integer {@code direction}) in the transform menu. This class uses
-     *  {@link ImageOperation} to apply the operation to the input image. 
-     * @param input image being rotated
-     * @author  Poppy
-     * @return rotated image
-     */
-
+ * <p>
+ * ImageOperation to rotate an image.
+ * </p>
+ * 
+ * <p>
+ * Rotate operation allows user to rotate the image 90, 180 or 270 degrees 
+ * determined by the number they select (integer {@code direction}) in the transform menu. This class uses
+ *  {@link ImageOperation} to apply the operation to the input image. 
+ * </p>
+ * 
+ * @author Jamie Rule
+ * @version 1.0
+ */
 
 public class Rotate implements ImageOperation, java.io.Serializable{
 
@@ -34,7 +39,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             direction = '3';
         }else{
             // make this do something
-            System.out.println("error2");
+            System.out.println("error");
         }
     }
 
