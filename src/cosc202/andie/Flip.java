@@ -20,9 +20,14 @@ import javax.swing.*;
 public class Flip implements ImageOperation, java.io.Serializable{
 
     /**
+     * <p>
      * A char to represent the direction to flip.
-     * 'H' = Horizontal Flip.
-     * 'V' = Vertical Flip.
+     * </p>
+     * 
+     * <ul>
+     * <li>'H' = Horizontal Flip.</li>
+     * <li>'V' = Vertical Flip.</li>
+     * </ul>
      */
     char direction;
 
@@ -34,11 +39,9 @@ public class Flip implements ImageOperation, java.io.Serializable{
      * @see #Flip(char)
      */
     Flip(){
-        try{
+        
         direction = 'H';
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Please open Image first");
-        }
+        
     }
 
     /**
@@ -58,7 +61,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
      * @see #Flip()
      */
     Flip(char c){
-    try{  
+      
         if(Character.toUpperCase(c) == 'H'){ 
             direction = 'H'; // if c is 'H' set it to the direction.
         }else if(Character.toUpperCase(c) == 'V'){
@@ -66,9 +69,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
         }else{
             direction = 'H'; // if there is an error set the direction the the default 'H'
         }
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
+    
     }
 
     /**
@@ -139,7 +140,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
             }
         }
     }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
+        JOptionPane.showMessageDialog(null, "Please open an image first");
     }
         return input;
     }

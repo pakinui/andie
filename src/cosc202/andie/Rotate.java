@@ -20,16 +20,36 @@ import java.awt.image.BufferedImage;
 
 public class Rotate implements ImageOperation, java.io.Serializable{
 
+    /**
+     * <p>
+     * The direction . . .
+     * </p>
+     * 
+     * <ul>
+     * <li>'1' = right 90 degree rotation ({@link #RotateRight}).</li>
+     * <li>'2' = left 90 degree rotation ({@link #RotateLeft}).</li>
+     * <li>'3' = full 180 degree rotation ({@link #RotateFull}).</li>
+     * </ul>
+     */
     char direction;
-    // 1 = right90
-    // 2 = left 90
-    // 3 = 180
 
+
+    /**
+     * <p>
+     * . . .
+     * </p>
+     */
     Rotate(){
         
         direction = '1';
     }
-
+    /**
+     * <p>
+     * . . . 
+     * </p>
+     * 
+     * @param c
+     */
     Rotate(char c){
 
         if(Character.compare(c, '1') == 0){
@@ -39,27 +59,47 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         }else if(Character.compare(c, '3') == 0){
             direction = '3';
         }else{
-            // make this do something
-            System.out.println("error");
+            System.out.println("error, please try again");
         }
     }
 
+    /**
+     * <p>
+     * . . . 
+     * </p>
+     * @param input 
+     * @return
+     */
     @Override
     public BufferedImage apply(BufferedImage input) {
+        try{
         
         if(direction == '1')  return RotateRight(input);
         if(direction == '2')  return RotateLeft(input);
         if(direction == '3')  return RotateFull(input);
         
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open an image first");
+    }
         return input;
     }
 
-    BufferedImage RotateFull(BufferedImage input){
+    /**
+     * <p>
+     * . . .
+     * </p>
+     * 
+     * @param input
+     * @return
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateFull(BufferedImage input) throws NullPointerException{
+
 
         int pixel;
         int height = input.getHeight()-1;
         int width = input.getWidth()-1;
-    try{
+    
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y < height; y++){
             int a = input.getRGB(x,y);
@@ -71,13 +111,20 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
        
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
     return input;
     }
 
-    BufferedImage RotateLeft(BufferedImage input){
+    /**
+     * <p>
+     * . . .
+     * </p>
+     * 
+     * @param input
+     * @return
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateLeft(BufferedImage input) throws NullPointerException{
+
 
         int pixel;
         int pixel2;
@@ -85,7 +132,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         int width = input.getHeight()-1;
 
         //Same as RotateRight but locations are reversed
-        try{
+        
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -112,20 +159,26 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
         
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
+
     return input;
     }
 
-
-    BufferedImage RotateRight(BufferedImage input){
+    /**
+     * <p>
+     * . . .
+     * </p>
+     * 
+     * @param input
+     * @return
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateRight(BufferedImage input) throws NullPointerException{
 
         int pixel;
         int pixel2;
         int height = input.getWidth()-1;
         int width = input.getHeight()-1;
-        try{
+        
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -152,13 +205,8 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
         
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
     return input;
     }
-
-
-    
+  
 }
 

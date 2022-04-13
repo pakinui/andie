@@ -10,7 +10,7 @@
  - [Sharpen filter](#sharpen-filter)
  - [Gaussian Blur filter](#gaussian-blur-filter)
  - [Median filter](#median-filter)
- - [Brightness and Contrast adjustment](#brightness-and-Contrast-adjustment)
+ - [Brightness and Contrast adjustment](#brightness-and-contrast-adjustment)
  - [Image resize](#image-resize)
  - [Image rotations](#image-rotations)
  - [Image flip](#image-flip)
@@ -206,6 +206,6 @@ Errors fixed:
 - Ensured that all images exported would be saved as either a JPG, JPEG or PNG image file.
 - 
 Exceptions handled:
-- 
+- Added try .. catch blocks around any code that was trying to work on an unopened image. (NullPointerException)
 
 ---
