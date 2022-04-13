@@ -136,13 +136,13 @@ public class Andie {
 
         //right rotate button
         //need to change icon
-        JButton rightButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        JButton rightButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/rotateRightIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         rightButton.addActionListener(transformActions.actions.get(3));
         toolBar.add(rightButton);
 
         //left rotate button
         //need to change icon
-        JButton leftButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/verticalIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+        JButton leftButton = new JButton(new ImageIcon((new ImageIcon("src/TBicons/rotateLeftIcon.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
         leftButton.addActionListener(transformActions.actions.get(4));
         toolBar.add(leftButton);
 

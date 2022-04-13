@@ -48,6 +48,18 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         return input;
     }
 
+    /**
+     * <p>
+     * Method to rotate an image 180 degrees
+     * A nested loop goes through the top half of the image switching the pixels from the other corner of the image
+     * The result is the returned image looking as it has being rotated 180 degrees
+     * </p>
+     * 
+     * @param input The image being roated
+     * @return input the rotated image
+     * @throws NullPointerException if input is null
+     */
+
     BufferedImage RotateFull(BufferedImage input){
 
         int pixel;
@@ -68,6 +80,18 @@ public class Rotate implements ImageOperation, java.io.Serializable{
 
     }
 
+    /**
+     * <p>
+     * Method to rotate an image 90 degrees to the left
+     * A nested loop goes with half the width and height spilts the image into 4 sections
+     * The loop then moves one pixel from each of these sections into the one on the left of it
+     * The result is returned the image looking as it has being rotated 90 degrees to the left
+     * </p>
+     * 
+     * @param input The image being roated
+     * @return input the rotated image
+     * @throws NullPointerException if input is null
+     */
     BufferedImage RotateLeft(BufferedImage input){
 
         int pixel;
@@ -106,6 +130,18 @@ public class Rotate implements ImageOperation, java.io.Serializable{
     }
 
 
+    /**
+     * <p>
+     * Method to rotate an image 90 degrees to the right
+     * A nested loop goes with half the width and height spilts the image into 4 sections
+     * The loop then moves one pixel from each of these sections into the one on the right of it
+     * The result is returned the image looking as it has being rotated 90 degrees to the right
+     * </p>
+     * 
+     * @param input The image being roated
+     * @return input the rotated image
+     * @throws NullPointerException if input is null
+     */
     BufferedImage RotateRight(BufferedImage input){
 
         int pixel;

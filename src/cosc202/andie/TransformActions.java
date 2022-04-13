@@ -304,13 +304,10 @@ public class TransformActions {
     public class Scale extends ImageAction {
 // Scale button
         /**
-<<<<<<< HEAD
-=======
          * <p>
          * Create a resize action.
          * </p>
          * 
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
          * @param name name of action(if ignored, null)
          * @param icon an icon to rep the action (if ignored, null)
          * @param desc brief desc of ation (if ignored, null)
@@ -361,9 +358,6 @@ public class TransformActions {
         }
     }
     
-<<<<<<< HEAD
-    //Rotate button
-=======
     /**
      * <p>
      * Action to rotate an image 180 degrees.
@@ -371,7 +365,6 @@ public class TransformActions {
      * 
      * @see Rotate#RotateFull
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class RotateFull extends ImageAction{
         /**
          * <p>
@@ -411,9 +404,6 @@ public class TransformActions {
         }
     }
 
-<<<<<<< HEAD
-    //Right rotate button
-=======
     /**
      * <p>
      * Action to rotate an image right 90 degrees.
@@ -421,7 +411,6 @@ public class TransformActions {
      * 
      * @see Rotate#RotateRight
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class RotateRight extends ImageAction{
 
         /**
@@ -514,9 +503,6 @@ public class TransformActions {
         
     }
 
-<<<<<<< HEAD
-    // Horizontal flip button
-=======
     /**
      * <p>
      * Action to flip an image horizontally.
@@ -524,7 +510,6 @@ public class TransformActions {
      * 
      * @see Flip
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class FlipHorizontal extends ImageAction{
         /**
          * <p>
@@ -566,9 +551,6 @@ public class TransformActions {
         }
     }
 
-<<<<<<< HEAD
-    //Vertical button
-=======
     /**
      * <p>
      * Action to flip an image vertically.
@@ -576,7 +558,6 @@ public class TransformActions {
      * 
      * @see Flip
      */
->>>>>>> 5d535287da47327794fdd5bc8461ee4060f7d8a8
     public class FlipVertical extends ImageAction{
 
         /**
