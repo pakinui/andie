@@ -28,12 +28,10 @@ public class SharpenFilter implements ImageOperation, java.io.Serializable {
      * using the source and destination, and then returns the output. There is also
      * an catch if there is no image
      * open and youre trying to preform Sharpen.
-     * 
-     * 
      * </p>
      * 
-     * @param input . . .
-     * @return . . .
+     * @param input Image to be too sharpen filter.
+     * @return Sharpened Image.
      */
     @Override
     public BufferedImage apply(BufferedImage input) {
