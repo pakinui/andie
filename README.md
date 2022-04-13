@@ -88,12 +88,14 @@ Tested on different shaped images (ie. square/rectangular) to make sure scaling 
 ### Contributors:
 - Jamie Rule
 ### Accessible via:
-- 
+- Transform menu(Rotate)
+- Keyboard shortcut ‘Ctrl’(Windows) / ‘COMMAND’(macOS) + ‘R’ for the rotate pop-up window
+- ToolBar contains rotate left and rotate right buttons
 ### Testing
-
+Testing on images to see if the rotations went the right way and did not mess up any pixel. 180 degree works for square and rectangle images but 90 degree rotates did not work for rectangle images.
 
 ### Issues:
-- 
+- 90 degree rotates at this time still do not work for rectangle images
 ---
 ## Image flip
 ### Contributors:
@@ -153,8 +155,11 @@ We used Javadoc comments with appropriate tags to create useful documentation fo
 ## Toolbar for common operations
 ### Contributors:
 - Jamie Rule
-### Testing
 
+### Accessible via:
+- The toolbar is always accessible sitting right under the menu bar.
+### Testing
+Testing involved making sure the jbuttons did the right task and that the icon matched up with the correct button. Also asking people not doing the paper if they could understand what the button did from the icon.
 
 ### Issues:
 - No known issues
@@ -164,6 +169,8 @@ We used Javadoc comments with appropriate tags to create useful documentation fo
 - Poppy Schlaadt
 - Mahfuz Bin Abdul Razak
 
+### Accessible via:
+- Any time the ANDIE application is open the keyboard shortcuts are able to be used.
 ### Testing
 The shortcuts use no formal testing framework, however, tests were run to make sure that the shortcuts worked on both Windows and macOS. All shortcuts were tested to ensure all shortcuts had unique keys. Tests were run to make sure only the shortcuts that had been created worked and if random keys were pressed nothing happened.
 
@@ -192,9 +199,12 @@ We felt that these keyboard shortcuts provided enough flexibility increase the s
 For the toolbar . . .
 
 ---
-### Exception handling
-. . .
+### Exception handling and Exception avoidance
+Errors fixed:
+- Made only JPG, JPEG and PNG files visible and accessible when in JFileChooser.
+- Ensured that all images exported would be saved as either a JPG, JPEG or PNG image file.
+- 
+Exceptions handled:
+- 
 
 ---
-### Error avoidance
-. . . 
