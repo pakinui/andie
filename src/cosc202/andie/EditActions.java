@@ -66,7 +66,8 @@ public class EditActions {
                     int key = (int) action.getValue("MnemonicKey");
                     char mn = (char) key;//shortcut key
                     menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
-                }editMenu.add(menu);
+                }
+                editMenu.add(menu);
             }catch(Exception e){
                 JOptionPane.showMessageDialog(null, "Please Open an Image");
             }

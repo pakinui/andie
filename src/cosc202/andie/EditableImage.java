@@ -232,12 +232,16 @@ class EditableImage {
      * </p>
      */
     public void undo() {
+        if(current == null){
+            JOptionPane.showMessageDialog(null, "Please open Image first");
+        }else{
         if(ops.empty()){
             JOptionPane.showMessageDialog(null, "Nothing to undo");
         }else{
             redoOps.push(ops.pop());
-         refresh();   
+         refresh(); 
         }
+    }
     }
 
     /**
@@ -246,11 +250,15 @@ class EditableImage {
      * </p>
      */
     public void redo()  {
+        if(current == null){
+            JOptionPane.showMessageDialog(null, "Please open Image first");
+        }else{
         if(redoOps.empty()){
             JOptionPane.showMessageDialog(null, "Nothing to redo");
         }else{
             apply(redoOps.pop());   
         }  
+    }
     }
 
     /**
