@@ -134,6 +134,7 @@ There was no formal testing framework for exception handling, we worked on excep
 - Preventing the retainment of previous operations when opening a new image
 - Preventing Gaussian and Median Filters from being applied when the dialogue box is closed
 - Preventing Undo/Redo functions from operating when there nothing to Undo/Redo
+- Prevent the use of functions such as undo/redo,flip,rotate or any shortcuts to be performed before an image is opened
 
 ### Issues:
 - No known issues
