@@ -204,8 +204,11 @@ For the toolbar . . .
 Errors fixed:
 - Made only JPG, JPEG and PNG files visible and accessible when in JFileChooser.
 - Ensured that all images exported would be saved as either a JPG, JPEG or PNG image file.
-- 
+- Preventing Undo/Redo functions from operating when there nothing to Undo/Redo
+- Preventing Gaussian and Median Filters from being applied when the dialogue box is closed
 Exceptions handled:
-- 
+- Prevention of incorrect formatted files from being opened by the application
+- Preventing the retainment of previous operations when opening a new image
+- Prevent the use of functions such as undo/redo,flip,rotate if no image is present
 
 ---
