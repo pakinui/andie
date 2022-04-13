@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -58,7 +59,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         int pixel;
         int height = input.getHeight()-1;
         int width = input.getWidth()-1;
-
+    try{
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y < height; y++){
             int a = input.getRGB(x,y);
@@ -69,8 +70,11 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             input.setRGB(width-x, height-y, pixel);
             }
         }
-        return input;
-
+       
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open Image first");
+    }
+    return input;
     }
 
     BufferedImage RotateLeft(BufferedImage input){
@@ -81,6 +85,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         int width = input.getHeight()-1;
 
         //Same as RotateRight but locations are reversed
+        try{
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -106,8 +111,11 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             input.setRGB(y,x, pixel);
             }
         }
-        return input;
-
+        
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open Image first");
+    }
+    return input;
     }
 
 
@@ -117,7 +125,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         int pixel2;
         int height = input.getWidth()-1;
         int width = input.getHeight()-1;
-
+        try{
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -143,8 +151,11 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             input.setRGB(x,y, pixel);
             }
         }
-        return input;
-
+        
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open Image first");
+    }
+    return input;
     }
 
 

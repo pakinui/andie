@@ -90,6 +90,9 @@ public class ImagePanel extends JPanel {
      * @param zoomPercent The new zoom level as a percentage.
      */
     public void setZoom(double zoomPercent) {
+        if(!image.hasImage()){
+            JOptionPane.showMessageDialog(null, "Please open Image first");
+        }else{
         if (zoomPercent < 50) {
             zoomPercent = 50;
         }
@@ -97,6 +100,7 @@ public class ImagePanel extends JPanel {
             zoomPercent = 200;
         }
         scale = zoomPercent / 100;
+    }
     }
 
 

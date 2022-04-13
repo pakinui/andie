@@ -1,7 +1,7 @@
 package cosc202.andie;
 
 import java.awt.image.BufferedImage;
-
+import javax.swing.*;
 /**
  * <p>
  * ImageOperation to flip an image vertically or horizontally.
@@ -34,7 +34,11 @@ public class Flip implements ImageOperation, java.io.Serializable{
      * @see #Flip(char)
      */
     Flip(){
+        try{
         direction = 'H';
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Please open Image first");
+        }
     }
 
     /**
@@ -54,7 +58,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
      * @see #Flip()
      */
     Flip(char c){
-        
+    try{  
         if(Character.toUpperCase(c) == 'H'){ 
             direction = 'H'; // if c is 'H' set it to the direction.
         }else if(Character.toUpperCase(c) == 'V'){
@@ -62,6 +66,9 @@ public class Flip implements ImageOperation, java.io.Serializable{
         }else{
             direction = 'H'; // if there is an error set the direction the the default 'H'
         }
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open Image first");
+    }
     }
 
     /**
@@ -95,7 +102,7 @@ public class Flip implements ImageOperation, java.io.Serializable{
      */
     @Override
     public BufferedImage apply(BufferedImage input) {
-
+    try{
         if(direction == 'H'){ // horizontal flip
             
             int pixel_hold; // temporary pixel
@@ -131,6 +138,9 @@ public class Flip implements ImageOperation, java.io.Serializable{
                 }
             }
         }
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open Image first");
+    }
         return input;
     }
 

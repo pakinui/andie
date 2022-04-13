@@ -77,7 +77,7 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
      * @param input The image to apply the Mean filter to.
      * @return The resulting (blurred)) image.
      */
-    public BufferedImage apply(BufferedImage input) {
+    public BufferedImage apply(BufferedImage input){
         int size = (2 * radius + 1) * (2 * radius + 1);
         float[] array = new float[size];
         Arrays.fill(array, 1.0f / size);
