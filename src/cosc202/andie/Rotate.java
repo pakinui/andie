@@ -22,7 +22,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * The direction . . .
+     * The direction is a char to represent the input which determines the rotate being applied.
      * </p>
      * 
      * <ul>
@@ -36,7 +36,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * . . .
+     * Rotate the image in the default(Right)
      * </p>
      */
     Rotate(){
@@ -45,10 +45,20 @@ public class Rotate implements ImageOperation, java.io.Serializable{
     }
     /**
      * <p>
-     * . . . 
+     * Rotate the image in a given direction
      * </p>
      * 
-     * @param c
+     * <p>
+     * The {@code direction} is provided by the user.
+     * </p>
+     * <ul>
+     * <li>'1' for 90 degrees right</li>
+     * <li>'2' for 90 degrees left</li>
+     * <li>'3' for 180 degrees</li>
+     * </ul>
+     *
+     * 
+     * @param c the char representng the rotate direction being used.
      */
     Rotate(char c){
 
@@ -65,10 +75,13 @@ public class Rotate implements ImageOperation, java.io.Serializable{
 
     /**
      * <p>
-     * . . . 
+     * Rotates an image.
+     * The {@code direction} of the rotate is determined by the constructors 
+     * and the appropriate rotate will be applied.
      * </p>
-     * @param input 
-     * @return
+     *
+     * @param input The image to be rotated
+     * @return The rotated image
      */
     @Override
     public BufferedImage apply(BufferedImage input) {
