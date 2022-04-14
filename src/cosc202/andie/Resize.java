@@ -26,7 +26,7 @@ public class Resize implements ImageOperation, java.io.Serializable {
 
     /**
      * <p>
-     * . . .
+     * This is the scale variable declaration entered by the user in the transform menu. 
      * </p>
      */
     int scale;
@@ -36,7 +36,7 @@ public class Resize implements ImageOperation, java.io.Serializable {
      * . . . 
      * </p>
      * 
-     * @param scale . . .
+     * @param scale sets the scale to be called in the method. 
      */
     Resize(int scale){
        this.scale = scale;
@@ -44,11 +44,13 @@ public class Resize implements ImageOperation, java.io.Serializable {
    
     /**
      * <p>
-     * . . . 
+     * This is the buffered image method where the image is edited using the buffered image class and the scale variable entered by the user. 
+     * This should be automatic once the user has entered the scale value and pressed ok. 
+     * The returned image should appear on the screen, an error message will appear had they not opened an image first. 
      * </p>
      * 
-     * @param input . . .
-     * @return . . . 
+     * @param input is the image opened by the user.
+     * @return the edited, scaled image. 
      */
     @Override
     public BufferedImage apply(BufferedImage input){
