@@ -78,8 +78,13 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         if(direction == '2')  return RotateLeft(input);
         if(direction == '3')  return RotateFull(input);
         
-    }catch(Exception e){
+    }catch(NullPointerException e){
+
         JOptionPane.showMessageDialog(null, "Please open an image first");
+
+    }catch(IndexOutOfBoundsException e){
+        
+        JOptionPane.showMessageDialog(null, "Image is not a square.\nCurrently image rotate only works for square images.");
     }
         return input;
     }
@@ -100,10 +105,16 @@ public class Rotate implements ImageOperation, java.io.Serializable{
      */
     BufferedImage RotateFull(BufferedImage input) throws NullPointerException{
 
-
+        
         int pixel;
         int height = input.getHeight()-1;
         int width = input.getWidth()-1;
+
+        if(height != width){
+
+            JOptionPane.showMessageDialog(null, "Image is not a square. Currently image rotate only works for square images.");
+            return input;
+        }
     
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y < height; y++){
