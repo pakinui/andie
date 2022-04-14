@@ -27,7 +27,6 @@
 - Christopher Mairs
 ### Accessible via:
 - Filter Menu (Sharpen Filter)
-- Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `P`
 ### Testing
 No formal testing framework was used on the Sharpen Filter. However I tested it with multiple kinds of image types such as JPEG & PNG. I also tested it with images of different widths and heights, and had no errors with any of them.
 
@@ -42,7 +41,6 @@ No formal testing framework was used on the Sharpen Filter. However I tested it 
 - Pippi Priestly King
 ### Accessible via:
 - Filter Menu (Gussian Filter)
-- Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `G`
 ### Testing
 No formal testing framework was used on the Gaussian FIlter. However, I have tested multiple images, multiple times. I tested JPEG, JPG and PNG, these three images all had different heights and widths and they all correctly worked.
 
@@ -54,7 +52,6 @@ No formal testing framework was used on the Gaussian FIlter. However, I have tes
 - Poppy Schlaadt
 ### Accessible via:
 - Filter menu (Median Filter)
-- Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `N`
 ### Testing
 There was no formal testing framework used but I tested on both greyscale and coloured images, as well as images that had already been altered with another filter (i.e., Mean Filter) and the filter behaved as expected. I tested on images with different size variations. For example, narrow and tall images and short and wide images. The filter worked on all kinds of sizes and there were no black borders, which showed that the pixel loop was working correctly.
 
@@ -66,7 +63,6 @@ There was no formal testing framework used but I tested on both greyscale and co
 - Poppy Schlaadt
 ### Accessible via:
 - Colour Menu (Brightness and Contrast)
-- Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `B`
 ### Testing
 There was no formal testing framework used, but tests were carried out with images with different colour values, for example, greyscale and colour images. Tests were run on every possible combination of brightness and contrast the user could pick and all images changed as expected. Tests were run to make sure that if the user closed the pop up window the changes to brightness and contrast they selected would not be applied, and that the changes were only applied if the ‘done’ button was selected. It also works as expected with an image that has had previous changes made to it.
 
@@ -89,19 +85,17 @@ Tested on different shaped images (ie. square/rectangular) to make sure scaling 
 - Jamie Rule
 ### Accessible via:
 - Transform menu(Rotate)
-- Keyboard shortcut ‘Ctrl’(Windows) / ‘COMMAND’(macOS) + ‘R’ for the rotate pop-up window
+- Keyboard shortcut `Ctrl`(Windows) / `COMMAND`(macOS) + `R` for the rotate pop-up window
 - ToolBar contains rotate left and rotate right buttons
 ### Testing
 Testing on images to see if the rotations went the right way and did not mess up any pixel. 180 degree works for square and rectangle images but 90 degree rotates did not work for rectangle images.
 
 ### Issues:
-- 90 degree rotates at this time still do not work for rectangle images
+-  Rotations at this time still do not work for rectangle images
 ---
 ## Image flip
 ### Contributors:
 - Poppy Schlaadt
-- Christopher Mairs
-- Pippi Priestly King
 ### Accessible via:
 - Transform menu (Flip) for the flip pop-up window
 - Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `F` for the pop-up window
@@ -119,7 +113,7 @@ There was no formal testing framework used, but tests were run on images with a 
 - File menu (Export image)
 - Keyboard shortcut: `Ctrl`(Windows) / `COMMAND`(macOS) + `E`
 ### Testing
-No formal testing framework used, but tests to ensure that if the user typed a filename without a file format (i.e. ‘.png’) then the image would automatically be saved as a ‘.png’. Also tested that users were able to open exported images on their computer as well as, opening a previously exported image and it was still able to be edited in ANDIE.
+No formal testing framework used, but tests to ensure that if the user typed a filename without a file format (i.e. ‘.png’) then the image would automatically be saved as a ‘.png’. Tests were also run for if the user put an invalid file type extension when exporting the image. This results in the files invalid extension type being overwritten and the image is saved as '.png'. Also tested that users were able to open exported images on their computer as well as, opening a previously exported image and it was still able to be edited in ANDIE. Tests on exporting all types of editied images as well as unedited images produced expected outcomes.
 
 ### Issues:
 - No known issues
@@ -173,7 +167,7 @@ Testing involved making sure the jbuttons did the right task and that the icon m
 ### Accessible via:
 - Any time the ANDIE application is open the keyboard shortcuts are able to be used.
 ### Testing
-The shortcuts use no formal testing framework, however, tests were run to make sure that the shortcuts worked on both Windows and macOS. All shortcuts were tested to ensure all shortcuts had unique keys. Tests were run to make sure only the shortcuts that had been created worked and if random keys were pressed nothing happened.
+The shortcuts use no formal testing framework, however, tests were run to make sure that the shortcuts worked on both Windows and macOS. All shortcuts were tested to ensure all shortcuts had unique keys. Tests were run to make sure only the shortcuts that had been created worked and if random keys were pressed nothing happened. Using keyboard shortcuts while there is no image opened was also tested, and pop-up's were created the tell the user to select an image first.
 
 ### Issues:
 - An issue is that shortcuts have not been able to be tested on other operating systems(besides Windows and macOS) as we had no access to them. However, I am fairly confident they would work as I used the Java Toolkit Class to make the modifier key used when creating the shortcuts specific to the operating system being run.
@@ -206,10 +200,11 @@ Errors fixed:
 - Ensured that all images exported would be saved as either a JPG, JPEG or PNG image file.
 - Preventing Undo/Redo functions from operating when there nothing to Undo/Redo
 - Preventing Gaussian and Median Filters from being applied when the dialogue box is closed
+
 Exceptions handled:
 - Prevention of incorrect formatted files from being opened by the application
 - Preventing the retainment of previous operations when opening a new image
-- Prevent the use of functions such as undo/redo,flip,rotate if no image is present
 - Prevent Gaussian/Median filter from being applied if the dialogue box was closed before confirmation
-
+- Added try .. catch blocks around any code that was trying to work on an unopened image. (NullPointerException)
+- Added a try .. catch block to catch the IndexOutOfBoundsException for when the user tries to rotate an image that is not a square.
 ---
