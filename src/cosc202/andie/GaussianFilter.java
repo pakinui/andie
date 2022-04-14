@@ -1,6 +1,9 @@
 package cosc202.andie;
 
 import java.awt.image.BufferedImage;
+
+import javax.swing.JOptionPane;
+
 import java.awt.image.*;
 
     /**
@@ -22,14 +25,18 @@ import java.awt.image.*;
     public class GaussianFilter implements ImageOperation, java.io.Serializable {
 
         /**
-        * The {@code radius} which is selected by the user. This determines
-        * the size of the filter to be applied. A radius of 1 is a 3x3 filter,
-        * a radius of 2 is a 5x5 filter, and so on.
-        */
+         * <p>
+         * The {@code radius} which is selected by the user. This determines
+         * the size of the filter to be applied. A radius of 1 is a 3x3 filter,
+         * a radius of 2 is a 5x5 filter, and so on.
+         * </p>
+         */
         private int radius; 
         /**
-        * The {@code variance} is determined by the {@link radius}.
-        */
+         * <p>
+         * The {@code variance} is determined by the {@link radius}.
+         * </p>
+         */
         private double variance; //variance calculated based on radius
         private int size; //number of elements in kernel
         private int length; //length of edges in kernel
@@ -157,7 +164,7 @@ import java.awt.image.*;
          * @see #arrFill
          */
         public BufferedImage apply(BufferedImage input) {
-
+            try{
                 float[] arr = new float[size];
                 arr = arrFill(arr); //fill the array with Gaussian values.
                 
@@ -168,6 +175,11 @@ import java.awt.image.*;
                 BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null), input.isAlphaPremultiplied(), null);
                 conOp.filter(input, output);
             
-            return output;//return the blurred image
+                return output;//return the blurred image
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Please open an image first");
+            }
+            return input;
+            
         }
     }

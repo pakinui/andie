@@ -20,16 +20,36 @@ import java.awt.image.BufferedImage;
 
 public class Rotate implements ImageOperation, java.io.Serializable{
 
+    /**
+     * <p>
+     * The direction . . .
+     * </p>
+     * 
+     * <ul>
+     * <li>'1' = right 90 degree rotation ({@link #RotateRight}).</li>
+     * <li>'2' = left 90 degree rotation ({@link #RotateLeft}).</li>
+     * <li>'3' = full 180 degree rotation ({@link #RotateFull}).</li>
+     * </ul>
+     */
     char direction;
-    // 1 = right90
-    // 2 = left 90
-    // 3 = 180
 
+
+    /**
+     * <p>
+     * . . .
+     * </p>
+     */
     Rotate(){
         
         direction = '1';
     }
-
+    /**
+     * <p>
+     * . . . 
+     * </p>
+     * 
+     * @param c
+     */
     Rotate(char c){
 
         if(Character.compare(c, '1') == 0){
@@ -39,27 +59,63 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         }else if(Character.compare(c, '3') == 0){
             direction = '3';
         }else{
-            // make this do something
-            System.out.println("error");
+            System.out.println("error, please try again");
         }
     }
 
+    /**
+     * <p>
+     * . . . 
+     * </p>
+     * @param input 
+     * @return
+     */
     @Override
     public BufferedImage apply(BufferedImage input) {
+        try{
         
         if(direction == '1')  return RotateRight(input);
         if(direction == '2')  return RotateLeft(input);
         if(direction == '3')  return RotateFull(input);
         
+    }catch(NullPointerException e){
+
+        JOptionPane.showMessageDialog(null, "Please open an image first");
+
+    }catch(IndexOutOfBoundsException e){
+        
+        JOptionPane.showMessageDialog(null, "Image is not a square.\nCurrently image rotate only works for square images.");
+    }
         return input;
     }
 
-    BufferedImage RotateFull(BufferedImage input){
+    /**
+     * <p>
+     * Method to rotate an image 180 degrees.
+     * </p>
+     * 
+     * <p>
+     * A nested loop goes through the top half of the image switching the pixels from the other corner of the image.
+     * The result is the returned image looking as it has being rotated 180 degrees.
+     * </p>
+     * 
+     * @param input The image being rotated.
+     * @return The rotated image.
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateFull(BufferedImage input) throws NullPointerException{
 
+        
         int pixel;
         int height = input.getHeight()-1;
         int width = input.getWidth()-1;
-    try{
+
+        if(height != width){
+
+            JOptionPane.showMessageDialog(null, "Image is not a square. Currently image rotate only works for square images.");
+            return input;
+        }
+    
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y < height; y++){
             int a = input.getRGB(x,y);
@@ -71,13 +127,23 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
        
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
     return input;
     }
 
-    BufferedImage RotateLeft(BufferedImage input){
+    /**
+     * <p>
+     * Method to rotate an image 90 degrees to the left.
+     * A nested loop goes with half the width and height spilts the image into 4 sections.
+     * The loop then moves one pixel from each of these sections into the one on the left of it.
+     * The result is returned the image looking as it has being rotated 90 degrees to the left.
+     * </p>
+     * 
+     * @param input The image being rotated.
+     * @return The rotate image.
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateLeft(BufferedImage input) throws NullPointerException{
+
 
         int pixel;
         int pixel2;
@@ -85,7 +151,7 @@ public class Rotate implements ImageOperation, java.io.Serializable{
         int width = input.getHeight()-1;
 
         //Same as RotateRight but locations are reversed
-        try{
+        
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -112,20 +178,29 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
         
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
+
     return input;
     }
 
-
-    BufferedImage RotateRight(BufferedImage input){
+    /**
+     * <p>
+     * Method to rotate an image 90 degrees to the right.
+     * A nested loop goes with half the width and height spilts the image into 4 sections.
+     * The loop then moves one pixel from each of these sections into the one on the right of it.
+     * The result is returned the image looking as it has being rotated 90 degrees to the right.
+     * </p>
+     * 
+     * @param input The image being rotated.
+     * @return The rotated image.
+     * @throws NullPointerException if input is null
+     */
+    BufferedImage RotateRight(BufferedImage input) throws NullPointerException{
 
         int pixel;
         int pixel2;
         int height = input.getWidth()-1;
         int width = input.getHeight()-1;
-        try{
+        
         for(int x = 0; x <= (width/2); x++){
          for(int y = 0; y <= (height/2); y++){
             
@@ -152,13 +227,8 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             }
         }
         
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Please open Image first");
-    }
     return input;
     }
-
-
-    
+  
 }
 

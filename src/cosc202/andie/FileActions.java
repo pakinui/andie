@@ -126,6 +126,7 @@ public class FileActions {
          */
         public void actionPerformed(ActionEvent e) {
            
+           
             FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("JPEG, JPG & PNG images","jpeg", "png", "jpg");
             JFileChooser fileChooser = new JFileChooser(){};
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // only access files
@@ -146,6 +147,7 @@ public class FileActions {
 
             target.repaint();
             target.getParent().revalidate();
+            
         }
 
     }

@@ -1,6 +1,9 @@
 package cosc202.andie;
 
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -91,42 +94,46 @@ public class MedianFilter implements ImageOperation, java.io.Serializable {
      */
     @Override
     public BufferedImage apply(BufferedImage input) {
+        try{
        
-        final int length = (radius*2)+1; //length of 'kernel'
-        final int size = length*length; // size of 'kernel'
-        final int middle = (int) Math.floor(size/2); // middle value of 'kernel' to get median value
-        int[] aValues = new int[size]; // array of alpha values from local neighbours
-        int[] rValues = new int[size]; // array of red values from local neighbours
-        int[] gValues = new int[size]; // array of green values from local neighbours
-        int[] bValues = new int[size]; // array of blue values from local neighbours
-        
-        //looping though all pixels in the image but avoiding the edge pixels of size radius
-        for(int x = radius; x < input.getWidth()-radius; x++){ //from radius to width-radius
-            for(int y = radius; y < input.getHeight()-radius; y++){ //from radius to hight-radius
-                //index to iterate though the local neighbours
-                int kernelIdx = 0;
+            final int length = (radius*2)+1; //length of 'kernel'
+            final int size = length*length; // size of 'kernel'
+            final int middle = (int) Math.floor(size/2); // middle value of 'kernel' to get median value
+            int[] aValues = new int[size]; // array of alpha values from local neighbours
+            int[] rValues = new int[size]; // array of red values from local neighbours
+            int[] gValues = new int[size]; // array of green values from local neighbours
+            int[] bValues = new int[size]; // array of blue values from local neighbours
+            
+            //looping though all pixels in the image but avoiding the edge pixels of size radius
+            for(int x = radius; x < input.getWidth()-radius; x++){ //from radius to width-radius
+                for(int y = radius; y < input.getHeight()-radius; y++){ //from radius to hight-radius
+                    //index to iterate though the local neighbours
+                    int kernelIdx = 0;
 
-                for(int i = (x-radius); i <= (x+radius) ; i++){ //itterating through local neighbours
-                    for(int ii = (y-radius); ii <= (y+radius); ii++){
-                        Color colour = new Color(input.getRGB(i,ii)); 
-                        aValues[kernelIdx] = colour.getAlpha(); 
-                        rValues[kernelIdx] = colour.getRed(); 
-                        gValues[kernelIdx] = colour.getGreen(); 
-                        bValues[kernelIdx] = colour.getBlue();  
-                        kernelIdx++;                      
+                    for(int i = (x-radius); i <= (x+radius) ; i++){ //itterating through local neighbours
+                        for(int ii = (y-radius); ii <= (y+radius); ii++){
+                            Color colour = new Color(input.getRGB(i,ii)); 
+                            aValues[kernelIdx] = colour.getAlpha(); 
+                            rValues[kernelIdx] = colour.getRed(); 
+                            gValues[kernelIdx] = colour.getGreen(); 
+                            bValues[kernelIdx] = colour.getBlue();  
+                            kernelIdx++;                      
+                        }
                     }
-                }
-                kernelIdx = 0; //set to 0 for each new kernel
-                //finding the median RGBA value in the array
-                Arrays.sort(aValues);
-                Arrays.sort(rValues);
-                Arrays.sort(gValues);
-                Arrays.sort(bValues);
-                //new colour with median RGBA values
-                Color newCol = new Color(rValues[middle], gValues[middle], bValues[middle], aValues[middle]);
-                input.setRGB(x,y, newCol.getRGB());
-            }  
-        }       
+                    kernelIdx = 0; //set to 0 for each new kernel
+                    //finding the median RGBA value in the array
+                    Arrays.sort(aValues);
+                    Arrays.sort(rValues);
+                    Arrays.sort(gValues);
+                    Arrays.sort(bValues);
+                    //new colour with median RGBA values
+                    Color newCol = new Color(rValues[middle], gValues[middle], bValues[middle], aValues[middle]);
+                    input.setRGB(x,y, newCol.getRGB());
+                }  
+            } 
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Please open an image first");
+        }      
         return input;
     }
 }

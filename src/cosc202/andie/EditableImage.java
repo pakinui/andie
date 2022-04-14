@@ -233,7 +233,7 @@ class EditableImage {
      */
     public void undo() {
         if(current == null){
-            JOptionPane.showMessageDialog(null, "Please open Image first");
+            JOptionPane.showMessageDialog(null, "Please open an image first");
         }else{
         if(ops.empty()){
             JOptionPane.showMessageDialog(null, "Nothing to undo");
@@ -251,7 +251,7 @@ class EditableImage {
      */
     public void redo()  {
         if(current == null){
-            JOptionPane.showMessageDialog(null, "Please open Image first");
+            JOptionPane.showMessageDialog(null, "Please open an image first");
         }else{
         if(redoOps.empty()){
             JOptionPane.showMessageDialog(null, "Nothing to redo");

@@ -10,7 +10,7 @@
  - [Sharpen filter](#sharpen-filter)
  - [Gaussian Blur filter](#gaussian-blur-filter)
  - [Median filter](#median-filter)
- - [Brightness and Contrast adjustment](#brightness-and-Contrast-adjustment)
+ - [Brightness and Contrast adjustment](#brightness-and-contrast-adjustment)
  - [Image resize](#image-resize)
  - [Image rotations](#image-rotations)
  - [Image flip](#image-flip)
@@ -197,7 +197,7 @@ We felt that these keyboard shortcuts provided enough flexibility increase the s
 
 ---
 ### Toolbar
-For the toolbar . . .
+The features on the toolbar include open, save, undo, redo, right rotate, and left rotate. I have chosen these features for the toolbar as they are the most common operations for andie and are very recognisable from their icons.
 
 ---
 ### Exception handling and Exception avoidance
@@ -210,5 +210,6 @@ Exceptions handled:
 - Prevention of incorrect formatted files from being opened by the application
 - Preventing the retainment of previous operations when opening a new image
 - Prevent the use of functions such as undo/redo,flip,rotate if no image is present
+- Prevent Gaussian/Median filter from being applied if the dialogue box was closed before confirmation
 
 ---

@@ -1,6 +1,9 @@
 package cosc202.andie;
 
 import java.awt.image.*;
+
+import javax.swing.JOptionPane;
+
 import java.awt.*;
 
 /**
@@ -65,8 +68,10 @@ import java.awt.*;
      * @param c The {@code contrast} percentage change to apply to the image.
      */
     BrightnessContrast(int b, int c){
+        
         brightness = b;
         contrast = c;
+        
     }
 
     /**
@@ -82,8 +87,10 @@ import java.awt.*;
      * 
      */
     BrightnessContrast(){
+       
         brightness = 0;
         contrast = 0;
+        
     }
 
     /**
@@ -116,6 +123,7 @@ import java.awt.*;
      * @see #inside(int)
      */
     public BufferedImage apply(BufferedImage input){
+        try{
 
         //if brightness and contrast are both 0 return the input(no change to the image)
         if (brightness == 0 && contrast == 0) return input;
@@ -148,6 +156,9 @@ import java.awt.*;
                 input.setRGB(x, y, finalColour);
             }
         }
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(null, "Please open an image first");
+    }
         return input;
     }
 

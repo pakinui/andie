@@ -3,6 +3,8 @@ package cosc202.andie;
 import java.awt.image.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 /**
  * <p>
  * ImageOperation to apply a Mean (simple blur) filter.
@@ -78,17 +80,22 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
      * @return The resulting (blurred)) image.
      */
     public BufferedImage apply(BufferedImage input){
-        int size = (2 * radius + 1) * (2 * radius + 1);
-        float[] array = new float[size];
-        Arrays.fill(array, 1.0f / size);
+        try{
+            int size = (2 * radius + 1) * (2 * radius + 1);
+            float[] array = new float[size];
+            Arrays.fill(array, 1.0f / size);
 
-        Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
-        ConvolveOp convOp = new ConvolveOp(kernel);
-        BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
-                input.isAlphaPremultiplied(), null);
-        convOp.filter(input, output);
+            Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
+            ConvolveOp convOp = new ConvolveOp(kernel);
+            BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
+                    input.isAlphaPremultiplied(), null);
+            convOp.filter(input, output);
 
-        return output;
+            return output;
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Please open an image first");
+        }
+        return input;  
     }
 
 }
