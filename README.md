@@ -197,7 +197,7 @@ We felt that these keyboard shortcuts provided enough flexibility increase the s
 
 ---
 ### Toolbar
-For the toolbar . . .
+The features on the toolbar include open, save, undo, redo, right rotate, and left rotate. I have chosen these features for the toolbar as they are the most common operations for andie and are very recognisable from their icons.
 
 ---
 ### Exception handling and Exception avoidance
@@ -207,5 +207,6 @@ Errors fixed:
 - 
 Exceptions handled:
 - Added try .. catch blocks around any code that was trying to work on an unopened image. (NullPointerException)
+- Added a try .. catch block to catch the IndexOutOfBoundsException for when the user tries to rotate an image that is not a square.
 
 ---
