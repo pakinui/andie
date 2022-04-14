@@ -14,16 +14,43 @@ import java.awt.image.BufferedImage;
 
 public class Rotate implements ImageOperation, java.io.Serializable{
 
+    /**
+     * <p>
+     * A char to represent the input which determines the rotate being applied
+     * <p>
+     * <ul>
+     * <li>'1' for 90 degree right</li>
+     * <li>'2' for 90 degree left</li>
+     * <li>'3' for 180 degree</li>
+     * </ul>
+     */
     char direction;
-    // 1 = right90
-    // 2 = left 90
-    // 3 = 180
 
+     /**
+     * <p>
+     * Rotate the image in the default(Right)
+     * </p>
+     */
     Rotate(){
-        
         direction = '1';
     }
 
+    /**
+     * <p>
+     * Rotate the image in a given direction
+     * </p>
+     * 
+     * <p>
+     * The {@code direction} is provided by the user.
+     * </p>
+     * <ul>
+     * <li>'1' for 90 degree right</li>
+     * <li>'2' for 90 degree left</li>
+     * <li>'3' for 180 degree</li>
+     * </ul>
+     * 
+     * @param c the char representng the rotate direction being used
+     */
     Rotate(char c){
 
         if(Character.compare(c, '1') == 0){
@@ -37,6 +64,14 @@ public class Rotate implements ImageOperation, java.io.Serializable{
             System.out.println("error2");
         }
     }
+
+     /**
+     * <p>
+     * Rotates an image.
+     * The {@code direction} of the rotate is determined by the constructors 
+     * and the appropriate rotate will be applied.
+     * </p>
+     */
 
     @Override
     public BufferedImage apply(BufferedImage input) {
