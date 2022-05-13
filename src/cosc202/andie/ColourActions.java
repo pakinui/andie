@@ -3,6 +3,9 @@ package cosc202.andie;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 
 /**
@@ -170,55 +173,41 @@ public class ColourActions {
             frame.setLayout(new GridLayout(5,0));
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // close only the pop-up window 
 
-            //brightness components
-            JPanel brightPanel = new JPanel(); // panel with brightness buttons
+            
+            //JPanel brightPanel = new JPanel(); // panel with brightness buttons
             JLabel bLabel = new JLabel("Brightness Adjustment");
-            
-            //create JradioButtons for percentage selection - brightness
-            JRadioButton[] brightnessButtons = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
-           //brightness button listeners
-            ActionListener brightListener = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    AbstractButton a = (AbstractButton) e.getSource();
-                    String pick = a.getText();
-                    if(pick.equals("-25%")) brightness = -25; // setting the brightness to the value user has picked
-                    if(pick.equals("0%")) brightness = 0;
-                    if(pick.equals("25%")) brightness = 25; 
-                }  
-            };
-            ButtonGroup b = new ButtonGroup();
-            for(JRadioButton j : brightnessButtons){
-                b.add(j); // add to brightness button group
-                j.addActionListener(brightListener);//add brightness action listener
-                brightPanel.add(j);//add to brightness panel
-            }
-
-
-            //contrast components
-            JPanel contPanel = new JPanel(); //panel with contrast buttons
             JLabel cLabel = new JLabel("Contrast Adjustment");
-            
-            //create JradioButtons for percentage selection - contrast
-            JRadioButton[] contrastButtons = {new JRadioButton("-25%"), new JRadioButton("0%", true), new JRadioButton("25%")};
-            //contrast button listeners
-            ActionListener contListener = new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    AbstractButton a = (AbstractButton) e.getSource();
-                    String pick = a.getText();
-                    if(pick.equals("-25%")) contrast = -25; // setting contrast to the value the user has picked
-                    if(pick.equals("0%")) contrast = 0;
-                    if(pick.equals("25%")) contrast = 25;     
-                }    
-            };
-            ButtonGroup c = new ButtonGroup();
-            for(JRadioButton rb : contrastButtons){
-                c.add(rb); //add to contrast button group
-                rb.addActionListener(contListener); // add contrast action listener
-                contPanel.add(rb); // add to contrast panel
-            }
 
+            //sliders
+            JSlider brightSlide = new JSlider(JSlider.HORIZONTAL, -50, 50, 0);
+            JSlider contSlide = new JSlider(JSlider.HORIZONTAL, -50, 50, 0);
+            
+            //sets sliders to have paint labels
+            Hashtable valueTable = new Hashtable();
+            valueTable.put(Integer.valueOf(0), new JLabel("0%"));
+            valueTable.put(Integer.valueOf(-25), new JLabel("-25%"));
+            valueTable.put(Integer.valueOf(25), new JLabel("25%"));
+            brightSlide.setLabelTable(valueTable);
+            brightSlide.setPaintLabels(true);
+            contSlide.setLabelTable(valueTable);
+            contSlide.setPaintLabels(true);
+
+            //change listener for both sliders
+            ChangeListener change = new ChangeListener(){
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    JSlider source = (JSlider)e.getSource();
+                    if(source == brightSlide){
+                        brightness = source.getValue();
+                    }else if(source == contSlide){
+                        contrast = source.getValue();
+                    }else{
+                        System.out.println("Error");// should never reach this
+                    }
+                }
+            };
+            contSlide.addChangeListener(change);
+            brightSlide.addChangeListener(change);
 
             //done button to confirm value selection
             JButton close = new JButton("Done");
@@ -229,14 +218,16 @@ public class ColourActions {
                      target.getImage().apply(new BrightnessContrast(brightness, contrast)); 
                      target.repaint();
                      target.getParent().revalidate();
+                     brightness = 0;// reset brightness
+                     contrast = 0;// reset contrast
                      frame.dispose(); // close the pop-up
                 }
             });
             //building the frame
             frame.add(bLabel);
-            frame.add(brightPanel);
+            frame.add(brightSlide);
             frame.add(cLabel);
-            frame.add(contPanel);
+            frame.add(contSlide);
             frame.add(close);
             frame.setSize(300,200);
             frame.pack();
