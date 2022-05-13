@@ -11,7 +11,8 @@ import java.awt.*;
  * </p>
  * 
  * <p>
- * The Transform menu contains actions that change the how the image is displayed, 
+ * The Transform menu contains actions that change the how the image is
+ * displayed,
  * and the contents of the image.
  * </p>
  * 
@@ -20,9 +21,9 @@ import java.awt.*;
  * </p>
  * 
  * <ul>
- * <li> {@link Rotate} </li>
- * <li> {@link Flip} </li>
- * <li> {@link Resize} </li>
+ * <li>{@link Rotate}</li>
+ * <li>{@link Flip}</li>
+ * <li>{@link Resize}</li>
  * </ul>
  * 
  * @version 1.0
@@ -30,24 +31,29 @@ import java.awt.*;
 
 public class TransformActions {
 
-    /**A list of actions in Transform menu */
+    /** A list of actions in Transform menu */
     protected ArrayList<Action> actions;
-    
-    protected JFrame frame; //frame for pop-ups
-    protected JPanel mainPanel; //panel for pop-ups
-    
-    public TransformActions(){
+
+    protected JFrame frame; // frame for pop-ups
+    protected JPanel mainPanel; // panel for pop-ups
+
+    public TransformActions() {
         actions = new ArrayList<Action>();
-        actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
-        actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
-        actions.add(new Scale("Scale", null, "Scale the size of an image", null));
-       
-        //actions to be able to access for shortcuts and the toolbar, but not in the transformMenu
-        actions.add(new RotateRight(null,null,null,null));
-        actions.add(new RotateLeft(null,null,null,null));
-        actions.add(new FlipHorizontal(null,null,null,null));
-        actions.add(new FlipVertical(null,null,null,null));
-        actions.add(new RotateFull(null, null, null, null));
+        actions.add(
+                new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R))); // 0
+        actions.add(
+                new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F))); // 1
+        actions.add(new Scale("Scale", null, "Scale the size of an image", null)); // 2
+
+        // actions to be able to access for shortcuts and the toolbar, but not in the
+        // transformMenu
+        actions.add(new RotateRight(null, null, null, null)); // 3
+        actions.add(new RotateLeft(null, null, null, null)); // 4
+        actions.add(new FlipHorizontal(null, null, null, null)); // 5
+        actions.add(new FlipVertical(null, null, null, null)); // 6
+        actions.add(new RotateFull(null, null, null, null));// 7
+        //actions.add(new CropAction("Crop", null, "Crop an image", null)); // 8
+        actions.add(new CropTwoAction("MouseAction", null, null, null));
     }
 
     /**
@@ -56,29 +62,34 @@ public class TransformActions {
      * </p>
      * 
      * <p>
-     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the
+     * constructor
      * </p>
      * 
      * @return The transform menu UI element.
      */
-    public JMenu createMenu(){
+    public JMenu createMenu() {
         JMenu transformMenu = new JMenu("Transform");
 
-        //for(Action action: actions){
-            for(int i = 0; i < 3 ; i++){
-                JMenuItem menu = new JMenuItem(actions.get(i));
-                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();//identifies the modifier key for the OS
-                //if shortcut is not null add shortcut
-                if(actions.get(i).getValue("MnemonicKey") != null){
-                    int idx = (int) actions.get(i).getValue("MnemonicKey");
-                    char mn = (char) idx;//shortcut key
-                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
-                }
-                transformMenu.add(menu);
+        // for(Action action: actions){
+        for (int i = 0; i < 3; i++) {
+            JMenuItem menu = new JMenuItem(actions.get(i));
+            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();// identifies the modifier key for the
+                                                                                 // OS
+            // if shortcut is not null add shortcut
+            if (actions.get(i).getValue("MnemonicKey") != null) {
+                int idx = (int) actions.get(i).getValue("MnemonicKey");
+                char mn = (char) idx;// shortcut key
+                menu.setAccelerator(KeyStroke.getKeyStroke(mn, menuKey));
             }
+            transformMenu.add(menu);
+        }
+        transformMenu.add(actions.get(8));
+        //transformMenu.add(actions.get(9));
         return transformMenu;
     }
-     /**
+
+    /**
      * <p>
      * Action to open the rotate-actions pop-up JFrame.
      * </p>
@@ -114,14 +125,14 @@ public class TransformActions {
          * Create a new rotate action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         RotateActions(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
 
         /**
@@ -135,26 +146,26 @@ public class TransformActions {
          * </p>
          * 
          * <ul>
-         * <li> left 90 degrees: calls {@link RotateLeft}</li>
-         * <li> right 90 degrees: calls {@link RotateRight} </li>
-         * <li> 180 degrees: calls {@link RotateFull} </li>
+         * <li>left 90 degrees: calls {@link RotateLeft}</li>
+         * <li>right 90 degrees: calls {@link RotateRight}</li>
+         * <li>180 degrees: calls {@link RotateFull}</li>
          * </ul>
          * 
          * @param e The event triggering this callback.
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            //frame
+
+            // frame
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-            //components
-            JPanel panel = new JPanel(); //main panel
-            panel.setLayout(new GridLayout(3,1));
+            // components
+            JPanel panel = new JPanel(); // main panel
+            panel.setLayout(new GridLayout(3, 1));
             JPanel buttonPanel = new JPanel(); // panel for buttons
-            buttonPanel.setLayout(new GridLayout(1,3));
-            
+            buttonPanel.setLayout(new GridLayout(1, 3));
+
             JLabel label = new JLabel("Which direction would you like to rotate the image?");
             JButton left = new JButton("Left 90º");
             JButton right = new JButton("Right 90º");
@@ -164,34 +175,34 @@ public class TransformActions {
             group.add(right);
             group.add(full);
 
-            left.addActionListener(actions.get(4)); //RotateLeftActions
-            right.addActionListener(actions.get(3)); //RotateRightActions
-            full.addActionListener(actions.get(7)); //RotateFullActions
+            left.addActionListener(actions.get(4)); // RotateLeftActions
+            right.addActionListener(actions.get(3)); // RotateRightActions
+            full.addActionListener(actions.get(7)); // RotateFullActions
 
             buttonPanel.add(left);
             buttonPanel.add(right);
             buttonPanel.add(full);
 
-            //done button to confirm finished with rotations
+            // done button to confirm finished with rotations
             JButton done = new JButton("Done");
-            done.addActionListener(new ActionListener(){
+            done.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    frame.dispose(); 
+                    frame.dispose();
                 }
             });
-            //making the frame
+            // making the frame
             panel.add(label);
             panel.add(buttonPanel);
             panel.add(done);
-            frame.add(panel);   
-            frame.setSize(300,200);
+            frame.add(panel);
+            frame.setSize(300, 200);
             frame.pack();
             frame.setVisible(true);
         }
     }
-    
+
     /**
      * <p>
      * Action to open the flip-actions pop-up JFrame.
@@ -212,7 +223,7 @@ public class TransformActions {
      * 
      * @see Flip
      */
-    public class FlipAction extends ImageAction{
+    public class FlipAction extends ImageAction {
 
         /**
          * <p>
@@ -221,19 +232,20 @@ public class TransformActions {
          * </p>
          */
         char direction;
+
         /**
          * <p>
          * Create a new flip action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         FlipAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
 
         /**
@@ -247,8 +259,8 @@ public class TransformActions {
          * </p>
          * 
          * <ul>
-         * <li> vertically: calls {@link FlipVertical}</li>
-         * <li> horizontally: calls {@link FlipHorizontal} </li>
+         * <li>vertically: calls {@link FlipVertical}</li>
+         * <li>horizontally: calls {@link FlipHorizontal}</li>
          * </ul>
          * 
          * @param e The event triggering this callback.
@@ -256,33 +268,33 @@ public class TransformActions {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            //frame components
+            // frame components
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             mainPanel = new JPanel();
-            mainPanel.setPreferredSize(new Dimension(300,200));
-            mainPanel.setLayout(new GridLayout(3,1));
+            mainPanel.setPreferredSize(new Dimension(300, 200));
+            mainPanel.setLayout(new GridLayout(3, 1));
 
             JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new GridLayout(1,2));
-            
-            //buttons
+            buttonPanel.setLayout(new GridLayout(1, 2));
+
+            // buttons
             JButton vert = new JButton("Vertical");
             JButton hor = new JButton("Horizontal");
             ButtonGroup group = new ButtonGroup();
             group.add(vert);
             group.add(hor);
-            //done button to confirm finished with fliping the image
+            // done button to confirm finished with fliping the image
             JButton done = new JButton("Done");
-            done.addActionListener(new ActionListener(){
+            done.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    frame.dispose(); 
+                    frame.dispose();
                 }
             });
-            vert.addActionListener(actions.get(6)); //FlipVertical
-            hor.addActionListener(actions.get(5));//FlipHorizontal
+            vert.addActionListener(actions.get(6)); // FlipVertical
+            hor.addActionListener(actions.get(5));// FlipHorizontal
 
             JLabel label = new JLabel("Which direction would you like to flip the image?");
             mainPanel.add(label);
@@ -310,15 +322,15 @@ public class TransformActions {
          * Create a resize action.
          * </p>
          * 
-         * @param name name of action(if ignored, null)
-         * @param icon an icon to rep the action (if ignored, null)
-         * @param desc brief desc of ation (if ignored, null)
+         * @param name     name of action(if ignored, null)
+         * @param icon     an icon to rep the action (if ignored, null)
+         * @param desc     brief desc of ation (if ignored, null)
          * @param mnemonic a mnemonic key to use as a shortcut (if ignored, null)
          */
 
         Scale(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
 
         /**
@@ -341,25 +353,28 @@ public class TransformActions {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            int scale=0;
+            int scale = 0;
             SpinnerNumberModel scaleModel = new SpinnerNumberModel(100, 10, 200, 10);
-            // percentages between 10 and 200% only can be selected to ensure appropriate value
+            // percentages between 10 and 200% only can be selected to ensure appropriate
+            // value
             JSpinner scaleSpinner = new JSpinner(scaleModel);
-            // jspinner for user to select the value for the scale - forces them to choose an appropriate value
-            double option = JOptionPane.showOptionDialog(null,scaleSpinner, "Scale %", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            // jspinner for user to select the value for the scale - forces them to choose
+            // an appropriate value
+            double option = JOptionPane.showOptionDialog(null, scaleSpinner, "Scale %", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             if (option == JOptionPane.CANCEL_OPTION) {
                 return;
             } else if (option == JOptionPane.OK_OPTION) {
                 scale = scaleModel.getNumber().intValue();
-                //scale value determined when they click okay
-            }//new image presented on the screen
+                // scale value determined when they click okay
+            } // new image presented on the screen
             target.getImage().apply(new Resize(scale));
             target.repaint();
             target.getParent().revalidate();
         }
     }
-    
+
     /**
      * <p>
      * Action to rotate an image 180 degrees.
@@ -367,7 +382,7 @@ public class TransformActions {
      * 
      * @see Rotate#RotateFull
      */
-    public class RotateFull extends ImageAction{
+    public class RotateFull extends ImageAction {
         /**
          * <p>
          * Create a new rotate-full action.
@@ -381,6 +396,7 @@ public class TransformActions {
         RotateFull(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
         }
+
         /**
          * <p>
          * Callback for when the rotate-full action is triggered.
@@ -399,7 +415,7 @@ public class TransformActions {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-                // full rotation - no extra data needed from user
+            // full rotation - no extra data needed from user
             target.getImage().apply(new Rotate('3'));
             target.repaint();
             target.getParent().revalidate();
@@ -413,7 +429,7 @@ public class TransformActions {
      * 
      * @see Rotate#RotateRight
      */
-    public class RotateRight extends ImageAction{
+    public class RotateRight extends ImageAction {
 
         /**
          * <p>
@@ -427,8 +443,9 @@ public class TransformActions {
          */
         RotateRight(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
+
         /**
          * <p>
          * Callback for when the rotate-right action is triggered.
@@ -450,10 +467,9 @@ public class TransformActions {
             target.getImage().apply(new Rotate('1'));
             target.repaint();
             target.getParent().revalidate();
-            
+
         }
 
-        
     }
 
     /**
@@ -463,7 +479,7 @@ public class TransformActions {
      * 
      * @see Rotate#RotateLeft
      */
-    public class RotateLeft extends ImageAction{
+    public class RotateLeft extends ImageAction {
         /**
          * <p>
          * Create a new rotate-left action.
@@ -476,8 +492,9 @@ public class TransformActions {
          */
         RotateLeft(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
+
         /**
          * <p>
          * Callback for when the rotate-left action is triggered.
@@ -499,10 +516,9 @@ public class TransformActions {
             target.getImage().apply(new Rotate('2'));
             target.repaint();
             target.getParent().revalidate();
-            
+
         }
 
-        
     }
 
     /**
@@ -512,21 +528,22 @@ public class TransformActions {
      * 
      * @see Flip
      */
-    public class FlipHorizontal extends ImageAction{
+    public class FlipHorizontal extends ImageAction {
         /**
          * <p>
          * Create a new flip-horizontal action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         FlipHorizontal(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
+
         /**
          * <p>
          * Callback for when the flip-horizontal action is triggered.
@@ -538,7 +555,7 @@ public class TransformActions {
          * </p>
          * 
          * <p>
-         * It calls {@link Flip}, using the character {@code 'H'} to 
+         * It calls {@link Flip}, using the character {@code 'H'} to
          * identify a horizontal flip.
          * </p>
          * 
@@ -560,22 +577,23 @@ public class TransformActions {
      * 
      * @see Flip
      */
-    public class FlipVertical extends ImageAction{
+    public class FlipVertical extends ImageAction {
 
         /**
          * <p>
          * Create a new flip-vertical action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         FlipVertical(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            
+
         }
+
         /**
          * <p>
          * Callback for when the flip-vertical action is triggered.
@@ -587,7 +605,7 @@ public class TransformActions {
          * </p>
          * 
          * <p>
-         * It calls {@link Flip}, using the character {@code 'V'} to 
+         * It calls {@link Flip}, using the character {@code 'V'} to
          * identify a vertical flip.
          * </p>
          * 
@@ -601,6 +619,45 @@ public class TransformActions {
             target.getParent().revalidate();
         }
     }
-}
+
     
 
+    public class CropTwoAction extends ImageAction {
+        MouseCrop m;
+        boolean once;
+
+        CropTwoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            //System.out.println("crop time");
+            once = false;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            m = new MouseCrop(target);
+            once = false;
+            
+            target.addMouseMotionListener(new MouseAdapter(){
+                
+                public void mouseMoved(MouseEvent e){
+
+                    if(m.finalRect != null && !once){
+                        //System.out.println("rect done");
+                        Rectangle r = m.getRect();
+                        target.getImage().apply(new CropFunction(r));
+                        target.repaint();
+                        target.getParent().revalidate();
+                        //m = null;
+                        m.reset();
+                        once = true;
+
+                    }
+                }
+            });
+            
+           
+            
+        }
+
+    }
+}
