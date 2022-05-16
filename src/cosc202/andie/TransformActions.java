@@ -4,6 +4,8 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 
 /**
  * <p>
@@ -48,6 +50,7 @@ public class TransformActions {
         actions.add(new FlipHorizontal(null,null,null,null));
         actions.add(new FlipVertical(null,null,null,null));
         actions.add(new RotateFull(null, null, null, null));
+        actions.add(new StickerAction("Sticker", null, null, null)); // 8
     }
 
     /**
@@ -76,6 +79,7 @@ public class TransformActions {
                 }
                 transformMenu.add(menu);
             }
+            transformMenu.add(actions.get(8));
         return transformMenu;
     }
      /**
@@ -600,6 +604,202 @@ public class TransformActions {
             target.repaint();
             target.getParent().revalidate();
         }
+    }
+
+    public class StickerAction extends ImageAction {
+
+        int num;
+        //0-5 for same num in arr
+        int x;
+        int y;
+        //location of mouse click
+        int size;
+        //size of icon
+        boolean fin = false;
+        //if false mouse listener work, once done is clicked it becomes true and it wont work
+
+
+        StickerAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+           
+
+            JFrame frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(300,300));
+
+            JButton[] buttons = new JButton[6];
+            ImageIcon[] icons = new ImageIcon[6];
+
+            ImageIcon smile = new ImageIcon((new ImageIcon("src/stickers/smile.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon fear = new ImageIcon((new ImageIcon("src/stickers/fear.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon wink = new ImageIcon((new ImageIcon("src/stickers/wink.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon sunglasses = new ImageIcon((new ImageIcon("src/stickers/sunglasses.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/happyTears.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heartEye.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            icons[0] = smile;
+            icons[1] = fear;
+            icons[2] = wink;
+            icons[3] = sunglasses;
+            icons[4] = tears;
+            icons[5] = heart;
+
+            for(int i = 0; i < buttons.length; i++){
+
+                buttons[i] = new JButton(icons[i]);
+            }
+               
+            
+
+            // buttons[0] = new JButton(smile);
+            // buttons[1] = new JButton(fear);
+            // buttons[2] = new JButton(wink);
+            // buttons[3] = new JButton(sunglasses);
+            // buttons[4] = new JButton(tears);
+            // buttons[5] = new JButton(heart);
+
+
+
+            ActionListener listen = new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton select = (JButton) e.getSource();
+
+                    for(int i = 0; i < buttons.length; i++){
+
+                        if(select == buttons[i]){
+                            num = i;
+                            
+                            
+                        }
+                    } 
+                }
+            };
+
+            //sticker size
+            JPanel scrollPanel = new JPanel();
+            JSlider bar = new JSlider(JSlider.HORIZONTAL);
+            bar.setMaximum(190);
+            bar.setValue(100);
+            bar.setMinimum(10);
+            scrollPanel.add(new JLabel("Adjust sticker size."));
+            scrollPanel.add(bar);
+
+            bar.addChangeListener(new ChangeListener(){
+
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    size = bar.getValue();
+                }
+            });
+
+            //example icon size
+            
+
+
+
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridLayout(3,1));
+
+            JPanel bPanel = new JPanel();
+            bPanel.setLayout(new GridLayout(2,3));
+            bPanel.setBorder(new EmptyBorder(10,10,10,10));
+
+            ButtonGroup group = new ButtonGroup();
+            for(JButton b : buttons){
+                b.setSize(new Dimension(50, 50));
+                bPanel.add(b);
+                group.add(b);
+                b.addActionListener(listen);
+                //b.setBorder(new EmptyBorder(10,10,10,10));
+            }
+
+            JButton done = new JButton("Done");
+            done.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.dispose(); 
+                    fin = true;
+
+                }
+            });
+            
+            bPanel.setSize(new Dimension(290, 100));
+            panel.add(bPanel);
+            panel.add(scrollPanel);
+            
+            
+            panel.add(done);
+
+
+            frame.add(panel);
+            frame.setVisible(true);
+            frame.pack();
+
+            
+
+
+            //mouse listener stuff
+            MouseListener mouse = new MouseListener(){
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(!fin && frame.isVisible()){
+                        x = e.getX();
+                        y = e.getY();
+                        //System.out.println("mouse clicked: x-" + x + ", y-" + y);
+                        //num = sticker num
+                        Icon icon = buttons[num].getIcon();
+                        Image img = icons[num].getImage();
+                        target.getImage().apply(new Sticker(x, y, size, img));
+                        target.repaint();
+                        target.getParent().revalidate();
+                        }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    mouseClicked(e);
+                    
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+            };
+
+
+            target.addMouseListener(mouse);
+
+
+
+
+            
+        }
+
+        
     }
 }
     

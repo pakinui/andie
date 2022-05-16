@@ -27,6 +27,8 @@ import javax.imageio.*;
  */
 public class Andie {
 
+
+    protected static JFrame frame;
     /**
      * <p>
      * Launches the main GUI for the ANDIE program.
@@ -53,7 +55,7 @@ public class Andie {
      */
     private static void createAndShowGUI() throws Exception {
         // Set up the main GUI frame
-        JFrame frame = new JFrame("ANDIE");
+        frame = new JFrame("ANDIE");
 
         Image image = ImageIO.read(new File("./src/icon.png"));
         frame.setIconImage(image);
