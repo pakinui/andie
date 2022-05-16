@@ -47,6 +47,7 @@ public class ColourActions {
         actions = new ArrayList<Action>();
         actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", null));
         actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", null));
+        actions.add(new PostAction("post", null, null, null));
     }
 
     /**
@@ -233,6 +234,23 @@ public class ColourActions {
             frame.pack();
             frame.setVisible(true); 
         }
+    }
+
+    public class PostAction extends ImageAction{
+
+        PostAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            //TODO Auto-generated constructor stub
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().apply(new Post());
+            target.repaint();
+            target.getParent().revalidate();
+            
+        }
+        
     }
 }
 
