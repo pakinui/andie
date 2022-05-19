@@ -25,6 +25,7 @@ import java.awt.*;
  * <ul>
  * <li> {@link BrightnessContrast} </li>
  * <li> {@link ConvertToGrey} </li>
+ *  * <li> {@link Invert} </li>
  * </ul>
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
@@ -47,6 +48,7 @@ public class ColourActions {
         actions = new ArrayList<Action>();
         actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", null));
         actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", null));
+        actions.add(new InvertAction("Invert", null, "Invert image colours", null));
     }
 
     /**
@@ -234,7 +236,43 @@ public class ColourActions {
             frame.setVisible(true); 
         }
     }
+
+
+
+public class InvertAction extends ImageAction {
+
+    /**
+     * <p>
+     * Create a new convert-to-grey action.
+     * </p>
+     * 
+     * @param name The name of the action (ignored if null).
+     * @param icon An icon to use to represent the action (ignored if null).
+     * @param desc A brief description of the action  (ignored if null).
+     * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+     */
+    InvertAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        super(name, icon, desc, mnemonic);
+    }
+
+    /**
+     * <p>
+     * Callback for when the convert-to-grey action is triggered.
+     * </p>
+     * 
+     * <p>
+     * This method is called whenever the ConvertToGreyAction is triggered.
+     * It changes the image to greyscale.
+     * </p>
+     * 
+     * @param e The event triggering this callback.
+     */
+    public void actionPerformed(ActionEvent e) {
+        target.getImage().apply(new Inverse());
+        target.repaint();
+        target.getParent().revalidate();
+    }
+
 }
 
-
-
+}
