@@ -52,8 +52,8 @@ public class TransformActions {
         actions.add(new FlipHorizontal(null, null, null, null)); // 5
         actions.add(new FlipVertical(null, null, null, null)); // 6
         actions.add(new RotateFull(null, null, null, null));// 7
-        //actions.add(new CropAction("Crop", null, "Crop an image", null)); // 8
-        actions.add(new CropTwoAction("MouseAction", null, null, null));
+        
+        actions.add(new CropAction("Crop Image", null, "Crop an Image", null));
     }
 
     /**
@@ -85,7 +85,7 @@ public class TransformActions {
             transformMenu.add(menu);
         }
         transformMenu.add(actions.get(8));
-        //transformMenu.add(actions.get(9));
+       
         return transformMenu;
     }
 
@@ -621,43 +621,89 @@ public class TransformActions {
     }
 
     
+    /**
+     * <p>
+     * Action to crop an image.
+     * </p>
+     * 
+     * @see CropFunction
+     * @see MouseCrop
+     */
+    public class CropAction extends ImageAction {
 
-    public class CropTwoAction extends ImageAction {
+        /**
+         * <p>
+         * A new {@code MouseCrop}.
+         */
         MouseCrop m;
-        boolean once;
 
-        CropTwoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        boolean once;//boolean to track if crop has happened
+
+        /**
+         * <p>
+         * Create a new crop action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        CropAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            //System.out.println("crop time");
             once = false;
         }
 
+        /**
+         * <p>
+         * Callback for when the crop action is triggered.
+         * </p>
+         * 
+         * <p>
+         * Creates a {@code MouseCrop} to find the reactangle which the user 
+         * inputs. A mouseMotionListener is added to target which calls the 
+         * {@code CropFunction} class when the {@code MouseCrop} rectangle is complete. 
+         * The crop is then applied to target.
+         * </p>
+         * 
+         * 
+         * @param e The event triggering this callback.
+         * @see MouseCrop
+         * @see CropFunction
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            m = new MouseCrop(target);
-            once = false;
             
+            try{
+                m = new MouseCrop(target);
+                once = false;
+            }catch(Exception ex){
+                JOptionPane.showMessageDialog(null, "Unexpected Error, please try again.");
+            }
             target.addMouseMotionListener(new MouseAdapter(){
                 
+                /**
+                 * <p>
+                 * Listener to call the {@code CropFunction} class 
+                 * when the rectangle from {@code MouseCrop - m} has been completed.
+                 * </p>
+                 * 
+                 * @param e MouseEvent mouseMoved.
+                 */
                 public void mouseMoved(MouseEvent e){
 
                     if(m.finalRect != null && !once){
-                        //System.out.println("rect done");
+                        
                         Rectangle r = m.getRect();
                         target.getImage().apply(new CropFunction(r));
                         target.repaint();
                         target.getParent().revalidate();
-                        //m = null;
                         m.reset();
-                        once = true;
-
+                        once = true;//rectangle is complete
                     }
                 }
             });
-            
-           
-            
+          
         }
-
     }
 }

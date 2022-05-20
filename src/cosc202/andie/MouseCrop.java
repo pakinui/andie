@@ -1,26 +1,23 @@
 package cosc202.andie;
 
-import java.awt.image.*;
-//import java.util.Arrays;
-import java.util.*;
 import javax.swing.*;
-
 import java.awt.*;
-
-
-import java.util.*;
 import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
+
+/**
+ * <p>
+ * 
+ * </p>
+ */
 public class MouseCrop {
 
     ImagePanel target;
-    boolean rectDone;
+    boolean rectDone;//boolean to see if rectangle is complete
     // start with the drag
-    int[] topL;
-    int[] botR;
-    int height;
-    int width;
+    int[] topL;// topL[0] = top left corner x, topL[1] = top left corner y
+    int[] botR;// topL[0] = bottom corner x, topL[1] = bottom right corner y
+    int height;//rectangle height
+    int width;//rectangle width
     Rectangle current;
     Rectangle oldRect = new Rectangle();
     Rectangle drawRect;
@@ -28,28 +25,46 @@ public class MouseCrop {
     Graphics g;
 
     // two clicks to select rect
-    boolean clickOne;
-    int clicked;
-    int[] clickTop;
-    int[] clickBot;
-    Rectangle clickRect;
+    boolean clickOne;//has the first click happened
+    int clicked;// another way to track if the first click has happned
+    int[] clickTop;//same as topL but for the two-click rectangle option
+    int[] clickBot;//same as botR but for the two-click rectangle option
+    Rectangle clickRect;//rectangle for two-click option
 
     // label
-    String comb;
-    String strX;
-    String strY;
-    String strW;
-    String strH;
-
-    JPanel panel;
-    JButton crop;
-    JButton two;
-    JButton three;
+    String rectLabel;
+    
     Rectangle finalRect;
 
-    MouseCrop(ImagePanel target){
+    MouseCrop(ImagePanel target) {
+
+        addOverlay(target);
+        addListeners(target);
+    }
+
+    /**
+     * <p>
+     * Adds a transparent layer to the target ImagePanel.
+     * </p>
+     * 
+     * <p>
+     * Uses the {@code MyPanel} class which extends {@code JPanel} 
+     * to override the {@code paintComponent} method.
+     * </p>
+     * 
+     * <p>
+     * Allows the user to know what area of the image they are 
+     * selecting.
+     * </p>
+     * 
+     * @param target The ImagePanel to lay the transparent {@code MyPanel} on top of.
+     * @see MyPanel
+     */
+    private void addOverlay(ImagePanel target){
+
         rectDone = false;
         this.target = target;
+
         // add a transpaernt overlay panel to draw the rect on
         MyPanel pan = new MyPanel();
         pan.setOpaque(false);
@@ -63,160 +78,190 @@ public class MouseCrop {
 
         g = (Graphics2D) target.getGraphics();
 
-            botR = new int[] { -1, -1 };// 0 = x, 1 = y
-            topL = new int[] { -1, -1 };
+        botR = new int[] { -1, -1 };// 0 = x, 1 = y
+        topL = new int[] { -1, -1 };
 
-            clickBot = new int[] { -1, -1 };// 0 = x, 1 = y
-            clickTop = new int[] { -1, -1 };
-
-            target.addMouseListener(new MouseAdapter() {
-                boolean cropDone = false;
-
-                public void mousePressed(MouseEvent e) {
-                    // System.out.println("Click @ " + e.getX() + ", " + e.getY());
-                    if(!rectDone){
-                        // for drag
-                        topL[0] = e.getX();
-                        topL[1] = e.getY();
-
-                        // create rect
-                        current = new Rectangle(topL[0], topL[1], 0, 0);
-                    }
-                }
-
-                public void mouseClicked(MouseEvent e) {
-                    if (!cropDone || !rectDone) {
-                        //System.out.println("\n - " + clickOne + ", " + clicked);
-                        if (!clickOne || clicked == 0) {
-                            clickTop = new int[] { e.getX(), e.getY() };
-                            clickOne = true;
-                            // System.out.println("boo: " + clickOne);
-                            clicked = 1;
-                            clickRect = new Rectangle(clickTop[0], clickTop[1], 0, 0);
-
-                            // System.out.println("first click @ " + Arrays.toString(clickTop));
-                            comb = "rectangle from: " + clickRect.x + ", " + clickRect.y + " -> ";
-                            if (!cropDone)
-                                target.repaint();
-
-                        } else if (clickOne || clicked == 1) {// if its the second click
-
-                            clickBot = new int[] { e.getX(), e.getY() };
-                            // System.out.println("second click @ " + Arrays.toString(clickBot));
-
-                            calcRect(clickRect, clickTop, clickBot);
-                            finalRect = clickRect;
-                            // System.out.println("rect: " + clickRect.x + ", " + clickRect.y + ", " +
-                            // clickRect.width + ", " + clickRect.height);
-                            // System.out.println("rect: " + clickTop[0] + ", " + clickTop[1] + ", " +
-                            // clickBot[0] + ", " + clickBot[1]);
-
-                            //System.out.println("one: " + finalRect);
-                            //target.getImage().apply(new CropFunction(finalRect));
-                            reset();
-                            target.repaint();
-                            // System.out.println("repaint");
-                            target.getParent().revalidate();
-                            cropDone = true;
-                            rectDone = true;
-                        } else {
-
-                            System.out.println("Error");
-                        }
-
-                    } else {
-                        //System.out.println("done");
-                    }
-                    // System.out.println();
-                }
-
-                public void mouseReleased(MouseEvent e) {
-                    if (current.width != 0) {
-                        if (!cropDone || !rectDone) {
-                            // System.out.println("Release @ " + e.getX() + ", " + e.getY());
-                            rectUpdate(e, current);
-
-                            // System.out.println(Arrays.toString(topL) + " --> " + Arrays.toString(botR));
-                            // System.out.println("rect: " + current.x + ", " + current.y + ", " +
-                            // current.width + ", " + current.height);
-                            width = current.width;
-                            height = current.height;
-                            // System.out.println("drawRect: " + newRect.x + ", " + newRect.y + ", " +
-                            // newRect.width + ", " + newRect.height);
-                            finalRect = current;
-
-                            //System.out.println("two: " + finalRect);
-                            //target.getImage().apply(new CropFunction(finalRect));
-                            reset();
-                            target.repaint();
-                            // System.out.println("repaint");
-                            target.getParent().revalidate();
-                            cropDone = true;
-                            rectDone = true;
-                        } else {
-
-                            System.out.println("done");
-                        }
-                    } else {
-                        // System.out.println("release");
-                    }
-
-                }
-            });
-
-            target.addMouseMotionListener(new MouseAdapter() {
-
-                // boolean cropDone = false;
-                public void mouseDragged(MouseEvent e) {
-                    // update rect while dragged
-                    if(!rectDone){
-                        updateSize(e);  
-                        int botX = current.x + current.width;
-                        int botY = current.y + current.height;
-                        comb = "rectangle from: " + current.x + ", " + current.y + " -> " + botX + ", " + botY;
-                    }
-                }
-
-                public void mouseMoved(MouseEvent e) {
-
-                    if (clickOne && !rectDone) {
-                        clickBot[0] = e.getX();
-                        clickBot[1] = e.getY();
-                        calcRect(clickRect, clickTop, clickBot);
-
-                        comb = "rectangle from: " + clickTop[0] + ", " + clickTop[1] + " -> " + e.getX() + ", "
-                                + e.getY();
-                        topL[0] = clickRect.x;
-                        topL[1] = clickRect.y;
-                        botR[0] = (clickRect.width);
-                        botR[1] = (clickRect.height);
-                        target.repaint();
-                    }
-                }
-
-            });
-
+        clickBot = new int[] { -1, -1 };// 0 = x, 1 = y
+        clickTop = new int[] { -1, -1 };
     }
 
-    protected Rectangle getRect(){
-        
+    /**
+     * <p>
+     * A method to add both a MouseListener and a {@code MouseMotionListener} 
+     * to the target ImagePanel.
+     * </p>
+     * 
+     * @param target The ImagePanel to add the action listeners to.
+     */
+    private void addListeners(ImagePanel target){
+
+        target.addMouseListener(new MouseAdapter() {
+            boolean cropDone = false;
+
+            /**
+             * <p>
+             * Listener which initalises the location of a mouse press 
+             * to make a rectangle with a drag.
+             * </p>
+             * 
+             * @param e MouseEvent of mouse pressed.
+             */
+            public void mousePressed(MouseEvent e) {
+                
+                if (!rectDone) {// if there is not a rectangle already started
+                    //for a rectangle from a drag
+                    topL[0] = e.getX();
+                    topL[1] = e.getY();
+
+                    current = new Rectangle(topL[0], topL[1], 0, 0);//create rectangle
+                }
+            }
+            /**
+             * <p>
+             * Listener which deals with creating a rectangle with 
+             * two-clicks.
+             * </p>
+             * 
+             * @param e MouseEvent of mouse clicked.
+             */
+            public void mouseClicked(MouseEvent e) {
+                if (!cropDone || !rectDone) {//if there is no rectangle
+                    
+                    if (!clickOne || clicked == 0) {//if it is the first click
+                        clickTop = new int[] { e.getX(), e.getY() };
+                        clickOne = true;
+                       
+                        clicked = 1;
+                        clickRect = new Rectangle(clickTop[0], clickTop[1], 0, 0);
+
+                        //updates the label for the rectangle location
+                        rectLabel = "rectangle from: " + clickRect.x + ", " + clickRect.y + " -> ";
+                        if (!cropDone)
+                            target.repaint();
+                    } else if (clickOne || clicked == 1) {// if its the second click
+
+                        clickBot = new int[] { e.getX(), e.getY() };
+                        calcRect(clickRect, clickTop, clickBot);//update rectangle
+                        finalRect = clickRect;//create final rectangle to crop
+                        reset();// reset all values
+                        target.repaint();
+                        target.getParent().revalidate();
+                        cropDone = true;
+                        rectDone = true;
+                    } else {
+                        System.out.println("Error");
+                    }
+                }
+            }
+
+            /**
+             * <p>
+             * Listener for when the mouse is released for a rectange created by 
+             * a drag.
+             * </p>
+             * 
+             * @param e MouseEvent of mouse release.
+             */
+            public void mouseReleased(MouseEvent e) {
+                if (current.width != 0) {
+                    if (!cropDone || !rectDone) {
+
+                        rectUpdate(e, current);
+                        width = current.width;
+                        height = current.height;
+                        finalRect = current;//create final rectangle to crop
+                        reset();
+                        target.repaint();
+                        target.getParent().revalidate();
+                        cropDone = true;
+                        rectDone = true;
+                    }
+                }
+            }
+        });
+
+        target.addMouseMotionListener(new MouseAdapter() {
+
+            /**
+             * <p>
+             * Listener to deal with a rectangle via dragging.
+             * </p>
+             * 
+             * <p>
+             * If rectanlge has been created via a mouse press, then 
+             * the mouse drag will update the current rectangle size. 
+             * Aswell as the label which shows the location of the rectangle.
+             * </p>
+             * 
+             * @param e MouseEvent of mouseDragged.
+             */
+            public void mouseDragged(MouseEvent e) {
+                if (!rectDone) {
+                    updateSize(e);
+                    int botX = current.x + current.width;
+                    int botY = current.y + current.height;
+                    rectLabel = "rectangle from: " + current.x + ", " + current.y + " -> " + botX + ", " + botY;
+                }
+            }
+
+            /**
+             * <p>
+             * Listener to deal with a mouse move action.
+             * </p>
+             * 
+             * <p>
+             * Handles the rectangle to identify the selected area when making a rectangle 
+             * with two-clicks. Aswell as updating the label of teh rectangles location.
+             * </p>
+             * 
+             * @param e MouseEvent of mouseMoved.
+             */
+            public void mouseMoved(MouseEvent e) {
+
+                if (clickOne && !rectDone) {
+                    clickBot[0] = e.getX();
+                    clickBot[1] = e.getY();
+                    calcRect(clickRect, clickTop, clickBot);
+                    rectLabel = "rectangle from: " + clickTop[0] + ", " + clickTop[1] + " -> " + e.getX() + ", "
+                            + e.getY();
+                    topL[0] = clickRect.x;
+                    topL[1] = clickRect.y;
+                    botR[0] = (clickRect.width);
+                    botR[1] = (clickRect.height);
+                    target.repaint();
+                }
+            }
+        });
+    }
+
+    /**
+     * 
+     */
+    protected Rectangle getRect() {
+
         return finalRect;
     }
 
-    
-
+    /**
+     * <p>
+     * Method to calculate the rectangle size.
+     * </p>
+     * 
+     * @param r Rectangle to calculate the size of.
+     * @param top array to update for r's top left x and y coordinates.
+     * @param bot array to update for r's bottom right x and y coordinates.
+     */
     void calcRect(Rectangle r, int[] top, int[] bot) {
 
-        int x = top[0];
-        int y = top[1];
+        int x = top[0];//rectangle top left corner x coordinate
+        int y = top[1];//rectangle top left corner y coordinate
 
-        int w = bot[0];
-        int h = bot[1];
+        int w = bot[0];//width
+        int h = bot[1];//height
 
         if (x < w && y < h) {
             top = new int[] { x, y };
             bot = new int[] { w, h };
-
         } else if (x < w && y > h) {
             top = new int[] { x, h };
             bot = new int[] { w, y };
@@ -233,61 +278,82 @@ public class MouseCrop {
         bot[0] = width;
         bot[1] = height;
 
-        r.setBounds(top[0], top[1], width, height);
+        r.setBounds(top[0], top[1], width, height);//update r size.
     }
 
     /**
+     * <p>
      * Method to update the current size of the rectangle while the
-     * mouse is being dragegd
+     * mouse is being dragegd.
+     * </p>
      * 
      * @param e The mouse event with new location to update current
      */
     void updateSize(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        /*
-         * i.e.,
-         * curr x = 35, y = 56
-         * e.x = 45, e.y = 67
-         * - this means width of triangle should be 10
-         * - and height should be 11
-         * 
-         * (45 - 35) (67 - 56)
-         * 10 11
-         * 
-         */
+        
         current.setSize(x - current.x, y - current.y);
-
         updateRect(x, y);
 
-        newRect = drawRect.union(oldRect);
+        newRect = drawRect.union(oldRect); //newRect is a union of draw and old rect
         topL[0] = newRect.x;
         topL[1] = newRect.y;
         botR[0] = newRect.width;
         botR[1] = newRect.height;
 
-        target.repaint(); // works if dragged in any direction
-        // rect still there after mouse release - needs to disapear
-
+        target.repaint();//repaint new rectangle size
     }
 
+    /**
+     * <p>
+     * MyPanel class which extends {@code ImagePanel} class.
+     * </p>
+     * 
+     * <p>
+     * Instance is created to override the {@code paintComponent} method.
+     * </p>
+     */
     public class MyPanel extends ImagePanel {
-
+        /**
+         * <p>
+         * Method to override the {@code ImagePanel} 
+         * {@code paintComponent} method. Paints a rectangle so the 
+         * user knows where they will be cropping as well as a label to 
+         * show the rectangle information.
+         * </p>
+         * 
+         * @param g Graphics for panel.
+         */
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (current != null || clickRect != null) {
-
+                //rectangle
                 g.setXORMode(Color.white);
                 g.drawRect(topL[0], topL[1], botR[0], botR[1]);
-
+                //label
                 Font fnt = new Font("Ariel", Font.BOLD, 10);
                 g.setFont(fnt);
-                g.drawString(comb, 10, 20);
+                g.drawString(rectLabel, 10, 20);
             }
         }
     }
 
+    /**
+     * <p>
+     * Method called by the mouseListeners on target. Used when 
+     * creating a rectangle with two-clicks.
+     * </p>
+     * 
+     * <p>
+     * When the mouse in released this method is called, it updates the rectangle 
+     * for the final time when the mouse is released.
+     * </p>
+     * 
+     * @param e MouseEvent of mouseRelease.
+     * @param r Rectangle to update.
+     */
     void rectUpdate(MouseEvent e, Rectangle r) {
 
         int w = e.getX();
@@ -301,7 +367,6 @@ public class MouseCrop {
         if (x < w && y < h) {
             topL = new int[] { x, y };
             botR = new int[] { w, h };
-
         } else if (x < w && y > h) {
             topL = new int[] { x, h };
             botR = new int[] { w, y };
@@ -315,9 +380,20 @@ public class MouseCrop {
         width = botR[0] - topL[0];
         height = botR[1] - topL[1];
 
-        r.setBounds(topL[0], topL[1], width, height);
+        r.setBounds(topL[0], topL[1], width, height);//updates r
     }
 
+    /**
+     * <p>
+     * Method to call when the rectangle has been completed to 
+     * reset all variables.
+     * </p>
+     * 
+     * <p>
+     * This means you are able to create multiple crops.
+     * </p>
+     * 
+     */
     void reset() {
         topL = new int[] { -1, -1 };
         botR = new int[] { -1, -1 };
@@ -334,19 +410,24 @@ public class MouseCrop {
         clicked = 0;
 
         // label
-        comb = new String();
-        // System.out.println("reset");
+        rectLabel = new String();
+        
     }
 
+    /**
+     * <p>
+     * A method to update the rectangle while the mouse is being dragged.
+     * </p>
+     * 
+     * @param w Rectangle width.
+     * @param h Rectangle height.
+     */
     void updateRect(int w, int h) {
-        // System.out.println("3");
+        
         int x = current.x;
         int y = current.y;
         int width = current.width;
         int height = current.height;
-
-        // topL = new int[2]; // og click
-        // botR = new int[2];
 
         if (x < w && y < h) {
             topL = new int[] { x, y };
@@ -368,16 +449,11 @@ public class MouseCrop {
         x = topL[0];
         y = topL[1];
 
-        if (drawRect != null) {
+        if (drawRect != null) {//updates drawRect and oldRect
             oldRect.setBounds(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
             drawRect.setBounds(x, y, width, height);
-
-        } else {
-            drawRect = new Rectangle(x, y, width, height);
+        } else {//if drawRect has not been created
+            drawRect = new Rectangle(x, y, width, height);//rectangle to draw is created
         }
-        // System.out.println("current width: " + current.width + ", height: " +
-        // current.height);
-
     }
-    
 }
