@@ -4,6 +4,8 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 
 /**
  * <p>
@@ -39,22 +41,19 @@ public class TransformActions {
 
     public TransformActions() {
         actions = new ArrayList<Action>();
-        actions.add(
-                new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R))); // 0
-        actions.add(
-                new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F))); // 1
-        actions.add(new Scale("Scale", null, "Scale the size of an image", null)); // 2
-
-        // actions to be able to access for shortcuts and the toolbar, but not in the
-        // transformMenu
-        actions.add(new RotateRight(null, null, null, null)); // 3
-        actions.add(new RotateLeft(null, null, null, null)); // 4
-        actions.add(new FlipHorizontal(null, null, null, null)); // 5
-        actions.add(new FlipVertical(null, null, null, null)); // 6
-        actions.add(new RotateFull(null, null, null, null));// 7
-        
-        actions.add(new CropAction("Crop Image", null, "Crop an Image", null));
-    }
+        actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
+        actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
+        actions.add(new Scale("Scale", null, "Scale the size of an image", null));
+       
+        //actions to be able to access for shortcuts and the toolbar, but not in the transformMenu
+        actions.add(new RotateRight(null,null,null,null));
+        actions.add(new RotateLeft(null,null,null,null));
+        actions.add(new FlipHorizontal(null,null,null,null));
+        actions.add(new FlipVertical(null,null,null,null));
+        actions.add(new RotateFull(null, null, null, null));
+        actions.add(new StickerAction("Sticker", null, "Add stickers to an image", null)); // 8
+        actions.add(new CropAction("Crop Image", null, "Crop an Image", null));//9
+    }   
 
     /**
      * <p>
@@ -85,6 +84,7 @@ public class TransformActions {
             transformMenu.add(menu);
         }
         transformMenu.add(actions.get(8));
+        transformMenu.add(actions.get(9));
        
         return transformMenu;
     }
@@ -620,6 +620,197 @@ public class TransformActions {
         }
     }
 
+     /**
+     * <p>
+     * Action to add Stickers to an image.
+     * </p>
+     * 
+     * @see Sticker
+     */
+    public class StickerAction extends ImageAction {
+
+        int num;//0-5 for same num in arr
+        
+        int x;//location of mouse click
+        int y;
+        
+        int size;//size of icon
+        
+        boolean fin = false;//if false mouse listener work, once done is clicked it becomes true and it wont work
+        
+
+        /**
+         * <p>
+         * Create a new sticker action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        StickerAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+            fin = false;
+        }
+
+        /**
+         * <p>
+         * Callback for when the sticker action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever StickerAction is triggered.
+         * It allows the user to add stickers to the image.
+         * </p>
+         * 
+         * <p>
+         * It calls {@link Sticker} when a mouseClick occurs with the 
+         * specified sticker selected in the pop-up JFrame.
+         * </p>
+         * 
+         * <p>
+         * The size of the stickers is able to be altered.
+         * 
+         * @param e The event triggering this callback.
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            fin = false;
+            
+            JFrame frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(300,300));
+
+            JButton[] buttons = new JButton[6];
+            ImageIcon[] icons = new ImageIcon[6];
+
+            ImageIcon smile = new ImageIcon((new ImageIcon("src/stickers/smile.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon fear = new ImageIcon((new ImageIcon("src/stickers/fear.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon wink = new ImageIcon((new ImageIcon("src/stickers/wink.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon sunglasses = new ImageIcon((new ImageIcon("src/stickers/sunglasses.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/happyTears.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heartEye.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            icons[0] = smile;
+            icons[1] = fear;
+            icons[2] = wink;
+            icons[3] = sunglasses;
+            icons[4] = tears;
+            icons[5] = heart;
+
+            for(int i = 0; i < buttons.length; i++){
+                buttons[i] = new JButton(icons[i]);//create JButtons
+            }
+            //JButton action listener
+            ActionListener listen = new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton select = (JButton) e.getSource();
+                    for(int i = 0; i < buttons.length; i++){
+                        if(select == buttons[i]){
+                            num = i; //set num to the associated number for the seleced sticker
+                        }
+                    } 
+                }
+            };
+
+            //adjust sticker size
+            JPanel scrollPanel = new JPanel();
+            JSlider bar = new JSlider(JSlider.HORIZONTAL);
+            bar.setMaximum(190);
+            bar.setValue(100);
+            bar.setMinimum(10);
+            scrollPanel.add(new JLabel("Adjust sticker size."));
+            scrollPanel.add(bar);
+
+            bar.addChangeListener(new ChangeListener(){
+
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    size = bar.getValue();//change of sticker size if applicable
+                }
+            });
+
+           
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridLayout(3,1));
+
+            JPanel bPanel = new JPanel();//button panel
+            bPanel.setLayout(new GridLayout(2,3));
+            bPanel.setBorder(new EmptyBorder(10,10,10,10));
+
+            ButtonGroup group = new ButtonGroup();
+            for(JButton b : buttons){
+                b.setSize(new Dimension(50, 50));
+                bPanel.add(b);
+                group.add(b);
+                b.addActionListener(listen);
+            }
+
+            JButton done = new JButton("Done");// end of sticker action
+            done.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.dispose(); 
+                    fin = true;
+
+                }
+            });
+            
+            bPanel.setSize(new Dimension(290, 100));
+            panel.add(bPanel);
+            panel.add(scrollPanel);
+            panel.add(done);
+            frame.add(panel);
+            frame.setVisible(true);
+            frame.pack();
+
+            //mouse listener stuff
+            MouseListener mouse = new MouseListener(){
+
+                /**
+                 * <p>
+                 * Calls the {@code Sticker} class to apply a sticker 
+                 * where the mouse is clicked onto the target image.
+                 * </p>
+                 * 
+                 * @param e MouseEvent mouseClicked.
+                 */
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(!fin && frame.isVisible()){
+                        x = e.getX();
+                        y = e.getY();
+                        
+                       // Icon icon = buttons[num].getIcon();
+                        Image img = icons[num].getImage();
+                        target.getImage().apply(new Sticker(x, y, size, img));
+                        target.repaint();
+                        target.getParent().revalidate();
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    mouseClicked(e);   
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {  
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) { 
+                }
+            };
+            target.addMouseListener(mouse);
+        } 
+    }
     
     /**
      * <p>
