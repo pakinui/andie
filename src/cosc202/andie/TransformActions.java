@@ -53,6 +53,7 @@ public class TransformActions {
         actions.add(new RotateFull(null, null, null, null));
         actions.add(new StickerAction("Sticker", null, "Add stickers to an image", null)); // 8
         actions.add(new CropAction("Crop Image", null, "Crop an Image", null));//9
+        actions.add(new DrawAction( "Draw", null, "Draw", null));
     }   
 
     /**
@@ -85,6 +86,7 @@ public class TransformActions {
         }
         transformMenu.add(actions.get(8));
         transformMenu.add(actions.get(9));
+        transformMenu.add(actions.get(10));
        
         return transformMenu;
     }
@@ -620,6 +622,34 @@ public class TransformActions {
         }
     }
 
+    public class DrawAction extends ImageAction {
+
+
+        DrawAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+        JFrame frame = new JFrame("Draw");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Draw drawing = new Draw();
+        JLabel coordinates = new JLabel("Mouse coordinates");
+        coordinates.setForeground(Color.BLUE);
+        frame.add(coordinates, BorderLayout.SOUTH);
+		frame.setLayout(new BorderLayout());
+        frame.add(drawing, BorderLayout.NORTH);
+
+		
+		frame.pack();
+		
+		frame.setLocationRelativeTo(null);
+		
+		frame.setVisible(true);
+
+    }
+    }
      /**
      * <p>
      * Action to add Stickers to an image.

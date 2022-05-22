@@ -22,7 +22,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 
     public Draw() {
 
-        final JPanel panel = new JPanel();
+        JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
@@ -69,12 +69,12 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		});
 
     }
-    public static void main(String[] args){
+    /**public static void main(String[] args){
         JFrame frame = new JFrame("Draw");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        final Draw drawing = new Draw();
-        final JLabel coordinates = new JLabel("Mouse coordinates");
+        Draw drawing = new Draw();
+        JLabel coordinates = new JLabel("Mouse coordinates");
         coordinates.setForeground(Color.BLUE);
         frame.add(coordinates, BorderLayout.SOUTH);
 		frame.setLayout(new BorderLayout());
@@ -87,7 +87,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		
 		frame.setVisible(true);
 
-    }
+    }**/
     @Override
 	public void mousePressed(MouseEvent e) {
 		throw new UnsupportedOperationException("Not supported yet.");
