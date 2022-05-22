@@ -634,7 +634,7 @@ public class TransformActions {
         JFrame frame = new JFrame("Draw");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Draw drawing = new Draw();
+        Draw drawing = new Draw(target);
         JLabel coordinates = new JLabel("Mouse coordinates");
         coordinates.setForeground(Color.BLUE);
         frame.add(coordinates, BorderLayout.SOUTH);

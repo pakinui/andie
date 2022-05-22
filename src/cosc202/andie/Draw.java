@@ -13,16 +13,18 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class Draw extends JPanel implements ImageOperation, java.io.Serializable, MouseMotionListener, MouseListener  {
-    static ArrayList<Drawable> itemsDrawn;
+public class Draw extends JPanel implements ImageOperation, java.io.Serializable, MouseMotionListener, MouseListener {
+	static ArrayList<Drawable> itemsDrawn;
 	public JButton clear, undo;
 	private JLabel mousePos;
 	public Draw.DrawPanel dp = new DrawPanel();
 	public Draw.ControlPanel cp = new ControlPanel(dp);
+	protected ImagePanel target;
+	protected BufferedImage input;
 
-    public Draw() {
-
-        JPanel panel = new JPanel();
+	public Draw(ImagePanel target) {
+		this.target = target;
+		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
@@ -68,27 +70,30 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 			}
 		});
 
-    }
-    /**public static void main(String[] args){
-        JFrame frame = new JFrame("Draw");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 
-        Draw drawing = new Draw();
-        JLabel coordinates = new JLabel("Mouse coordinates");
-        coordinates.setForeground(Color.BLUE);
-        frame.add(coordinates, BorderLayout.SOUTH);
-		frame.setLayout(new BorderLayout());
-        frame.add(drawing, BorderLayout.NORTH);
-
-		
-		frame.pack();
-		
-		frame.setLocationRelativeTo(null);
-		
-		frame.setVisible(true);
-
-    }**/
-    @Override
+	/**
+	 * public static void main(String[] args){
+	 * JFrame frame = new JFrame("Draw");
+	 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	 * 
+	 * Draw drawing = new Draw();
+	 * JLabel coordinates = new JLabel("Mouse coordinates");
+	 * coordinates.setForeground(Color.BLUE);
+	 * frame.add(coordinates, BorderLayout.SOUTH);
+	 * frame.setLayout(new BorderLayout());
+	 * frame.add(drawing, BorderLayout.NORTH);
+	 * 
+	 * 
+	 * frame.pack();
+	 * 
+	 * frame.setLocationRelativeTo(null);
+	 * 
+	 * frame.setVisible(true);
+	 * 
+	 * }
+	 **/
+	@Override
 	public void mousePressed(MouseEvent e) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
@@ -287,7 +292,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 				mousePos.setText(position);
 				drawPanel.repaint();
 			}
-			
+
 			public void mouseMoved(MouseEvent e) {
 				String position = "(" + e.getPoint().x + "," + e.getPoint().y + ")";
 				mousePos.setText(position);
@@ -374,6 +379,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		public MyRectangle(State state) {
 			super(state);
 		}
+
 		@Override
 		public Shape getShape() {
 			return getBounds();
@@ -384,6 +390,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		public MyOval(State state) {
 			super(state);
 		}
+
 		@Override
 		public Shape getShape() {
 			Rectangle bounds = getBounds();
@@ -395,6 +402,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		public MyLine(State state) {
 			super(state);
 		}
+
 		@Override
 		public Shape getShape() {
 			Rectangle bounds = getBounds();
@@ -404,8 +412,14 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 
 	public class DrawPanel extends JPanel {
 		public DrawPanel() {
+			try {
+				add(target);
+			} catch (Exception e) {
+
+			}
 			itemsDrawn = new ArrayList<>();
 		}
+
 		@Override
 		public Dimension getPreferredSize() {
 			return new Dimension(500, 500);
@@ -441,7 +455,13 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 	public void mouseExited(MouseEvent arg0) {
 	}
 
-    public BufferedImage apply(BufferedImage input){
-        return input;
-    }
+	public BufferedImage apply(BufferedImage input) {
+		this.input = input;
+		// JFrame f = new JFrame();
+		// f.add(target);
+		// f.setVisible(true);
+		// f.pack();
+		// f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		return input;
+	}
 }
