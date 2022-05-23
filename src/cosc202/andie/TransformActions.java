@@ -41,20 +41,24 @@ public class TransformActions {
 
     public TransformActions() {
         actions = new ArrayList<Action>();
-        actions.add(new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
-        actions.add(new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
+        actions.add(
+                new RotateActions("Rotate", null, "Rotate image either 90º or 180º", Integer.valueOf(KeyEvent.VK_R)));
+        actions.add(
+                new FlipAction("Flip", null, "Flip image vertically or horizontally", Integer.valueOf(KeyEvent.VK_F)));
         actions.add(new Scale("Scale", null, "Scale the size of an image", null));
-       
-        //actions to be able to access for shortcuts and the toolbar, but not in the transformMenu
-        actions.add(new RotateRight(null,null,null,null));
-        actions.add(new RotateLeft(null,null,null,null));
-        actions.add(new FlipHorizontal(null,null,null,null));
-        actions.add(new FlipVertical(null,null,null,null));
+
+        // actions to be able to access for shortcuts and the toolbar, but not in the
+        // transformMenu
+        actions.add(new RotateRight(null, null, null, null));
+        actions.add(new RotateLeft(null, null, null, null));
+        actions.add(new FlipHorizontal(null, null, null, null));
+        actions.add(new FlipVertical(null, null, null, null));
         actions.add(new RotateFull(null, null, null, null));
         actions.add(new StickerAction("Sticker", null, "Add stickers to an image", null)); // 8
-        actions.add(new CropAction("Crop Image", null, "Crop an Image", null));//9
-        actions.add(new DrawAction( "Draw", null, "Draw", null));
-    }   
+        actions.add(new CropAction("Crop Image", null, "Crop an Image", null));// 9
+        actions.add(new DrawAction("Draw", null, "Draw", null));
+        actions.add(new Draw2Action("Draw2", null, "Draw", null));
+    }
 
     /**
      * <p>
@@ -87,7 +91,8 @@ public class TransformActions {
         transformMenu.add(actions.get(8));
         transformMenu.add(actions.get(9));
         transformMenu.add(actions.get(10));
-       
+        transformMenu.add(actions.get(11));
+
         return transformMenu;
     }
 
@@ -624,33 +629,77 @@ public class TransformActions {
 
     public class DrawAction extends ImageAction {
 
-
         DrawAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
         }
 
         @Override
-        public void actionPerformed(ActionEvent e){
-        JFrame frame = new JFrame("Draw");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        public void actionPerformed(ActionEvent e) {
+            JFrame frame = new JFrame("Draw");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Draw drawing = new Draw(target);
-        JLabel coordinates = new JLabel("Mouse coordinates");
-        coordinates.setForeground(Color.BLUE);
-        frame.add(coordinates, BorderLayout.SOUTH);
-		frame.setLayout(new BorderLayout());
-        frame.add(drawing, BorderLayout.NORTH);
+            Draw drawing = new Draw(target);
+            JLabel coordinates = new JLabel("Mouse coordinates");
+            coordinates.setForeground(Color.BLUE);
+            frame.add(coordinates, BorderLayout.SOUTH);
+            frame.setLayout(new BorderLayout());
+            frame.add(drawing, BorderLayout.NORTH);
 
-		
-		frame.pack();
-		
-		frame.setLocationRelativeTo(null);
-		
-		frame.setVisible(true);
+            frame.pack();
+
+            frame.setLocationRelativeTo(null);
+
+            frame.setVisible(true);
+
+            target.getImage().apply(drawing);
+            target.repaint();
+            target.getParent().revalidate();
+
+        }
+    }
+
+    public class Draw2Action extends ImageAction {
+
+        DrawShape ds;
+
+        Draw2Action(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            try {
+                ds = new DrawShape(target);
+                System.out.println("started");
+
+            } catch (Exception ex) {
+                // ex.printStackTrace();
+            }
+
+            target.addMouseMotionListener(new MouseAdapter() {
+
+                public void mouseMoved(MouseEvent e) {
+                    try {
+                        if (ds.finished) {
+                            target.getImage().apply(ds);
+                            target.repaint();
+                            target.getParent().revalidate();
+                            System.out.println("finsihed");
+                            ds.finished = false;
+                        }
+                    } catch (Exception ex) {
+
+                    }
+                }
+            });
+
+        }
 
     }
-    }
-     /**
+
+    /**
      * <p>
      * Action to add Stickers to an image.
      * </p>
@@ -659,15 +708,15 @@ public class TransformActions {
      */
     public class StickerAction extends ImageAction {
 
-        int num;//0-5 for same num in arr
-        
-        int x;//location of mouse click
+        int num;// 0-5 for same num in arr
+
+        int x;// location of mouse click
         int y;
-        
-        int size;//size of icon
-        
-        boolean fin = false;//if false mouse listener work, once done is clicked it becomes true and it wont work
-        
+
+        int size;// size of icon
+
+        boolean fin = false;// if false mouse listener work, once done is clicked it becomes true and it
+                            // wont work
 
         /**
          * <p>
@@ -695,7 +744,7 @@ public class TransformActions {
          * </p>
          * 
          * <p>
-         * It calls {@link Sticker} when a mouseClick occurs with the 
+         * It calls {@link Sticker} when a mouseClick occurs with the
          * specified sticker selected in the pop-up JFrame.
          * </p>
          * 
@@ -707,20 +756,26 @@ public class TransformActions {
         @Override
         public void actionPerformed(ActionEvent e) {
             fin = false;
-            
+
             JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setPreferredSize(new Dimension(300,300));
+            frame.setPreferredSize(new Dimension(300, 300));
 
             JButton[] buttons = new JButton[6];
             ImageIcon[] icons = new ImageIcon[6];
 
-            ImageIcon smile = new ImageIcon((new ImageIcon("src/stickers/smile.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-            ImageIcon fear = new ImageIcon((new ImageIcon("src/stickers/fear.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-            ImageIcon wink = new ImageIcon((new ImageIcon("src/stickers/wink.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-            ImageIcon sunglasses = new ImageIcon((new ImageIcon("src/stickers/sunglasses.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/happyTears.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
-            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heartEye.png").getImage()).getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH));
+            ImageIcon smile = new ImageIcon((new ImageIcon("src/stickers/smile.png").getImage()).getScaledInstance(20,
+                    20, java.awt.Image.SCALE_SMOOTH));
+            ImageIcon fear = new ImageIcon((new ImageIcon("src/stickers/fear.png").getImage()).getScaledInstance(20, 20,
+                    java.awt.Image.SCALE_SMOOTH));
+            ImageIcon wink = new ImageIcon((new ImageIcon("src/stickers/wink.png").getImage()).getScaledInstance(20, 20,
+                    java.awt.Image.SCALE_SMOOTH));
+            ImageIcon sunglasses = new ImageIcon((new ImageIcon("src/stickers/sunglasses.png").getImage())
+                    .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/happyTears.png").getImage())
+                    .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heartEye.png").getImage())
+                    .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
             icons[0] = smile;
             icons[1] = fear;
             icons[2] = wink;
@@ -728,24 +783,24 @@ public class TransformActions {
             icons[4] = tears;
             icons[5] = heart;
 
-            for(int i = 0; i < buttons.length; i++){
-                buttons[i] = new JButton(icons[i]);//create JButtons
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i] = new JButton(icons[i]);// create JButtons
             }
-            //JButton action listener
-            ActionListener listen = new ActionListener(){
+            // JButton action listener
+            ActionListener listen = new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JButton select = (JButton) e.getSource();
-                    for(int i = 0; i < buttons.length; i++){
-                        if(select == buttons[i]){
-                            num = i; //set num to the associated number for the seleced sticker
+                    for (int i = 0; i < buttons.length; i++) {
+                        if (select == buttons[i]) {
+                            num = i; // set num to the associated number for the seleced sticker
                         }
-                    } 
+                    }
                 }
             };
 
-            //adjust sticker size
+            // adjust sticker size
             JPanel scrollPanel = new JPanel();
             JSlider bar = new JSlider(JSlider.HORIZONTAL);
             bar.setMaximum(190);
@@ -754,24 +809,23 @@ public class TransformActions {
             scrollPanel.add(new JLabel("Adjust sticker size."));
             scrollPanel.add(bar);
 
-            bar.addChangeListener(new ChangeListener(){
+            bar.addChangeListener(new ChangeListener() {
 
                 @Override
                 public void stateChanged(ChangeEvent e) {
-                    size = bar.getValue();//change of sticker size if applicable
+                    size = bar.getValue();// change of sticker size if applicable
                 }
             });
 
-           
             JPanel panel = new JPanel();
-            panel.setLayout(new GridLayout(3,1));
+            panel.setLayout(new GridLayout(3, 1));
 
-            JPanel bPanel = new JPanel();//button panel
-            bPanel.setLayout(new GridLayout(2,3));
-            bPanel.setBorder(new EmptyBorder(10,10,10,10));
+            JPanel bPanel = new JPanel();// button panel
+            bPanel.setLayout(new GridLayout(2, 3));
+            bPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
             ButtonGroup group = new ButtonGroup();
-            for(JButton b : buttons){
+            for (JButton b : buttons) {
                 b.setSize(new Dimension(50, 50));
                 bPanel.add(b);
                 group.add(b);
@@ -779,15 +833,15 @@ public class TransformActions {
             }
 
             JButton done = new JButton("Done");// end of sticker action
-            done.addActionListener(new ActionListener(){
+            done.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    frame.dispose(); 
+                    frame.dispose();
                     fin = true;
 
                 }
             });
-            
+
             bPanel.setSize(new Dimension(290, 100));
             panel.add(bPanel);
             panel.add(scrollPanel);
@@ -796,12 +850,12 @@ public class TransformActions {
             frame.setVisible(true);
             frame.pack();
 
-            //mouse listener stuff
-            MouseListener mouse = new MouseListener(){
+            // mouse listener stuff
+            MouseListener mouse = new MouseListener() {
 
                 /**
                  * <p>
-                 * Calls the {@code Sticker} class to apply a sticker 
+                 * Calls the {@code Sticker} class to apply a sticker
                  * where the mouse is clicked onto the target image.
                  * </p>
                  * 
@@ -809,11 +863,11 @@ public class TransformActions {
                  */
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(!fin && frame.isVisible()){
+                    if (!fin && frame.isVisible()) {
                         x = e.getX();
                         y = e.getY();
-                        
-                       // Icon icon = buttons[num].getIcon();
+
+                        // Icon icon = buttons[num].getIcon();
                         Image img = icons[num].getImage();
                         target.getImage().apply(new Sticker(x, y, size, img));
                         target.repaint();
@@ -827,21 +881,21 @@ public class TransformActions {
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    mouseClicked(e);   
+                    mouseClicked(e);
                 }
 
                 @Override
-                public void mouseEntered(MouseEvent e) {  
+                public void mouseEntered(MouseEvent e) {
                 }
 
                 @Override
-                public void mouseExited(MouseEvent e) { 
+                public void mouseExited(MouseEvent e) {
                 }
             };
             target.addMouseListener(mouse);
-        } 
+        }
     }
-    
+
     /**
      * <p>
      * Action to crop an image.
@@ -858,7 +912,7 @@ public class TransformActions {
          */
         MouseCrop m;
 
-        boolean once;//boolean to track if crop has happened
+        boolean once;// boolean to track if crop has happened
 
         /**
          * <p>
@@ -881,9 +935,9 @@ public class TransformActions {
          * </p>
          * 
          * <p>
-         * Creates a {@code MouseCrop} to find the reactangle which the user 
-         * inputs. A mouseMotionListener is added to target which calls the 
-         * {@code CropFunction} class when the {@code MouseCrop} rectangle is complete. 
+         * Creates a {@code MouseCrop} to find the reactangle which the user
+         * inputs. A mouseMotionListener is added to target which calls the
+         * {@code CropFunction} class when the {@code MouseCrop} rectangle is complete.
          * The crop is then applied to target.
          * </p>
          * 
@@ -894,37 +948,37 @@ public class TransformActions {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            try{
+
+            try {
                 m = new MouseCrop(target);
                 once = false;
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Unexpected Error, please try again.");
             }
-            target.addMouseMotionListener(new MouseAdapter(){
-                
+            target.addMouseMotionListener(new MouseAdapter() {
+
                 /**
                  * <p>
-                 * Listener to call the {@code CropFunction} class 
+                 * Listener to call the {@code CropFunction} class
                  * when the rectangle from {@code MouseCrop - m} has been completed.
                  * </p>
                  * 
                  * @param e MouseEvent mouseMoved.
                  */
-                public void mouseMoved(MouseEvent e){
+                public void mouseMoved(MouseEvent e) {
 
-                    if(m.finalRect != null && !once){
-                        
+                    if (m.finalRect != null && !once) {
+
                         Rectangle r = m.getRect();
                         target.getImage().apply(new CropFunction(r));
                         target.repaint();
                         target.getParent().revalidate();
                         m.reset();
-                        once = true;//rectangle is complete
+                        once = true;// rectangle is complete
                     }
                 }
             });
-          
+
         }
     }
 }

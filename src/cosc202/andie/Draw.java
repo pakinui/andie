@@ -42,8 +42,16 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		dp.setLayout(new GridLayout());
 		dp.setVisible(true);
 		dp.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(0, 0, 20, 30)));
-		dp.setBackground(Color.WHITE);
+		dp.setBackground(Color.RED);
+
+		// ImagePanel img = new ImagePanel();
+		// panel.setSize(new Dimension(target.getWidth(), target.getHeight()));
+
+		// img.add(target);
+		// dp.add(img);
+		// dp.repaint();
 		panel.add(dp, BorderLayout.CENTER);
+
 		panel.setVisible(true);
 		panel.add(bottom, BorderLayout.SOUTH);
 		add(panel, BorderLayout.PAGE_START);
@@ -413,7 +421,11 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 	public class DrawPanel extends JPanel {
 		public DrawPanel() {
 			try {
-				add(target);
+				// Graphics2D gg = (Graphics2D) target.getGraphics();
+				// BufferedImage buff = new BufferedImage(target.getWidth(), target.getHeight(),
+				// BufferedImage.TYPE_INT_ARGB);
+				// gg.drawImage(buff, null, 0, 0);
+
 			} catch (Exception e) {
 
 			}
@@ -457,11 +469,12 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 
 	public BufferedImage apply(BufferedImage input) {
 		this.input = input;
-		// JFrame f = new JFrame();
-		// f.add(target);
-		// f.setVisible(true);
-		// f.pack();
-		// f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		System.out.println("apply");
+		JFrame f = new JFrame();
+		f.add(target);
+		f.setVisible(true);
+		f.pack();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		return input;
 	}
 }
