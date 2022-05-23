@@ -2,10 +2,17 @@ package cosc202.andie;
 
 import java.util.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.awt.*;
-import javax.swing.border.EmptyBorder;
+
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.*;
 import javax.swing.event.*;
+import java.awt.geom.Line2D;
 
 /**
  * <p>
@@ -660,43 +667,519 @@ public class TransformActions {
 
     public class Draw2Action extends ImageAction {
 
-        DrawShape ds;
+        BufferedImage buffOver;
+        MyPanel pan;
+        JFrame f;
+
+        ArrayList<BufferedImage> buffArray = new ArrayList<>();
+        ArrayList<Graphics2D> graphicsArray = new ArrayList<>();
+
+        JFrame frame;
+        JPanel topPanel;
+        JPanel botPanel;
+        GridBagLayout grid;
+        GridBagConstraints gbc;
+        JLabel coords;
+        JButton done;
+        ArrayList<Point> line = new ArrayList<>();
+        ArrayList<Color> lineColour = new ArrayList<>();
+        //boolean finished;
+        //boolean completed;
+        JButton undo;
+        JButton clear;
+        JComboBox<String> shapeSelect;
+        String selected;
+        JButton foreground;
+        JButton background;
+        JCheckBox filled;
+        JCheckBox gradient;
+        JCheckBox dashed;
+
+        JTextField dLength;
+        JTextField lWidth;
+
+        Color foregroundColour;
+        Color backgroundColour;
+
+        
+        JLabel labelImg;
+
+        BufferedImage buff;
+        Image img;
+        GridLayout gridLay;
+        JLabel lab;
 
         Draw2Action(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            selected = "Rectangle";
+            target.repaint();
+            
+        }
 
+        protected void createMenu(){
+
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //frame.setSize(new Dimension(100, 500));
+            GridBagLayout gridLay = new GridBagLayout();
+            frame.setLayout(gridLay);
+            GridBagConstraints gbc2 = new GridBagConstraints();
+            gbc2.gridx = 0;
+            gbc2.gridy = 0;
+            
+           
+
+            // top panel
+            topPanel = createTopPanel();
+            topPanel.setSize(new Dimension(100,400));
+            gridLay.setConstraints(topPanel, gbc2);
+            
+
+
+            // coords
+            JPanel labelPanel = new JPanel();
+            labelPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+            coords = new JLabel("(" + 0 + ", " + 0 + ")");
+            // coords.setHorizontalAlignment(JLabel.WEST);
+            labelPanel.add(coords);
+            labelPanel.setSize(new Dimension(100,50));
+            
+
+            done = new JButton("Done");
+            done.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    frame.dispose();
+                    //for (int i = 0; i < line.size(); i++) {
+
+                        //Point p = line.get(i);
+                        target.getImage().apply(new DrawAgain(pan));
+                        target.repaint();
+                        target.getParent().revalidate();
+                        pan = new MyPanel();
+                        buff = null;
+                    //}
+                    
+                }
+
+            });
+
+            labelPanel.add(done);
+            gbc2.gridx = 0;
+            gbc2.gridy = 1;
+            gridLay.setConstraints(labelPanel, gbc2);
+
+            frame.add(topPanel);
+            //frame.add(botPanel);
+            frame.add(labelPanel);
+
+            frame.setLocation(0, 515);
+            frame.pack();
+            frame.setVisible(true);
+
+        }
+
+        private JPanel createBotPanel() {
+
+            ImagePanel panel = new ImagePanel();
+            // panel.setSize(new Dimension(700,500));
+            // int height = target.getHeight();
+            // int width = target.getWidth();
+            // panel.setSize(new Dimension(width + 10, height + 50));
+            //System.out.println("height: " + height + ", pan hieght: " + panel.getHeight());
+            // gbc.insets = new Insets(20,20,20,20);
+    
+            grid.setConstraints(panel, gbc);
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            panel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(0, 0, 20, 30)));
+    
+            buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) target.getGraphics();
+            g.drawImage(buff, null, 0, 0);
+            g.setColor(Color.BLACK);
+            g.fillRect(10,10, 40,22);
+            
+            img = (Image) buff;
+            JLabel imgLabel = new JLabel(new ImageIcon(img));
+
+            panel.add(target);
+            panel.repaint();
+            return panel;
+        }
+    
+        private JPanel createTopPanel() {
+    
+            JPanel panel = new JPanel();
+            grid = new GridBagLayout();
+            gbc = new GridBagConstraints();
+            
+            panel.setLayout(grid);
+    
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+    
+            // undo button
+            undo = new JButton("Undo");
+            undo.addActionListener(new ActionListener() {
+    
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // add
+    
+                }
+    
+            });
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            grid.setConstraints(undo, gbc);
+            undo.setSize(new Dimension(90,40));
+            panel.add(undo);
+    
+            // clear button
+            clear = new JButton("Clear");
+            clear.addActionListener(new ActionListener() {
+    
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // add
+    
+                }
+    
+            });
+             gbc.gridx = 1;
+             gbc.gridy = 0;
+             grid.setConstraints(clear, gbc);
+            clear.setSize(new Dimension(90,40));
+            panel.add(clear);
+    
+            // shape selection
+            JLabel shapeLabel = new JLabel("Shape:");
+            JPanel shapePanel = new JPanel();
+            
+            gbc.gridx = 2;
+            gbc.gridy = 0;
+            
+    
+            shapePanel.add(shapeLabel);
+    
+            shapeSelect = new JComboBox<>(new String[] { "Rectangle", "Oval", "Line", "Eclipse", "Paint Brush" });
+            shapeSelect.addActionListener(new ActionListener() {
+    
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selected = (String) shapeSelect.getSelectedItem();
+                    System.out.println(selected);
+                    
+    
+                }
+    
+            });
+            // gbc.gridx = 2;
+            //  gbc.gridy = 0;
+            shapePanel.add(shapeSelect);
+             grid.setConstraints(shapePanel, gbc);
+            panel.add(shapePanel);
+            
+
+
+            // 1st col
+            foreground = new JButton("1st Colour");
+            foreground.setBackground(Color.BLACK);
+            foregroundColour = (Color.BLACK);
+            foreground.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    // color1 = JColorChooser.showDialog(null, "Pick your
+                    // color", Color.BLACK);
+                    
+                    foregroundColour = JColorChooser.showDialog(null, "Pick your color", Color.BLACK);
+                    //System.out.println(foregroundColour);
+                    foreground.setBackground(foregroundColour);
+    
+                }
+            });
+            gbc.gridx = 3;
+             gbc.gridy = 0;
+             grid.setConstraints(foreground, gbc);
+            panel.add(foreground);
+    
+            // 2nd col
+            background = new JButton("2nd Colour");
+            background.setBackground(Color.WHITE);
+            backgroundColour = (Color.WHITE);
+            background.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    /*
+                     * color2 = JColorChooser.showDialog(null,
+                     * "Pick your color.", color2); if (color2 == null) color2 =
+                     * Color.WHITE;
+                     */
+                    background.setBackground(JColorChooser.showDialog(null, "Pick your color", Color.BLACK));
+                }
+            });
+            gbc.gridx = 4;
+             gbc.gridy = 0;
+            // gbc.gridwidth = GridBagConstraints.REMAINDER;
+             grid.setConstraints(background, gbc);
+            panel.add(background);
+    
+            filled = new JCheckBox("Filled");
+            gbc.gridx = 0;
+             gbc.gridy = 1;
+             grid.setConstraints(filled, gbc);
+            panel.add(filled);
+    
+            gradient = new JCheckBox("Use Gradient");
+            gbc.gridx = 1;
+             gbc.gridy = 1;
+             grid.setConstraints(gradient, gbc);
+            panel.add(gradient);
+    
+            dashed = new JCheckBox("Dashed");
+            gbc.gridx = 2;
+             gbc.gridy = 1;
+             grid.setConstraints(dashed, gbc);
+            panel.add(dashed);
+    
+            
+            JPanel dashPanel = new JPanel();
+            JLabel dashLabel = new JLabel("Dash Length:");
+            gbc.gridx = 3;
+             gbc.gridy = 1;
+             //grid.setConstraints(dashLabel, gbc);
+            dashPanel.add(dashLabel);
+    
+            dLength = new JTextField("10");
+            //gbc.gridx = 4;
+             //gbc.gridy = 1;
+             //grid.setConstraints(dLength, gbc);
+            dashPanel.add(dLength);
+            grid.setConstraints(dashPanel, gbc);
+            panel.add(dashPanel);
+    
+            //JPanel linePanel = new JPanel();
+            //linePanel.setLayout(new GridLayout(1,2));
+
+            JPanel linePanel = new JPanel();
+            JLabel lineLabel = new JLabel("Line Width:");
+            gbc.gridx = 4;
+            gbc.gridy = 1;
+            
+            //  grid.setConstraints(lineLabel, gbc);
+            linePanel.add(lineLabel);
+            
+            // gbc.gridx = 6;
+            // gbc.gridy = 1;
+            
+            lWidth = new JTextField("2");
+             
+            linePanel.add(lWidth);
+            grid.setConstraints(linePanel, gbc);
+            panel.add(linePanel);
+
+            
+            
+    
+            //grid.setConstraints(panel, gbc);
+            
+            return panel;
+        }
+
+        private void createListeners() {
+
+            target.addMouseMotionListener(new MouseAdapter() {
+    
+                public void mouseDragged(MouseEvent e) {
+                    //if (!finished) {
+                        coords.setText("(" + e.getX() + ", " + e.getY() + ")");
+                        if(selected.equals("Paint Brush")){
+                            line.add(e.getPoint());
+                            lineColour.add(foregroundColour);
+                            // pixel.setLocation(e.getPoint());
+        
+                            pan.repaint();
+                            target.repaint();
+                            
+                        }else if(selected.equals("Rectangle")){
+
+
+                        }
+                        
+                       
+                    //}
+    
+                }
+    
+                public void mouseMoved(MouseEvent e) {
+    
+                    coords.setText("(" + e.getX() + ", " + e.getY() + ")");
+                    // target.repaint();
+                }
+    
+            });
+    
+            target.addMouseListener(new MouseAdapter() {
+    
+                public void mouseReleased(MouseEvent e) {
+                    try {
+    
+                        
+                        // Graphics2D g = (Graphics2D) target.getGraphics();
+                        // // BufferedImage newImg = new BufferedImage(input.getWidth(), input.getHeight(),
+                        // // BufferedImage.TYPE_INT_ARGB);
+                        // //System.out.println(pan.getWidth() + " W - H " + pan.getHeight());
+                        // BufferedImage panBuff = new BufferedImage(target.getWidth(), target.getHeight(),
+                        //         BufferedImage.TYPE_INT_ARGB);
+    
+                        // g.drawImage(panBuff, null, 0, 0);
+    
+                        // Graphics2D g2 = (Graphics2D) target.getGraphics();
+                        // BufferedImage buff = new BufferedImage(target.getWidth(), target.getHeight(),
+                        //         BufferedImage.TYPE_INT_ARGB);
+                        // g2.drawImage(buff, null, 0, 0);// pan as a buffered img
+    
+                        // Graphics2D gr = (Graphics2D) buff.getGraphics();
+                        // //gr.drawImage(input, null, 0, 0);
+                        
+                        // buffArray.add(buffOver);
+                        // //graphicsArray.add()
+                        // // Image img = (Image) input;
+                        // // labelImg = new JLabel(new ImageIcon(img));
+                        
+    
+                        // line.clear();
+                        if (line.isEmpty())
+                            System.out.println("EMPTY");
+                        // lineColour = new ArrayList<>();
+                        // lineColour.clear();
+                    } catch (Exception ex) {
+                        // System.out.println("error");
+                        ex.printStackTrace();
+                    }
+    
+                }
+            });
+    
+        }
+
+        private void addOverlay() {
+            target.repaint();
+            pan = new MyPanel();
+            pan.setOpaque(false);//false = see though, true = see panel
+            //pan.setVisible(true);
+
+            //pan.add(new JLabel("PANEL PANEL"));
+            //JPanel test = new JPanel();
+            //pan.setBackground(Color.RED);
+            //test.setSize(new Dimension(100,100));
+
+
+            LayoutManager over = new OverlayLayout(target);
+            target.setLayout(over);
+            System.out.println(target.getWidth() + " W -- H" + target.getHeight());
+            pan.setSize(target.getSize());
+            
+            
+            //System.out.println(pan.getWidth() + " W -1 H " + pan.getHeight());
+            target.add(pan);
+            //target.add(test);
+            
+            
+    
+        }
+
+        
+
+        protected class MyPanel extends ImagePanel {
+
+            //public BufferedImage buffOver;
+
+    
+            MyPanel() {
+                
+                //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                
+
+                
+    
+            }
+    
+            // protected BufferedImage getBuff(){
+    
+            //     return buffOver;
+            // }
+    
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    if(buff != null){
+                        if(selected.equals("Paint Brush")){
+                            Graphics2D g2 = (Graphics2D) g;
+                            Graphics2D g3 = (Graphics2D) buff.getGraphics();
+        
+                            // g.fillOval(p.x, p.y, 10, 10);
+                            g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                            g3.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        
+                            // g.fillOval(pixel.x, pixel.y, 10, 10);
+                            for (int i = 1; i < line.size(); i++) {
+                                Point p = line.get(i);
+                                Point pBefore = line.get(i - 1);
+                                Color c = lineColour.get(i);
+                                g2.setColor(c);
+                                g2.draw(new Line2D.Float(pBefore, p));
+                                g3.setColor(c);
+                                g3.draw(new Line2D.Float(pBefore, p));
+                                
+                                lab = new JLabel(new ImageIcon(buff));
+                            }
+                        }else if(selected.equals("Rectangle")){
+
+                            Graphics2D g2 = (Graphics2D) g;
+
+                            //MouseCrop mc = new MouseCrop(target);
+
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error");
+                    e.printStackTrace();
+                }
+    
+            }
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            target.repaint();
+            createMenu();
+            addOverlay();
+            createListeners();
+            
 
-            try {
-                ds = new DrawShape(target);
-                System.out.println("started");
 
-            } catch (Exception ex) {
-                // ex.printStackTrace();
-            }
+            // f = new JFrame("trail");
+            // f.setLayout(new GridLayout(2,1));
+            // lab = new JLabel(new ImageIcon(buff));
+            // f.add(pan);
+            // f.add(lab);
+            // f.setLocation(400,0);
+            // f.setVisible(true);
+            // f.pack();
+            //System.out.println(line);
+            //System.out.println(line.size());
 
-            target.addMouseMotionListener(new MouseAdapter() {
-
-                public void mouseMoved(MouseEvent e) {
-                    try {
-                        if (ds.finished) {
-                            target.getImage().apply(ds);
-                            target.repaint();
-                            target.getParent().revalidate();
-                            System.out.println("finsihed");
-                            ds.finished = false;
-                        }
-                    } catch (Exception ex) {
-
-                    }
-                }
-            });
 
         }
 
+
+        
     }
 
     /**

@@ -40,6 +40,7 @@ public class MouseCrop {
 
         addOverlay(target);
         addListeners(target);
+        
     }
 
     /**
@@ -163,19 +164,23 @@ public class MouseCrop {
              * @param e MouseEvent of mouse release.
              */
             public void mouseReleased(MouseEvent e) {
-                if (current.width != 0) {
-                    if (!cropDone || !rectDone) {
+                try{
+                    if (current.width != 0) {
+                        if (!cropDone || !rectDone) {
 
-                        rectUpdate(e, current);
-                        width = current.width;
-                        height = current.height;
-                        finalRect = current;//create final rectangle to crop
-                        reset();
-                        target.repaint();
-                        target.getParent().revalidate();
-                        cropDone = true;
-                        rectDone = true;
+                            rectUpdate(e, current);
+                            width = current.width;
+                            height = current.height;
+                            finalRect = current;//create final rectangle to crop
+                            reset();
+                            target.repaint();
+                            target.getParent().revalidate();
+                            cropDone = true;
+                            rectDone = true;
+                        }
                     }
+                }catch(Exception ex){
+
                 }
             }
         });
@@ -290,19 +295,24 @@ public class MouseCrop {
      * @param e The mouse event with new location to update current
      */
     void updateSize(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        
-        current.setSize(x - current.x, y - current.y);
-        updateRect(x, y);
+       try{
+       
+            int x = e.getX();
+            int y = e.getY();
+            
+            current.setSize(x - current.x, y - current.y);
+            updateRect(x, y);
 
-        newRect = drawRect.union(oldRect); //newRect is a union of draw and old rect
-        topL[0] = newRect.x;
-        topL[1] = newRect.y;
-        botR[0] = newRect.width;
-        botR[1] = newRect.height;
+            newRect = drawRect.union(oldRect); //newRect is a union of draw and old rect
+            topL[0] = newRect.x;
+            topL[1] = newRect.y;
+            botR[0] = newRect.width;
+            botR[1] = newRect.height;
 
-        target.repaint();//repaint new rectangle size
+            target.repaint();//repaint new rectangle size
+       }catch(Exception ex){
+
+       }
     }
 
     /**
