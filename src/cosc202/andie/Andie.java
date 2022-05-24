@@ -158,6 +158,7 @@ public class Andie {
      * @throws Exception If something goes awry
      * @see #createAndShowGUI()
      */
+    
     public static void main(String[] args) throws Exception {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
