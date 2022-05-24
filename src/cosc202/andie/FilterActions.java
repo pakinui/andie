@@ -314,26 +314,30 @@ public class EmbossAction extends ImageAction {
     EmbossAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
         super(name, icon, desc, mnemonic);
     }
-
-    /**
-     * <p>
-     * Callback for when the convert-to-grey action is triggered.
-     * </p>
-     * 
-     * <p>
-     * This method is called whenever the ConvertToGreyAction is triggered.
-     * It changes the image to greyscale.
-     * </p>
-     * 
-     * @param e The event triggering this callback.
-     */
     public void actionPerformed(ActionEvent e) {
-        target.getImage().apply(new Emboss());
+
+        // Determine what emboss we are going to use - ask the user.
+        int filterNo = 0;
+
+        // Pop-up dialog box to ask for the filter no value.
+        SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 8, 1);
+        JSpinner radiusSpinner = new JSpinner(radiusModel);
+        int option = JOptionPane.showOptionDialog(null, radiusSpinner, "Enter what emboss you want (1-8)",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+        // Check the return value from the dialog box.
+        if (option == JOptionPane.CANCEL_OPTION) {
+            return;
+        } else if (option == JOptionPane.OK_OPTION) {
+            filterNo = radiusModel.getNumber().intValue();
+        }
+
+        // Create and apply the filter
+        target.getImage().apply(new Emboss(filterNo));
         target.repaint();
         target.getParent().revalidate();
     }
 
 }
-
 
 }
