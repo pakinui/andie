@@ -19,15 +19,36 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 	private JLabel mousePos;
 	public Draw.DrawPanel dp = new DrawPanel();
 	public Draw.ControlPanel cp = new ControlPanel(dp);
-	protected ImagePanel target;
+	protected MyPanel target;
 	protected BufferedImage input;
+	protected MouseAdapter mouseHandler;
+	protected JButton done;
 
-	public Draw(ImagePanel target) {
-		this.target = target;
+	protected boolean completed;//if done or exited
+
+	public Draw(BufferedImage img) {
+		target = new MyPanel(img);
+
+		completed = false;
+		
+
+		//target.repaint();
 		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		JPanel bottom = new JPanel();
+		
+		//panel.setVisible(true);
+
+		GridBagLayout grid = new GridBagLayout();
+		panel.setLayout(grid);
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		//panel.setLayout(new BorderLayout());
+		JPanel bottom = new JPanel();//where the mouse coords are displayed
 		bottom.setLayout(new BorderLayout());
+
+		
+
+		
+		
 		JPanel control = new JPanel();
 		mousePos = new JLabel("( , )");
 		bottom.add(mousePos, BorderLayout.WEST);
@@ -38,25 +59,97 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 		control.add(undo);
 		control.add(clear);
 		control.add(cp);
-		panel.add(control, BorderLayout.NORTH);
-		dp.setLayout(new GridLayout());
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		
+		grid.setConstraints(control, gbc);
+		panel.add(control);
+		//dp.setLayout(new GridLayout());
 		dp.setVisible(true);
+		
+		
 		dp.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(0, 0, 20, 30)));
-		dp.setBackground(Color.RED);
+		dp.setMaximumSize(target.getSize());
+		
+		
 
+		
+
+
+		// target.setVisible(true);
+		// dp.setOpaque(false);
+		target.repaint();
+		TransformActions.DrawAction.target.repaint();
+		
+		//target.repaint();
+
+		//System.out.println("Tsize: " + target.getSize());
+		
 		// ImagePanel img = new ImagePanel();
 		// panel.setSize(new Dimension(target.getWidth(), target.getHeight()));
 
 		// img.add(target);
 		// dp.add(img);
 		// dp.repaint();
-		panel.add(dp, BorderLayout.CENTER);
+		//System.out.println("P: " + target.getParent().getName());
+		//target.setOpaque(false);
+		gbc.gridy = 1;
+		//gbc.ipady = 60;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		gbc.anchor = GridBagConstraints.CENTER;
+		grid.setConstraints(target, gbc);
+		panel.add(target, GridBagConstraints.REMAINDER);
 
-		panel.setVisible(true);
-		panel.add(bottom, BorderLayout.SOUTH);
-		add(panel, BorderLayout.PAGE_START);
-		addMouseListener((MouseListener) this);
-		addMouseMotionListener((MouseMotionListener) this);
+		LayoutManager over = new OverlayLayout(target);
+		target.setLayout(over);
+		dp.setSize(target.getSize());
+		target.add(dp);
+		//target.setBackground(Color.RED);
+		
+
+		//panel.setVisible(true);
+		//target.setOpaque(false);
+		//target.setVisible(false);
+		//target.setOpaque(true);
+		//target.setBackground(Color.RED);
+		dp.setOpaque(true);
+		dp.setBackground(Color.RED);
+		
+		
+		gbc.gridy = 2;
+		gbc.ipady = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		
+		grid.setConstraints(bottom, gbc);
+		panel.add(bottom, GridBagConstraints.REMAINDER);
+
+		done = new JButton("Done");
+		// JPanel buttonPanel = new JPanel();
+		// buttonPanel.add(done);
+		//action listener
+		gbc.gridx = 1;
+		gbc.anchor = GridBagConstraints.EAST;
+		grid.setConstraints(done, gbc);
+		panel.add(done);
+
+		ActionListener finished = new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				completed = true;
+				TransformActions.DrawAction.frame.dispose();
+			}
+			
+		};
+
+		done.addActionListener(finished);
+		
+		add(panel, BorderLayout.CENTER);
+		dp.addMouseListener(mouseHandler);
+		dp.addMouseMotionListener(mouseHandler);
+		target.addMouseListener(mouseHandler);
+		target.addMouseMotionListener(mouseHandler);
 
 		clear.addActionListener(new ActionListener() {
 			@Override
@@ -77,9 +170,44 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 				}
 			}
 		});
-
+		
+		target.repaint();
+		TransformActions.DrawAction.target.repaint();
 	}
 
+	protected class MyPanel extends ImagePanel{
+
+		BufferedImage buff;
+		MyPanel(){}
+
+		MyPanel(BufferedImage buff){
+			// this.add(new JLabel(new ImageIcon(buff)));
+			// this.setOpaque(false);
+			//this.paint(buff.getGraphics());
+			this.buff = buff;
+			LayoutManager over = new OverlayLayout(this);
+			this.setLayout(over);
+			this.add(dp);
+			
+		}
+
+		@Override
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			g.drawImage(buff, 0, 0, null);
+			Graphics2D g2d = (Graphics2D) g.create();
+			for (Drawable d : itemsDrawn) {
+				d.paint(this, g2d);
+				d.paint(target, g2d);
+			}
+			g2d.dispose();
+		}
+	}
+
+
+	protected ImagePanel getPanel(){
+		return  target;
+	}
 	/**
 	 * public static void main(String[] args){
 	 * JFrame frame = new JFrame("Draw");
@@ -227,9 +355,18 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 			add(width);
 			add(lineWidth);
 			this.drawPanel = panel;
-			MouseHandler mouseHandler = new MouseHandler();
-			drawPanel.addMouseListener(mouseHandler);
-			drawPanel.addMouseMotionListener(mouseHandler);
+			mouseHandler = new MouseHandler();
+			// drawPanel.addMouseListener(mouseHandler);
+			// drawPanel.addMouseMotionListener(mouseHandler);
+			if(target != null){
+				dp.addMouseListener(mouseHandler);
+				dp.addMouseMotionListener(mouseHandler);
+			}else{
+				dp.addMouseListener(mouseHandler);
+				dp.addMouseMotionListener(mouseHandler);
+			}
+			
+			//System.out.println("size: " + TransformActions.DrawAction.frame.getSize());
 		}
 
 		public int getDash() {
@@ -299,6 +436,8 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 
 				mousePos.setText(position);
 				drawPanel.repaint();
+				target.repaint();
+				TransformActions.DrawAction.target.repaint();
 			}
 
 			public void mouseMoved(MouseEvent e) {
@@ -443,6 +582,7 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 			Graphics2D g2d = (Graphics2D) g.create();
 			for (Drawable d : itemsDrawn) {
 				d.paint(this, g2d);
+				d.paint(target, g2d);
 			}
 			g2d.dispose();
 		}
@@ -468,13 +608,12 @@ public class Draw extends JPanel implements ImageOperation, java.io.Serializable
 	}
 
 	public BufferedImage apply(BufferedImage input) {
+		
+		
 		this.input = input;
-		System.out.println("apply");
-		JFrame f = new JFrame();
-		f.add(target);
-		f.setVisible(true);
-		f.pack();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//target.paint(input.getGraphics());
+		//target.repaint();
+		
 		return input;
 	}
 }

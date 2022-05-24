@@ -636,31 +636,78 @@ public class TransformActions {
 
     public class DrawAction extends ImageAction {
 
+        static JFrame  frame;
+
         DrawAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
+            //target.repaint();
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Draw");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            Draw drawing = new Draw(target);
-            JLabel coordinates = new JLabel("Mouse coordinates");
-            coordinates.setForeground(Color.BLUE);
-            frame.add(coordinates, BorderLayout.SOUTH);
+            Graphics2D gg = (Graphics2D) target.getGraphics();
+            BufferedImage buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            //gg.drawImage(buff, null, 0,0);
+            target.paint(buff.getGraphics());
+
+            JFrame f = new JFrame("HMMGMGMGM");
+            f.setLayout(new GridLayout(2,1));
+            f.add(new JLabel(new ImageIcon(buff)));
+            //f.add(target);
+            f.pack();
+            f.setVisible(true);
+
+
+            //target.repaint();
+            frame = new JFrame("Draw");
+            Draw drawing = new Draw(buff);
+            JButton d = drawing.done;
+            d.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                System.out.println("finished");
+                ImagePanel p = drawing.getPanel();
+                //target = p;
+                // JFrame f = new JFrame("pan");
+                // f.setLayout(new GridLayout(2,1));
+                // f.add(target);
+                // f.add(p);
+                // //f.add(drawing);
+                // f.setLocation(500,0);
+                // f.setVisible(true);
+                // f.pack();
+                
+                System.out.println("hi");
+                target.getImage().apply(new DrawAgain(p));
+                target.repaint();
+                target.getParent().revalidate();
+                
+                }
+
+            });
+            
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            
+            
+            //drawing.setSize(new Dimension(1000, 700));
+            // JLabel coordinates = new JLabel("Mouse coordinates");
+            // coordinates.setForeground(Color.BLUE);
+            // coordinates.setSize(new Dimension(1000, 75));
+            // frame.add(coordinates, BorderLayout.SOUTH);
             frame.setLayout(new BorderLayout());
             frame.add(drawing, BorderLayout.NORTH);
-
+            //System.out.println("DSIze: " + drawing.getSize());
             frame.pack();
 
             frame.setLocationRelativeTo(null);
 
             frame.setVisible(true);
 
-            target.getImage().apply(drawing);
-            target.repaint();
-            target.getParent().revalidate();
+            // target.getImage().apply(drawing);
+            // target.repaint();
+            // target.getParent().revalidate();
 
         }
     }
@@ -695,8 +742,8 @@ public class TransformActions {
         JCheckBox gradient;
         JCheckBox dashed;
 
-        JTextField dLength;
-        JTextField lWidth;
+        JTextField dashLength;
+        JTextField lineWidth;
 
         Color foregroundColour;
         Color backgroundColour;
@@ -709,12 +756,22 @@ public class TransformActions {
         GridLayout gridLay;
         JLabel lab;
 
+        boolean filledBox;
+        boolean gradientBox;
+        boolean dashedBox;
+        Color transparent;
+        boolean dashSwitch;
+
         Draw2Action(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
             //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
             selected = "Rectangle";
             target.repaint();
-            
+            filledBox = false;
+            gradientBox = false;
+            dashedBox = false;
+            transparent = new Color(0,0,0, 0);
+            dashSwitch = false;
         }
 
         protected void createMenu(){
@@ -754,13 +811,19 @@ public class TransformActions {
                     
                     frame.dispose();
                     //for (int i = 0; i < line.size(); i++) {
-
+                        // JFrame f = new JFrame("pan");
+                        // f.setLayout(new GridLayout(2,1));
+                        // f.add(pan);
+                        // f.add(target);
+                        // f.setVisible(true);
+                        // f.pack();
                         //Point p = line.get(i);
                         target.getImage().apply(new DrawAgain(pan));
                         target.repaint();
                         target.getParent().revalidate();
-                        pan = new MyPanel();
                         buff = null;
+                        pan = new MyPanel();
+                        
                     //}
                     
                 }
@@ -953,11 +1016,11 @@ public class TransformActions {
              //grid.setConstraints(dashLabel, gbc);
             dashPanel.add(dashLabel);
     
-            dLength = new JTextField("10");
+            dashLength = new JTextField("10");
             //gbc.gridx = 4;
              //gbc.gridy = 1;
              //grid.setConstraints(dLength, gbc);
-            dashPanel.add(dLength);
+            dashPanel.add(dashLength);
             grid.setConstraints(dashPanel, gbc);
             panel.add(dashPanel);
     
@@ -975,9 +1038,9 @@ public class TransformActions {
             // gbc.gridx = 6;
             // gbc.gridy = 1;
             
-            lWidth = new JTextField("2");
+            lineWidth = new JTextField("5");
              
-            linePanel.add(lWidth);
+            linePanel.add(lineWidth);
             grid.setConstraints(linePanel, gbc);
             panel.add(linePanel);
 
@@ -997,8 +1060,26 @@ public class TransformActions {
                     //if (!finished) {
                         coords.setText("(" + e.getX() + ", " + e.getY() + ")");
                         if(selected.equals("Paint Brush")){
+                            
                             line.add(e.getPoint());
-                            lineColour.add(foregroundColour);
+
+                            if(dashed.isSelected()){
+                                if(lineColour.size()%getDash() == 0){
+                                    if(dashSwitch){
+                                        dashSwitch = false;
+                                        System.out.print("s");
+                                    }else{
+                                        dashSwitch = true;
+                                    }
+                                }
+                                
+                            }
+                            if(dashSwitch){
+                                lineColour.add(transparent);    
+                            }else{
+                                lineColour.add(foregroundColour);
+                            }
+                            
                             // pixel.setLocation(e.getPoint());
         
                             pan.repaint();
@@ -1026,34 +1107,20 @@ public class TransformActions {
     
                 public void mouseReleased(MouseEvent e) {
                     try {
+
+                        //System.out.println("Release pan size: " + pan.getWidth() + ", " + pan.getHeight());
     
-                        
-                        // Graphics2D g = (Graphics2D) target.getGraphics();
-                        // // BufferedImage newImg = new BufferedImage(input.getWidth(), input.getHeight(),
-                        // // BufferedImage.TYPE_INT_ARGB);
-                        // //System.out.println(pan.getWidth() + " W - H " + pan.getHeight());
-                        // BufferedImage panBuff = new BufferedImage(target.getWidth(), target.getHeight(),
-                        //         BufferedImage.TYPE_INT_ARGB);
-    
-                        // g.drawImage(panBuff, null, 0, 0);
-    
-                        // Graphics2D g2 = (Graphics2D) target.getGraphics();
-                        // BufferedImage buff = new BufferedImage(target.getWidth(), target.getHeight(),
-                        //         BufferedImage.TYPE_INT_ARGB);
-                        // g2.drawImage(buff, null, 0, 0);// pan as a buffered img
-    
-                        // Graphics2D gr = (Graphics2D) buff.getGraphics();
-                        // //gr.drawImage(input, null, 0, 0);
-                        
-                        // buffArray.add(buffOver);
-                        // //graphicsArray.add()
-                        // // Image img = (Image) input;
-                        // // labelImg = new JLabel(new ImageIcon(img));
-                        
+                        target.getImage().apply(new DrawAgain(pan));
+                        target.repaint();
+                        target.getParent().revalidate();
+                        // buff = null;
+                        // pan = new MyPanel();
+                        // pan.setSize(target.getWidth(), target.getHeight());
+                        resetPanel();
     
                         // line.clear();
-                        if (line.isEmpty())
-                            System.out.println("EMPTY");
+                        // if (line.isEmpty())
+                        //     System.out.println("EMPTY");
                         // lineColour = new ArrayList<>();
                         // lineColour.clear();
                     } catch (Exception ex) {
@@ -1092,64 +1159,103 @@ public class TransformActions {
     
         }
 
+        public int getDash() {
+			String length = dashLength.getText();
+			int dash = Integer.parseInt(length);
+			return dash;
+		}
+
+		public int getLine() {
+			String width = lineWidth.getText();
+			int line = Integer.parseInt(width);
+			return line;
+		}
+
+        private void resetPanel(){
+            pan = new MyPanel();
+            pan.setOpaque(false);//false = see though, true = see panel
+
+            LayoutManager over = new OverlayLayout(target);
+            target.setLayout(over);
+            //System.out.println(target.getWidth() + " W -- H" + target.getHeight());
+            pan.setSize(target.getSize());
+            
+            
+            //System.out.println(pan.getWidth() + " W -1 H " + pan.getHeight());
+            target.add(pan);
+            line.clear();
+            lineColour.clear();
+
+        }
+
         
 
         protected class MyPanel extends ImagePanel {
 
             //public BufferedImage buffOver;
-
+            
     
             MyPanel() {
                 
                 //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                
+               
 
-                
-    
             }
     
-            // protected BufferedImage getBuff(){
-    
-            //     return buffOver;
-            // }
-    
+           
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    if(buff != null){
-                        if(selected.equals("Paint Brush")){
-                            Graphics2D g2 = (Graphics2D) g;
-                            Graphics2D g3 = (Graphics2D) buff.getGraphics();
-        
-                            // g.fillOval(p.x, p.y, 10, 10);
-                            g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                            g3.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        
-                            // g.fillOval(pixel.x, pixel.y, 10, 10);
+                    if(buff != null && pan != null){
+                        Graphics2D g2 = (Graphics2D) g;
+
+                        if(dashed.isSelected()){
+                            
+                            g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, new float[] {getDash()}, 0));
+                        }else{
+                            
+                            g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
+                        }
+
+                        if(selected.equals("Paint Brush")){ //doesnt care for fill or gradient or background colour
+                            
+                            
+                            //g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                            //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {getDash()}, 0));
+                            //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {getDash()}, 0));
+                            
+                            
                             for (int i = 1; i < line.size(); i++) {
+                                
                                 Point p = line.get(i);
                                 Point pBefore = line.get(i - 1);
                                 Color c = lineColour.get(i);
                                 g2.setColor(c);
                                 g2.draw(new Line2D.Float(pBefore, p));
-                                g3.setColor(c);
-                                g3.draw(new Line2D.Float(pBefore, p));
+                                
                                 
                                 lab = new JLabel(new ImageIcon(buff));
                             }
                         }else if(selected.equals("Rectangle")){
 
-                            Graphics2D g2 = (Graphics2D) g;
+                            
+                            
+                           
 
-                            //MouseCrop mc = new MouseCrop(target);
+                            
+
+                        }else if(selected.equals("Oval")){
+
+
+                        }else{
 
                         }
                     }
                 } catch (Exception e) {
                     System.out.println("Error");
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
     
             }
@@ -1164,22 +1270,8 @@ public class TransformActions {
             
 
 
-            // f = new JFrame("trail");
-            // f.setLayout(new GridLayout(2,1));
-            // lab = new JLabel(new ImageIcon(buff));
-            // f.add(pan);
-            // f.add(lab);
-            // f.setLocation(400,0);
-            // f.setVisible(true);
-            // f.pack();
-            //System.out.println(line);
-            //System.out.println(line.size());
-
-
         }
 
-
-        
     }
 
     /**
