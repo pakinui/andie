@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
- /**
+/**
  * <p>
  * Actions provided by the Edit menu.
  * </p>
@@ -15,19 +15,20 @@ import java.awt.*;
  * </p>
  * 
  * <ul>
- * <li> {@link UndoAction} </li>
- * <li> {@link RedoAction} </li>
+ * <li>{@link UndoAction}</li>
+ * <li>{@link RedoAction}</li>
  * </ul>
  * 
- * <p> 
- * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
+ * <p>
+ * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA
+ * 4.0</a>
  * </p>
  * 
  * @author Steven Mills
  * @version 1.0
  */
 public class EditActions {
-    
+
     /** A list of actions for the Edit menu. */
     protected ArrayList<Action> actions;
 
@@ -40,6 +41,8 @@ public class EditActions {
         actions = new ArrayList<Action>();
         actions.add(new UndoAction("Undo", null, "Undo", Integer.valueOf(KeyEvent.VK_Z)));
         actions.add(new RedoAction("Redo", null, "Redo", Integer.valueOf(KeyEvent.VK_Y)));
+        actions.add(new SaveMacroAction("Save Macro", null, "Save Macro", Integer.valueOf(KeyEvent.VK_M)));
+        actions.add(new ApplyMacroAction("Apply Macro", null, "Apply Macro", Integer.valueOf(KeyEvent.VK_Y)));
     }
 
     /**
@@ -48,7 +51,8 @@ public class EditActions {
      * </p>
      * 
      * <p>
-     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the constructor
+     * Adds a keyboard shortcut to the JMenuItem is a value has been provided in the
+     * constructor
      * </p>
      * 
      * @return The edit menu UI element.
@@ -56,19 +60,20 @@ public class EditActions {
     public JMenu createMenu() {
         JMenu editMenu = new JMenu("Edit");
 
-        //for(Action action: actions){
-            for(Action action : actions){
-                JMenuItem menu = new JMenuItem(action);
-                int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); //identifies the modifier key for the OS
-                //if shortcut is not null add shortcut
-                if(action.getValue("MnemonicKey") != null){
-                    int key = (int) action.getValue("MnemonicKey");
-                    char mn = (char) key;//shortcut key
-                    menu.setAccelerator(KeyStroke.getKeyStroke(mn ,menuKey));
-                }
-                editMenu.add(menu);
-                
+        // for(Action action: actions){
+        for (Action action : actions) {
+            JMenuItem menu = new JMenuItem(action);
+            int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(); // identifies the modifier key for the
+                                                                                  // OS
+            // if shortcut is not null add shortcut
+            if (action.getValue("MnemonicKey") != null) {
+                int key = (int) action.getValue("MnemonicKey");
+                char mn = (char) key;// shortcut key
+                menu.setAccelerator(KeyStroke.getKeyStroke(mn, menuKey));
             }
+            editMenu.add(menu);
+
+        }
         return editMenu;
     }
 
@@ -86,15 +91,15 @@ public class EditActions {
          * Create a new undo action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         UndoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
             putValue(MNEMONIC_KEY, mnemonic);
-            //setAccelerator(KeyStroke.getKeyStroke((KeyEvent.VK_Z),InputEvent.CTRL_DOWN_MASK);
+            // setAccelerator(KeyStroke.getKeyStroke((KeyEvent.VK_Z),InputEvent.CTRL_DOWN_MASK);
         }
 
         /**
@@ -116,13 +121,13 @@ public class EditActions {
         }
     }
 
-     /**
+    /**
      * <p>
      * Action to redo an {@link ImageOperation}.
      * </p>
      * 
      * @see EditableImage#redo()
-     */   
+     */
     public class RedoAction extends ImageAction {
 
         /**
@@ -130,16 +135,15 @@ public class EditActions {
          * Create a new redo action.
          * </p>
          * 
-         * @param name The name of the action (ignored if null).
-         * @param icon An icon to use to represent the action (ignored if null).
-         * @param desc A brief description of the action  (ignored if null).
-         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
          */
         RedoAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
         }
 
-        
         /**
          * <p>
          * Callback for when the redo action is triggered.
@@ -154,6 +158,76 @@ public class EditActions {
          */
         public void actionPerformed(ActionEvent e) {
             target.getImage().redo();
+            target.repaint();
+            target.getParent().revalidate();
+        }
+    }
+
+    public class SaveMacroAction extends ImageAction {
+
+        /**
+         * <p>
+         * Create saves/clones current operations to a new Stack.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        SaveMacroAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for when the save macro action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the save macro is triggered.
+         * It saves all operations done on image to another stack.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().saveMacro();
+            target.repaint();
+            target.getParent().revalidate();
+        }
+    }
+
+    public class ApplyMacroAction extends ImageAction {
+
+        /**
+         * <p>
+         * Creat a new apply macro action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        ApplyMacroAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for appling macro action is called.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the apply macro is triggered.
+         * It applies all saved operations onto the image.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().applyMacro();
             target.repaint();
             target.getParent().revalidate();
         }
