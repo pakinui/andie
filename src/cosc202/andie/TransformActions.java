@@ -63,8 +63,8 @@ public class TransformActions {
         actions.add(new RotateFull(null, null, null, null));
         actions.add(new StickerAction("Sticker", null, "Add stickers to an image", null)); // 8
         actions.add(new CropAction("Crop Image", null, "Crop an Image", null));// 9
-        actions.add(new DrawAction("Draw", null, "Draw", null));
-        actions.add(new Draw2Action("Draw2", null, "Draw", null));
+        actions.add(new DrawAction("Draw Shapes", null, "Draw shapes", null));
+        actions.add(new PaintAction("Paint Brush", null, "Paint brush", null));
     }
 
     /**
@@ -651,12 +651,12 @@ public class TransformActions {
             //gg.drawImage(buff, null, 0,0);
             target.paint(buff.getGraphics());
 
-            JFrame f = new JFrame("HMMGMGMGM");
-            f.setLayout(new GridLayout(2,1));
-            f.add(new JLabel(new ImageIcon(buff)));
-            //f.add(target);
-            f.pack();
-            f.setVisible(true);
+            // JFrame f = new JFrame("HMMGMGMGM");
+            // f.setLayout(new GridLayout(2,1));
+            // f.add(new JLabel(new ImageIcon(buff)));
+            // //f.add(target);
+            // f.pack();
+            // f.setVisible(true);
 
 
             //target.repaint();
@@ -712,7 +712,7 @@ public class TransformActions {
         }
     }
 
-    public class Draw2Action extends ImageAction {
+    public class PaintAction extends ImageAction {
 
         BufferedImage buffOver;
         MyPanel pan;
@@ -734,19 +734,18 @@ public class TransformActions {
         //boolean completed;
         JButton undo;
         JButton clear;
-        JComboBox<String> shapeSelect;
-        String selected;
-        JButton foreground;
+        
+        
         JButton background;
-        JCheckBox filled;
-        JCheckBox gradient;
+        
+       
         JCheckBox dashed;
 
         JTextField dashLength;
         JTextField lineWidth;
 
-        Color foregroundColour;
         Color backgroundColour;
+        
 
         
         JLabel labelImg;
@@ -756,19 +755,17 @@ public class TransformActions {
         GridLayout gridLay;
         JLabel lab;
 
-        boolean filledBox;
-        boolean gradientBox;
+        
         boolean dashedBox;
         Color transparent;
         boolean dashSwitch;
 
-        Draw2Action(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        PaintAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
             //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            selected = "Rectangle";
+            
             target.repaint();
-            filledBox = false;
-            gradientBox = false;
+            
             dashedBox = false;
             transparent = new Color(0,0,0, 0);
             dashSwitch = false;
@@ -918,61 +915,12 @@ public class TransformActions {
             clear.setSize(new Dimension(90,40));
             panel.add(clear);
     
-            // shape selection
-            JLabel shapeLabel = new JLabel("Shape:");
-            JPanel shapePanel = new JPanel();
             
-            gbc.gridx = 2;
-            gbc.gridy = 0;
-            
-    
-            shapePanel.add(shapeLabel);
-    
-            shapeSelect = new JComboBox<>(new String[] { "Rectangle", "Oval", "Line", "Eclipse", "Paint Brush" });
-            shapeSelect.addActionListener(new ActionListener() {
-    
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    selected = (String) shapeSelect.getSelectedItem();
-                    System.out.println(selected);
-                    
-    
-                }
-    
-            });
-            // gbc.gridx = 2;
-            //  gbc.gridy = 0;
-            shapePanel.add(shapeSelect);
-             grid.setConstraints(shapePanel, gbc);
-            panel.add(shapePanel);
-            
-
-
-            // 1st col
-            foreground = new JButton("1st Colour");
-            foreground.setBackground(Color.BLACK);
-            foregroundColour = (Color.BLACK);
-            foreground.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    // color1 = JColorChooser.showDialog(null, "Pick your
-                    // color", Color.BLACK);
-                    
-                    foregroundColour = JColorChooser.showDialog(null, "Pick your color", Color.BLACK);
-                    //System.out.println(foregroundColour);
-                    foreground.setBackground(foregroundColour);
-    
-                }
-            });
-            gbc.gridx = 3;
-             gbc.gridy = 0;
-             grid.setConstraints(foreground, gbc);
-            panel.add(foreground);
     
             // 2nd col
-            background = new JButton("2nd Colour");
-            background.setBackground(Color.WHITE);
-            backgroundColour = (Color.WHITE);
+            background = new JButton("1st Colour");
+            background.setBackground(Color.BLACK);
+            backgroundColour = (Color.BLACK);
             background.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent event) {
@@ -981,29 +929,21 @@ public class TransformActions {
                      * "Pick your color.", color2); if (color2 == null) color2 =
                      * Color.WHITE;
                      */
-                    background.setBackground(JColorChooser.showDialog(null, "Pick your color", Color.BLACK));
+                    Color c = JColorChooser.showDialog(null, "Pick your color", Color.BLACK);
+                    background.setBackground(c);
+                    backgroundColour = c;
                 }
             });
-            gbc.gridx = 4;
+            gbc.gridx = 2;
              gbc.gridy = 0;
             // gbc.gridwidth = GridBagConstraints.REMAINDER;
              grid.setConstraints(background, gbc);
             panel.add(background);
     
-            filled = new JCheckBox("Filled");
-            gbc.gridx = 0;
-             gbc.gridy = 1;
-             grid.setConstraints(filled, gbc);
-            panel.add(filled);
-    
-            gradient = new JCheckBox("Use Gradient");
-            gbc.gridx = 1;
-             gbc.gridy = 1;
-             grid.setConstraints(gradient, gbc);
-            panel.add(gradient);
+            
     
             dashed = new JCheckBox("Dashed");
-            gbc.gridx = 2;
+            gbc.gridx = 0;
              gbc.gridy = 1;
              grid.setConstraints(dashed, gbc);
             panel.add(dashed);
@@ -1011,7 +951,7 @@ public class TransformActions {
             
             JPanel dashPanel = new JPanel();
             JLabel dashLabel = new JLabel("Dash Length:");
-            gbc.gridx = 3;
+            gbc.gridx = 1;
              gbc.gridy = 1;
              //grid.setConstraints(dashLabel, gbc);
             dashPanel.add(dashLabel);
@@ -1029,7 +969,7 @@ public class TransformActions {
 
             JPanel linePanel = new JPanel();
             JLabel lineLabel = new JLabel("Line Width:");
-            gbc.gridx = 4;
+            gbc.gridx = 2;
             gbc.gridy = 1;
             
             //  grid.setConstraints(lineLabel, gbc);
@@ -1057,9 +997,9 @@ public class TransformActions {
             target.addMouseMotionListener(new MouseAdapter() {
     
                 public void mouseDragged(MouseEvent e) {
-                    //if (!finished) {
+                    
                         coords.setText("(" + e.getX() + ", " + e.getY() + ")");
-                        if(selected.equals("Paint Brush")){
+                        
                             
                             line.add(e.getPoint());
 
@@ -1077,7 +1017,7 @@ public class TransformActions {
                             if(dashSwitch){
                                 lineColour.add(transparent);    
                             }else{
-                                lineColour.add(foregroundColour);
+                                lineColour.add(backgroundColour);
                             }
                             
                             // pixel.setLocation(e.getPoint());
@@ -1085,13 +1025,9 @@ public class TransformActions {
                             pan.repaint();
                             target.repaint();
                             
-                        }else if(selected.equals("Rectangle")){
-
-
-                        }
-                        
                        
-                    //}
+                       
+                    
     
                 }
     
@@ -1219,9 +1155,7 @@ public class TransformActions {
                             g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
                         }
 
-                        if(selected.equals("Paint Brush")){ //doesnt care for fill or gradient or background colour
-                            
-                            
+                       
                             //g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                             //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {getDash()}, 0));
                             //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {getDash()}, 0));
@@ -1238,20 +1172,7 @@ public class TransformActions {
                                 
                                 lab = new JLabel(new ImageIcon(buff));
                             }
-                        }else if(selected.equals("Rectangle")){
-
-                            
-                            
-                           
-
-                            
-
-                        }else if(selected.equals("Oval")){
-
-
-                        }else{
-
-                        }
+                        
                     }
                 } catch (Exception e) {
                     System.out.println("Error");
