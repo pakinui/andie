@@ -64,7 +64,7 @@ import java.util.List;
                 
               }
              // System.out.println(red + ", " + green + ", " + blue);
-             allReds.add(red);
+             
 /*              red=red/2+127;
               green=green/2+127;
               blue=blue/2+127;*/
@@ -73,6 +73,7 @@ import java.util.List;
               red = (red/2);
               blue = (blue/2);
               green = (green /2);
+              
 
               int a = (image.getRGB(col, row)>>24)&0xff;
               px = (a<<24) | (red<<16) | (green<<8) | blue;
