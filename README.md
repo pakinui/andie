@@ -191,13 +191,26 @@ The extended filters used no formal testing however, tests were run to make sure
 - Pippi Priestly King
 
 ### Accessible via:
-- 
+- Filter Actions
+### Testing
+Fixed negative out of bounds errors.
+
+### Issues:
+- Slight bug with the colors not coming out right but all filters and Sobel filters work. 
+---
+
+## Negative filter
+### Contributors:
+- Pippi Priestly King
+
+### Accessible via:
+- Color Actions
 ### Testing
 
 
 ### Issues:
-- 
----
+
+----
 ## Posterise effect
 ### Contributors:
 - Poppy Schlaadt
