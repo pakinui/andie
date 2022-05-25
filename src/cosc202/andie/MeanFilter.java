@@ -79,23 +79,23 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
      * @param input The image to apply the Mean filter to.
      * @return The resulting (blurred)) image.
      */
-    public BufferedImage apply(BufferedImage input){
-        try{
+    public BufferedImage apply(BufferedImage input) {
+        try {
             int size = (2 * radius + 1) * (2 * radius + 1);
             float[] array = new float[size];
             Arrays.fill(array, 1.0f / size);
 
             Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
-            ConvolveOp convOp = new ConvolveOp(kernel);
+            ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
             BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
                     input.isAlphaPremultiplied(), null);
             convOp.filter(input, output);
 
             return output;
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please open an image first");
         }
-        return input;  
+        return input;
     }
 
 }
