@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
+import java.awt.Graphics2D;
 import java.awt.image.*;
 
 /**
@@ -173,14 +174,23 @@ public class GaussianFilter implements ImageOperation, java.io.Serializable {
         try {
             float[] arr = new float[size];
             arr = arrFill(arr); // fill the array with Gaussian values.
+            int kernelWidth = length;
+            int kernelHeight = length;
 
+            int xOffset = (kernelWidth - 1) / 2;
+            int yOffset = (kernelHeight - 1) / 2;
+            BufferedImage modInput = new BufferedImage(input.getWidth() + kernelWidth - 1,
+                    input.getHeight() + kernelHeight - 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = modInput.createGraphics();
+            g2.drawImage(input, xOffset, yOffset, null);
+            g2.dispose();
             // applies the filter using the array above,kernel and convolveop
             Kernel kernel = new Kernel(length, length, arr);
             ConvolveOp conOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
             // create a new buffered image with the resulting Gaussian blur
-            BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
-                    input.isAlphaPremultiplied(), null);
-            conOp.filter(input, output);
+            BufferedImage output = new BufferedImage(modInput.getColorModel(), modInput.copyData(null),
+                    modInput.isAlphaPremultiplied(), null);
+            conOp.filter(modInput, output);
 
             return output;// return the blurred image
         } catch (Exception e) {
