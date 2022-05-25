@@ -23,9 +23,9 @@ import java.awt.*;
  * </p>
  * 
  * <ul>
- * <li> {@link BrightnessContrast} </li>
- * <li> {@link ConvertToGrey} </li>
- *  * <li> {@link Invert} </li>
+ *  <li> {@link BrightnessContrast} </li>
+ *  <li> {@link ConvertToGrey} </li>
+ *   <li> {@link Inverse} </li>
  * </ul>
  * <p> 
  * <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
