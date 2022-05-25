@@ -634,570 +634,491 @@ public class TransformActions {
         }
     }
 
+    /**
+     * <p>
+     * Action to draw shapes on an image.
+     * </p>
+     * 
+     * @see DrawShapes
+     */
     public class DrawAction extends ImageAction {
 
-        static JFrame  frame;
-
+        static JFrame frame;
+        /**
+         * <p>
+         * Create a new draw shapes action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
         DrawAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            //target.repaint();
+            
         }
-
+        /**
+         * <p>
+         * Callback for when the draw shape action is triggered.
+         * </p>
+         * 
+         * 
+         * <p>
+         * It calls {@link DrawShapes}, which opens a JFrame where 
+         * you are able to draw on an image.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Graphics2D gg = (Graphics2D) target.getGraphics();
+            
             BufferedImage buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            //gg.drawImage(buff, null, 0,0);
             target.paint(buff.getGraphics());
 
-            // JFrame f = new JFrame("HMMGMGMGM");
-            // f.setLayout(new GridLayout(2,1));
-            // f.add(new JLabel(new ImageIcon(buff)));
-            // //f.add(target);
-            // f.pack();
-            // f.setVisible(true);
-
-
-            //target.repaint();
             frame = new JFrame("Draw");
             Draw drawing = new Draw(buff);
-            JButton d = drawing.done;
-            d.addActionListener(new ActionListener(){
+            JButton d = drawing.done;//make done frome drawing panel d
+            d.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                System.out.println("finished");
-                ImagePanel p = drawing.getPanel();
-                //target = p;
-                // JFrame f = new JFrame("pan");
-                // f.setLayout(new GridLayout(2,1));
-                // f.add(target);
-                // f.add(p);
-                // //f.add(drawing);
-                // f.setLocation(500,0);
-                // f.setVisible(true);
-                // f.pack();
-                
-                System.out.println("hi");
-                target.getImage().apply(new DrawAgain(p));
-                target.repaint();
-                target.getParent().revalidate();
-                
+                    
+                    ImagePanel p = drawing.getPanel();
+                    target.getImage().apply(new DrawShapes(p));
+                    target.repaint();
+                    target.getParent().revalidate();
+
                 }
 
             });
-            
+
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            
-            
-            //drawing.setSize(new Dimension(1000, 700));
-            // JLabel coordinates = new JLabel("Mouse coordinates");
-            // coordinates.setForeground(Color.BLUE);
-            // coordinates.setSize(new Dimension(1000, 75));
-            // frame.add(coordinates, BorderLayout.SOUTH);
             frame.setLayout(new BorderLayout());
             frame.add(drawing, BorderLayout.NORTH);
-            //System.out.println("DSIze: " + drawing.getSize());
+            
             frame.pack();
-
             frame.setLocationRelativeTo(null);
-
             frame.setVisible(true);
-
-            // target.getImage().apply(drawing);
-            // target.repaint();
-            // target.getParent().revalidate();
 
         }
     }
 
+    /**
+     * <p>
+     * Action to paint on an image using a paint brush.
+     * </p>
+     * 
+     */
     public class PaintAction extends ImageAction {
 
-        BufferedImage buffOver;
         MyPanel pan;
-        JFrame f;
-
-        ArrayList<BufferedImage> buffArray = new ArrayList<>();
-        ArrayList<Graphics2D> graphicsArray = new ArrayList<>();
-
         JFrame frame;
-        JPanel topPanel;
-        JPanel botPanel;
+        JPanel controlPanel;//panel with brush settings
+        
         GridBagLayout grid;
         GridBagConstraints gbc;
-        JLabel coords;
-        JButton done;
-        ArrayList<Point> line = new ArrayList<>();
-        ArrayList<Color> lineColour = new ArrayList<>();
-        //boolean finished;
-        //boolean completed;
+
+        JLabel coords;//coordinates of mouse
+        JButton done;//completed painting
+        ArrayList<Point> line = new ArrayList<>();//location where brush paints
+        ArrayList<Color> lineColour = new ArrayList<>();// current colour of each location
+        
         JButton undo;
-        JButton clear;
-        
-        
-        JButton background;
-        
-       
+        JButton redo;
+        JButton clear;//remove all drawings
+        JButton background;//pen colour
         JCheckBox dashed;
 
         JTextField dashLength;
         JTextField lineWidth;
 
-        Color backgroundColour;
-        
-
-        
-        JLabel labelImg;
-
+        Color backgroundColour;//colour selected
         BufferedImage buff;
-        Image img;
-        GridLayout gridLay;
-        JLabel lab;
-
-        
-        boolean dashedBox;
-        Color transparent;
+        Color transparent;//transparent colour for dash
+        /*
+        true for transparent colour, false for background colour
+        gets switched depending on dash length
+        */
         boolean dashSwitch;
 
+        /**
+         * <p>
+         * Create a new paint action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
         PaintAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
-            //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            
-            target.repaint();
-            
-            dashedBox = false;
-            transparent = new Color(0,0,0, 0);
+            transparent = new Color(0, 0, 0, 0);
             dashSwitch = false;
         }
-
-        protected void createMenu(){
+        
+        /**
+         * <p>
+         * Method to create the menu containing all the 
+         * ways to edit the paint brush, undo, redo and 
+         * clear button as well as the mouse coordinates 
+         * and a done button.
+         * </p>
+         * 
+         * <p>
+         * Uses a {@code GridBagLayout} and {@code GridBagConstraints} 
+         * to add components to the JFrame.
+         * </p>
+         * 
+         * @see #createPanel()
+         */
+        protected void createMenuFrame() {
 
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //frame.setSize(new Dimension(100, 500));
+            
             GridBagLayout gridLay = new GridBagLayout();
             frame.setLayout(gridLay);
             GridBagConstraints gbc2 = new GridBagConstraints();
             gbc2.gridx = 0;
             gbc2.gridy = 0;
-            
-           
 
-            // top panel
-            topPanel = createTopPanel();
-            topPanel.setSize(new Dimension(100,400));
-            gridLay.setConstraints(topPanel, gbc2);
-            
-
+            // control panel
+            controlPanel = createPanel();
+            controlPanel.setSize(new Dimension(100, 400));
+            gridLay.setConstraints(controlPanel, gbc2);
 
             // coords
             JPanel labelPanel = new JPanel();
             labelPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
             coords = new JLabel("(" + 0 + ", " + 0 + ")");
-            // coords.setHorizontalAlignment(JLabel.WEST);
             labelPanel.add(coords);
-            labelPanel.setSize(new Dimension(100,50));
-            
+            labelPanel.setSize(new Dimension(100, 50));
 
+            //done button
             done = new JButton("Done");
             done.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    
-                    frame.dispose();
-                    //for (int i = 0; i < line.size(); i++) {
-                        // JFrame f = new JFrame("pan");
-                        // f.setLayout(new GridLayout(2,1));
-                        // f.add(pan);
-                        // f.add(target);
-                        // f.setVisible(true);
-                        // f.pack();
-                        //Point p = line.get(i);
-                        target.getImage().apply(new DrawAgain(pan));
-                        target.repaint();
-                        target.getParent().revalidate();
-                        buff = null;
-                        pan = new MyPanel();
-                        
-                    //}
-                    
-                }
 
+                    frame.dispose();
+                    target.getImage().apply(new Paint(pan));
+                    
+                    target.repaint();
+                    target.getParent().revalidate();
+                    resetPanel();
+                }
             });
 
             labelPanel.add(done);
             gbc2.gridx = 0;
             gbc2.gridy = 1;
             gridLay.setConstraints(labelPanel, gbc2);
-
-            frame.add(topPanel);
-            //frame.add(botPanel);
+            frame.add(controlPanel);
             frame.add(labelPanel);
 
             frame.setLocation(0, 515);
             frame.pack();
             frame.setVisible(true);
-
         }
 
-        private JPanel createBotPanel() {
+        /**
+         * <p>
+         * Method to create the control panel for a paint action.
+         * </p>
+         * 
+         * @return control panel;
+         */
+        private JPanel createPanel() {
 
-            ImagePanel panel = new ImagePanel();
-            // panel.setSize(new Dimension(700,500));
-            // int height = target.getHeight();
-            // int width = target.getWidth();
-            // panel.setSize(new Dimension(width + 10, height + 50));
-            //System.out.println("height: " + height + ", pan hieght: " + panel.getHeight());
-            // gbc.insets = new Insets(20,20,20,20);
-    
-            grid.setConstraints(panel, gbc);
-            gbc.gridwidth = GridBagConstraints.REMAINDER;
-            panel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(0, 0, 20, 30)));
-    
-            buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = (Graphics2D) target.getGraphics();
-            g.drawImage(buff, null, 0, 0);
-            g.setColor(Color.BLACK);
-            g.fillRect(10,10, 40,22);
-            
-            img = (Image) buff;
-            JLabel imgLabel = new JLabel(new ImageIcon(img));
-
-            panel.add(target);
-            panel.repaint();
-            return panel;
-        }
-    
-        private JPanel createTopPanel() {
-    
             JPanel panel = new JPanel();
             grid = new GridBagLayout();
             gbc = new GridBagConstraints();
-            
+
             panel.setLayout(grid);
-    
+
             gbc.weightx = 1.0;
             gbc.weighty = 1.0;
-    
+
             // undo button
             undo = new JButton("Undo");
             undo.addActionListener(new ActionListener() {
-    
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // add
-    
+                   target.getImage().undoOnce();
+                   target.repaint();
                 }
-    
             });
             gbc.gridx = 0;
             gbc.gridy = 0;
             grid.setConstraints(undo, gbc);
-            undo.setSize(new Dimension(90,40));
+            undo.setSize(new Dimension(90, 40));
             panel.add(undo);
-    
+
+            // undo button
+            redo = new JButton("Redo");
+            redo.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                   target.getImage().redoOnce();
+                   target.repaint();
+                }
+            });
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            grid.setConstraints(redo, gbc);
+            redo.setSize(new Dimension(90, 40));
+            panel.add(redo);
+
             // clear button
             clear = new JButton("Clear");
             clear.addActionListener(new ActionListener() {
-    
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // add
-    
+                    target.getImage().undo();//undo action remove all paint actions in a row at once
+                    target.repaint();
                 }
-    
             });
-             gbc.gridx = 1;
-             gbc.gridy = 0;
-             grid.setConstraints(clear, gbc);
-            clear.setSize(new Dimension(90,40));
+            gbc.gridx = 2;
+            gbc.gridy = 0;
+            grid.setConstraints(clear, gbc);
+            clear.setSize(new Dimension(90, 40));
             panel.add(clear);
-    
-            
-    
-            // 2nd col
-            background = new JButton("1st Colour");
+
+            //paint brush colour picker
+            background = new JButton("Brush Colour");
             background.setBackground(Color.BLACK);
             backgroundColour = (Color.BLACK);
             background.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent event) {
-                    /*
-                     * color2 = JColorChooser.showDialog(null,
-                     * "Pick your color.", color2); if (color2 == null) color2 =
-                     * Color.WHITE;
-                     */
+                    
                     Color c = JColorChooser.showDialog(null, "Pick your color", Color.BLACK);
                     background.setBackground(c);
                     backgroundColour = c;
                 }
             });
-            gbc.gridx = 2;
-             gbc.gridy = 0;
-            // gbc.gridwidth = GridBagConstraints.REMAINDER;
-             grid.setConstraints(background, gbc);
+            gbc.gridx = 3;
+            gbc.gridy = 0;
+            grid.setConstraints(background, gbc);
             panel.add(background);
-    
-            
-    
+
+            //dashed checkbox
             dashed = new JCheckBox("Dashed");
             gbc.gridx = 0;
-             gbc.gridy = 1;
-             grid.setConstraints(dashed, gbc);
+            gbc.gridy = 1;
+            grid.setConstraints(dashed, gbc);
             panel.add(dashed);
-    
-            
+
+            //dash length panel
             JPanel dashPanel = new JPanel();
             JLabel dashLabel = new JLabel("Dash Length:");
             gbc.gridx = 1;
-             gbc.gridy = 1;
-             //grid.setConstraints(dashLabel, gbc);
+            gbc.gridy = 1;
             dashPanel.add(dashLabel);
-    
             dashLength = new JTextField("10");
-            //gbc.gridx = 4;
-             //gbc.gridy = 1;
-             //grid.setConstraints(dLength, gbc);
             dashPanel.add(dashLength);
             grid.setConstraints(dashPanel, gbc);
             panel.add(dashPanel);
-    
-            //JPanel linePanel = new JPanel();
-            //linePanel.setLayout(new GridLayout(1,2));
 
+            //line width panel
             JPanel linePanel = new JPanel();
             JLabel lineLabel = new JLabel("Line Width:");
             gbc.gridx = 2;
             gbc.gridy = 1;
-            
-            //  grid.setConstraints(lineLabel, gbc);
             linePanel.add(lineLabel);
-            
-            // gbc.gridx = 6;
-            // gbc.gridy = 1;
-            
             lineWidth = new JTextField("5");
-             
             linePanel.add(lineWidth);
             grid.setConstraints(linePanel, gbc);
-            panel.add(linePanel);
 
-            
-            
-    
-            //grid.setConstraints(panel, gbc);
-            
+            panel.add(linePanel);
             return panel;
         }
 
+        /**
+         * <p>
+         * Method to add listeners to make paint action work.
+         * </p>
+         */
         private void createListeners() {
 
             target.addMouseMotionListener(new MouseAdapter() {
-    
+
                 public void mouseDragged(MouseEvent e) {
-                    
-                        coords.setText("(" + e.getX() + ", " + e.getY() + ")");
-                        
-                            
-                            line.add(e.getPoint());
 
-                            if(dashed.isSelected()){
-                                if(lineColour.size()%getDash() == 0){
-                                    if(dashSwitch){
-                                        dashSwitch = false;
-                                        System.out.print("s");
-                                    }else{
-                                        dashSwitch = true;
-                                    }
-                                }
-                                
-                            }
-                            if(dashSwitch){
-                                lineColour.add(transparent);    
-                            }else{
-                                lineColour.add(backgroundColour);
-                            }
-                            
-                            // pixel.setLocation(e.getPoint());
-        
-                            pan.repaint();
-                            target.repaint();
-                            
-                       
-                       
-                    
-    
-                }
-    
-                public void mouseMoved(MouseEvent e) {
-    
                     coords.setText("(" + e.getX() + ", " + e.getY() + ")");
-                    // target.repaint();
+                    line.add(e.getPoint());
+                    if (dashed.isSelected()) {//switching colours if dash is selected
+                        if (lineColour.size() % getDash() == 0) {
+                            if (dashSwitch) dashSwitch = false;
+                            else dashSwitch = true;
+                        }
+                    }
+                    if (dashSwitch) lineColour.add(transparent);   
+                    else lineColour.add(backgroundColour);
+                    pan.repaint();
+                    target.repaint();
                 }
-    
-            });
-    
-            target.addMouseListener(new MouseAdapter() {
-    
-                public void mouseReleased(MouseEvent e) {
-                    try {
 
-                        //System.out.println("Release pan size: " + pan.getWidth() + ", " + pan.getHeight());
-    
-                        target.getImage().apply(new DrawAgain(pan));
+                public void mouseMoved(MouseEvent e) {
+
+                    coords.setText("(" + e.getX() + ", " + e.getY() + ")");
+                }
+            });
+
+            target.addMouseListener(new MouseAdapter() {
+
+                public void mouseReleased(MouseEvent e) {
+                    try {//paints line if mouse is released
+                        target.getImage().apply(new Paint(pan));
                         target.repaint();
                         target.getParent().revalidate();
-                        // buff = null;
-                        // pan = new MyPanel();
-                        // pan.setSize(target.getWidth(), target.getHeight());
                         resetPanel();
-    
-                        // line.clear();
-                        // if (line.isEmpty())
-                        //     System.out.println("EMPTY");
-                        // lineColour = new ArrayList<>();
-                        // lineColour.clear();
                     } catch (Exception ex) {
-                        // System.out.println("error");
-                        ex.printStackTrace();
+                        System.out.println("error");
+                        // ex.printStackTrace();
                     }
-    
                 }
             });
-    
         }
 
+        /**
+         * <p>
+         * Method to add a transparent overlay panel to target.
+         * </p>
+         * 
+         * <p>
+         * Paint brush graphics get added onto this overlay panel.
+         * </p>
+         * 
+         * @see MyPanel
+         */
         private void addOverlay() {
-            target.repaint();
             pan = new MyPanel();
-            pan.setOpaque(false);//false = see though, true = see panel
-            //pan.setVisible(true);
-
-            //pan.add(new JLabel("PANEL PANEL"));
-            //JPanel test = new JPanel();
-            //pan.setBackground(Color.RED);
-            //test.setSize(new Dimension(100,100));
-
-
+            pan.setOpaque(false);
             LayoutManager over = new OverlayLayout(target);
             target.setLayout(over);
-            System.out.println(target.getWidth() + " W -- H" + target.getHeight());
             pan.setSize(target.getSize());
-            
-            
-            //System.out.println(pan.getWidth() + " W -1 H " + pan.getHeight());
             target.add(pan);
-            //target.add(test);
-            
-            
-    
         }
 
+        /**
+         * <p>
+         * Method to get dash length.
+         * </p>
+         * 
+         * @return dash length
+         */
         public int getDash() {
-			String length = dashLength.getText();
-			int dash = Integer.parseInt(length);
-			return dash;
-		}
+            String length = dashLength.getText();
+            int dash = Integer.parseInt(length);
+            return dash;
+        }
 
-		public int getLine() {
-			String width = lineWidth.getText();
-			int line = Integer.parseInt(width);
-			return line;
-		}
+        /**
+         * <p>
+         * Method to get line width.
+         * </p>
+         * 
+         * @return line width
+         */
+        public int getLine() {
+            String width = lineWidth.getText();
+            int line = Integer.parseInt(width);
+            return line;
+        }
 
-        private void resetPanel(){
+        /**
+         * <p>
+         * Method to reset all parts concerning the drawing 
+         * panel, to get ready for a new operation.
+         * </p>
+         */
+        private void resetPanel() {
             pan = new MyPanel();
-            pan.setOpaque(false);//false = see though, true = see panel
-
+            pan.setOpaque(false);
             LayoutManager over = new OverlayLayout(target);
             target.setLayout(over);
-            //System.out.println(target.getWidth() + " W -- H" + target.getHeight());
             pan.setSize(target.getSize());
-            
-            
-            //System.out.println(pan.getWidth() + " W -1 H " + pan.getHeight());
             target.add(pan);
             line.clear();
             lineColour.clear();
-
         }
 
-        
-
+        /**
+         * <p>
+         * Class which extends JPanel.
+         * </p>
+         * 
+         * <p>
+         * This panel is overlayed ontop of the target image 
+         * and all painting operations are done onto this panel.
+         * </p>
+         */
         protected class MyPanel extends ImagePanel {
 
-            //public BufferedImage buffOver;
-            
-    
+            /**
+             * <p>
+             * Contructor, which creates a BufferedImage the same 
+             * size as the target image.
+             * </p>
+             * 
+             * <p>
+             * This is the BufferedImage that gets painted on.
+             * </p>
+             */
             MyPanel() {
-                
-                //buffOver = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 buff = new BufferedImage(target.getWidth(), target.getHeight(), BufferedImage.TYPE_INT_ARGB);
-               
-
             }
-    
-           
+
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-                    if(buff != null && pan != null){
+                    if (buff != null && pan != null) {
                         Graphics2D g2 = (Graphics2D) g;
+                        g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
+            
+                        for (int i = 1; i < line.size(); i++) {
 
-                        if(dashed.isSelected()){
-                            
-                            g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, new float[] {getDash()}, 0));
-                        }else{
-                            
-                            g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
+                            Point p = line.get(i);
+                            Point pBefore = line.get(i - 1);
+                            Color c = lineColour.get(i);
+                            g2.setColor(c);
+                            g2.draw(new Line2D.Float(pBefore, p));
                         }
-
-                       
-                            //g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                            //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {getDash()}, 0));
-                            //g2.setStroke(new BasicStroke(getLine(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {getDash()}, 0));
-                            
-                            
-                            for (int i = 1; i < line.size(); i++) {
-                                
-                                Point p = line.get(i);
-                                Point pBefore = line.get(i - 1);
-                                Color c = lineColour.get(i);
-                                g2.setColor(c);
-                                g2.draw(new Line2D.Float(pBefore, p));
-                                
-                                
-                                lab = new JLabel(new ImageIcon(buff));
-                            }
-                        
                     }
                 } catch (Exception e) {
                     System.out.println("Error");
-                    //e.printStackTrace();
+                    //ex.printStackTrace();
                 }
-    
             }
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            target.repaint();
-            createMenu();
+
+            createMenuFrame();
             addOverlay();
             createListeners();
-            
-
-
         }
-
     }
 
     /**
      * <p>
      * Action to add Stickers to an image.
+     * </p>
+     * 
+     * <p>
+     * The .png files used for stickers were draw from scratch by a team 
+     * member to avoid copyright issues.
      * </p>
      * 
      * @see Sticker
@@ -1219,6 +1140,7 @@ public class TransformActions {
          * Create a new sticker action.
          * </p>
          * 
+         * 
          * @param name     The name of the action (ignored if null).
          * @param icon     An icon to use to represent the action (ignored if null).
          * @param desc     A brief description of the action (ignored if null).
@@ -1227,6 +1149,7 @@ public class TransformActions {
         StickerAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
             super(name, icon, desc, mnemonic);
             fin = false;
+            size = 200;
         }
 
         /**
@@ -1256,28 +1179,29 @@ public class TransformActions {
             JFrame frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setPreferredSize(new Dimension(300, 300));
+            frame.setLocation(500,0);
 
             JButton[] buttons = new JButton[6];
             ImageIcon[] icons = new ImageIcon[6];
 
-            ImageIcon smile = new ImageIcon((new ImageIcon("src/stickers/smile.png").getImage()).getScaledInstance(20,
+            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heart.png").getImage()).getScaledInstance(20,
                     20, java.awt.Image.SCALE_SMOOTH));
-            ImageIcon fear = new ImageIcon((new ImageIcon("src/stickers/fear.png").getImage()).getScaledInstance(20, 20,
+            ImageIcon banana = new ImageIcon((new ImageIcon("src/stickers/banana.png").getImage()).getScaledInstance(20, 20,
                     java.awt.Image.SCALE_SMOOTH));
-            ImageIcon wink = new ImageIcon((new ImageIcon("src/stickers/wink.png").getImage()).getScaledInstance(20, 20,
+            ImageIcon carrot = new ImageIcon((new ImageIcon("src/stickers/carrot.png").getImage()).getScaledInstance(20, 20,
                     java.awt.Image.SCALE_SMOOTH));
-            ImageIcon sunglasses = new ImageIcon((new ImageIcon("src/stickers/sunglasses.png").getImage())
+            ImageIcon rainbow = new ImageIcon((new ImageIcon("src/stickers/rainbow.png").getImage())
                     .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/happyTears.png").getImage())
+            ImageIcon tears = new ImageIcon((new ImageIcon("src/stickers/leaf.png").getImage())
                     .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-            ImageIcon heart = new ImageIcon((new ImageIcon("src/stickers/heartEye.png").getImage())
+            ImageIcon sun = new ImageIcon((new ImageIcon("src/stickers/sun.png").getImage())
                     .getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-            icons[0] = smile;
-            icons[1] = fear;
-            icons[2] = wink;
-            icons[3] = sunglasses;
+            icons[0] = heart;
+            icons[1] = banana;
+            icons[2] = carrot;
+            icons[3] = rainbow;
             icons[4] = tears;
-            icons[5] = heart;
+            icons[5] = sun;
 
             for (int i = 0; i < buttons.length; i++) {
                 buttons[i] = new JButton(icons[i]);// create JButtons
@@ -1299,9 +1223,9 @@ public class TransformActions {
             // adjust sticker size
             JPanel scrollPanel = new JPanel();
             JSlider bar = new JSlider(JSlider.HORIZONTAL);
-            bar.setMaximum(190);
-            bar.setValue(100);
-            bar.setMinimum(10);
+            bar.setMaximum(300);
+            bar.setValue(200);
+            bar.setMinimum(100);
             scrollPanel.add(new JLabel("Adjust sticker size."));
             scrollPanel.add(bar);
 

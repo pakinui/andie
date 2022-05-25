@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Andie",
+            "request": "launch",
+            "mainClass": "cosc202.andie.Andie",
+            "projectName": "andie_ca356938"
+        },
+        {
+            "type": "java",
             "name": "Launch SeeThroughImageApplet",
             "request": "launch",
             "mainClass": "SeeThroughImageApplet",
