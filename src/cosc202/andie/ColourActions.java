@@ -49,6 +49,7 @@ public class ColourActions {
         actions.add(new ConvertToGreyAction("Greyscale", null, "Convert to greyscale", null));
         actions.add(new BrightnessAction("Brightness and Contrast", null, "Change brightness and/or Contrast", null));
         actions.add(new InvertAction("Invert", null, "Invert image colours", null));
+        actions.add(new PostAction("Posterisation", null, "Apply a posterise effect", null));
     }
 
     /**
@@ -236,6 +237,56 @@ public class ColourActions {
             frame.setVisible(true); 
         }
     }
+
+    /**
+     * <p>
+     * Action to add a posterise effect to the image
+     * </p>
+     * 
+     * @see Posterisation
+     */
+    public class PostAction extends ImageAction{
+
+        /**
+         * <p>
+         * Create a new posterise effect.
+         * </p>
+         * 
+         * @param name The name of the action (ignored if null).
+         * @param icon An icon to use to represent the action (ignored if null).
+         * @param desc A brief description of the action  (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+         */
+        PostAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for when a posterise action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the {@code PostAction} is 
+         * triggered.
+         * </p>
+         * 
+         * <p>
+         * It applies a posterisation effect to the image by calling
+         * the {@link Posterisation} class.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().apply(new Posterisation());
+            target.repaint();
+            target.getParent().revalidate();
+        }
+        
+    }
+
 
 
 

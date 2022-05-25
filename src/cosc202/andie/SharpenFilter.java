@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.awt.Graphics2D;
 import java.awt.image.*;
 
 import javax.swing.JOptionPane;
@@ -41,14 +42,25 @@ public class SharpenFilter implements ImageOperation, java.io.Serializable {
                     -0.5f, 3f, -0.5f,
                     0.0f, -0.5f, 0.0f,
             };
+            int kernelWidth = 3;
+            int kernelHeight = 3;
 
+            int xOffset = (kernelWidth - 1) / 2;
+            int yOffset = (kernelHeight - 1) / 2;
+            BufferedImage modInput = new BufferedImage(input.getWidth() + kernelWidth - 1,
+                    input.getHeight() + kernelHeight - 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = modInput.createGraphics();
+            g2.drawImage(input, xOffset, yOffset, null);
+            g2.dispose();
             Kernel kernel = new Kernel(3, 3, sharpen); // Constructs the kernel's width, height & the array of float.
-            ConvolveOp convOp = new ConvolveOp(kernel); // Constructs a ConvloveOp with the given Kernel.
-            BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
-                    input.isAlphaPremultiplied(), null); // Constructs a new BufferedImage with a ColorModel and Raster
-                                                         // and
-                                                         // is AlphaPremulitplied returned true.
-            convOp.filter(input, output); // Preforms a convlop on the buffered image with the source and destination
+            ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null); // Constructs a ConvloveOp with the
+                                                                                     // given Kernel.
+            BufferedImage output = new BufferedImage(modInput.getColorModel(), modInput.copyData(null),
+                    modInput.isAlphaPremultiplied(), null); // Constructs a new BufferedImage with a ColorModel and
+                                                            // Raster
+                                                            // and
+                                                            // is AlphaPremulitplied returned true.
+            convOp.filter(modInput, output); // Preforms a convlop on the buffered image with the source and destination
             return output; // Returns the output. // passed through.
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please open an image first");

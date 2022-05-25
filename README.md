@@ -173,6 +173,110 @@ The shortcuts use no formal testing framework, however, tests were run to make s
 - An issue is that shortcuts have not been able to be tested on other operating systems(besides Windows and macOS) as we had no access to them. However, I am fairly confident they would work as I used the Java Toolkit Class to make the modifier key used when creating the shortcuts specific to the operating system being run.
 ---
 
+## Extended Filters 
+### Contributors:
+- Mahfuz Bin Abdul Razak
+
+### Accessible via:
+- All filters using a kernel to opperate
+### Testing
+The extended filters used no formal testing however, tests were run to make sure that the filter covered the entire image. We eliminated the border and solced the issue where it would only apply the filter to the center of the image
+
+### Issues:
+- No known issues.
+---
+
+## Emboss and edge detection filters
+### Contributors:
+- Pippi Priestly King
+
+### Accessible via:
+- 
+### Testing
+
+
+### Issues:
+- 
+---
+## Posterise effect
+### Contributors:
+- Poppy Schlaadt
+
+### Accessible via:
+- Colour Menu (Posterisation)
+### Testing
+The posterise has formal testing framework. It was tested on all image sizes and ratios as well as before and after other operations. All tests produce the expected image.
+
+### Issues:
+- No known issues.
+---
+## Crop to selection
+### Contributors:
+- Poppy Schlaadt
+
+### Accessible via:
+- Transform Menu (Crop Image)
+### Testing
+The Sticker function has formal testing framework. It was tested on all image sizes and ratios as well as before and after other operations. Crop was tested after a prior crop and undo and redo work all as expected.
+
+### Issues:
+- Sometimes when there has been a previous crop and your try to crop with 2 clicks the first click doesnt work, but if you try again it works.
+---
+
+## Drawing Functions 
+### Contributors:
+- Poppy Schlaadt
+- Mahfuz Bin Abdul Razak
+
+### Accessible via:
+- Transform Menu (Draw Shapes)
+### Testing
+The Drawing function has formal testing framework. It was tested on images of all sizes are ratios (the image will remain the same size but not the whole image can always be drawn on). Its was tested being used before and after other filters. 
+
+### Issues:
+- Currently the image you are able to draw shapes onto is only the same size as the starting target panel (around 600x600) regardless of your image size. It does not, however, cut the image to this size, the draw shape operations are only able to be drawed in that area.
+---
+## Macros for record and replay of operations
+### Contributors:
+- Mahfuz Bin Abdul Razak
+
+### Accessible via:
+- Shortcuts or the menu, saves current operation and reapplies it to image, there is a shortcut to save, apply and clear current macros
+### Testing
+There has been no formal testing however, we have saved and applied macros multiple times without error using different functions and filters in different combiinations
+
+### Issues:
+- No known issues.
+---
+## Sticker (show us something)
+### Contributors:
+- Poppy Schlaadt
+
+### Accessible via:
+- Transform Menu (Sticker)
+### Testing
+The Sticker function has formal testing framework. It was tested on various image sizes and ratios. It was tested before and after other operations and produced the expected outcome. Tests were run to undo and redo the operation and there are some problems with redo, but undo behaved as expected.
+
+### Issues:
+- If you undoing a sticker operation that has changed the size of the sticker and then redo it, the size of the stickers is enlarged.
+---
+
+
+## Paint Brush (Show us something/Drawing)
+### Contributors:
+- Poppy Schlaadt
+
+### Accessible via:
+- Transform Menu (Paint Brush)
+### Testing
+The Paint Brush function has formal testing framework. It was tested on images of all sizes are ratios. Its was tested being used before and after other filters. Changes were made to the undo operations in EditiableImage so that when a user clicks undo in ANDIE it removes all paint operations in a row at once. Tests were also run to ensure that the undo and redo button in the paint control panel only undo a single line rather then the whole thing.
+
+### Issues:
+- When you are doing a Paint operation for a second time (i.e., you have pressed done the first time and have then opened Paint Brush again), when you undo or clear it is able to remove the last operations changes aswell.
+---
+
+
+
 ## General Features
 ---
 ### Keyboard Shortcuts
@@ -187,6 +291,9 @@ These include:
 - Zoom Out (`_`)
 - Rotate (`R`)
 - Flip (`F`)
+- Save Macro (`M`)
+- Apply Macro (`A`)
+- Clear Macro (`C`)
 We felt that these keyboard shortcuts provided enough flexibility increase the speed and ease that users experience while using the program, without having too many options and causing confusion.
 
 ---

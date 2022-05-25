@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.awt.Graphics2D;
 import java.awt.image.*;
 import java.util.*;
 
@@ -79,23 +80,36 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
      * @param input The image to apply the Mean filter to.
      * @return The resulting (blurred)) image.
      */
-    public BufferedImage apply(BufferedImage input){
-        try{
+    public BufferedImage apply(BufferedImage input) {
+        try {
             int size = (2 * radius + 1) * (2 * radius + 1);
             float[] array = new float[size];
+
+            int kernelWidth = (2 * radius + 1);
+            int kernelHeight = (2 * radius + 1);
+
+            int xOffset = (kernelWidth - 1) / 2;
+            int yOffset = (kernelHeight - 1) / 2;
+
             Arrays.fill(array, 1.0f / size);
 
+            BufferedImage modInput = new BufferedImage(input.getWidth() + kernelWidth - 1,
+                    input.getHeight() + kernelHeight - 1, BufferedImage.TYPE_INT_ARGB);
             Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
-            ConvolveOp convOp = new ConvolveOp(kernel);
-            BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
-                    input.isAlphaPremultiplied(), null);
-            convOp.filter(input, output);
+            ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+
+            Graphics2D g2 = modInput.createGraphics();
+            g2.drawImage(input, xOffset, yOffset, null);
+            g2.dispose();
+            BufferedImage output = new BufferedImage(modInput.getColorModel(), modInput.copyData(null),
+                    modInput.isAlphaPremultiplied(), null);
+            convOp.filter(modInput, output);
 
             return output;
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please open an image first");
         }
-        return input;  
+        return input;
     }
 
 }
