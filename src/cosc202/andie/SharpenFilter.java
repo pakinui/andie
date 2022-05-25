@@ -43,7 +43,8 @@ public class SharpenFilter implements ImageOperation, java.io.Serializable {
             };
 
             Kernel kernel = new Kernel(3, 3, sharpen); // Constructs the kernel's width, height & the array of float.
-            ConvolveOp convOp = new ConvolveOp(kernel); // Constructs a ConvloveOp with the given Kernel.
+            ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null); // Constructs a ConvloveOp with the
+                                                                                     // given Kernel.
             BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
                     input.isAlphaPremultiplied(), null); // Constructs a new BufferedImage with a ColorModel and Raster
                                                          // and
