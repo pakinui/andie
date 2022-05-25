@@ -1,6 +1,8 @@
 package cosc202.andie;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * <p>
  * ImageOperation to add emboss effects to the image and Sobel filters.
@@ -19,15 +21,14 @@ import java.awt.image.BufferedImage;
         int kernelNo = 0;
        
     double [][] kernel = null;
-       
-        Emboss(int kernelNo){
-        this.kernelNo = kernelNo;
 
-        System.out.println(kernelNo);
-        }
+    Emboss(int kernelNo){
+        this.kernelNo=kernelNo;
+    }
 
     public BufferedImage apply(BufferedImage image){
         setKernel(kernelNo);
+        List<Integer> allReds = new ArrayList<Integer>();
         for (int row = 0; row < image.getHeight(); row ++) {
             for (int col = 0; col < image.getWidth(); col++) {
                 
@@ -63,16 +64,30 @@ import java.awt.image.BufferedImage;
                 
               }
              // System.out.println(red + ", " + green + ", " + blue);
-              red+=127;
-              green+=127;
-              blue+=127;
+             allReds.add(red);
+/*              red=red/2+127;
+              green=green/2+127;
+              blue=blue/2+127;*/
+
+              // 
+              red = (red/2);
+              blue = (blue/2);
+              green = (green /2);
+
               int a = (image.getRGB(col, row)>>24)&0xff;
               px = (a<<24) | (red<<16) | (green<<8) | blue;
               image.setRGB(col, row, px);
        
             }
           }
-     
+          int maxR = -1000000;
+          int minR = 1000000;
+        for (Integer r : allReds) {
+            maxR = r > maxR ? r : maxR;
+            minR = r < minR ? r : minR;
+        }
+        System.out.println(maxR);
+        System.out.println(minR);
     return image;
     }
 
@@ -98,6 +113,8 @@ import java.awt.image.BufferedImage;
         kernel = new double[][]{{(-1/2), -1, -(1/2)},{0, 0, 0},{1/2, 1, (1/2)}};  }
     if(kernelNo == 10){
             kernel = new double[][]{{-(1/2), 0, (1/2)},{-1, 0, 1},{-(1/2), 0, (1/2)}};  }
+
+
 
     }
 }
