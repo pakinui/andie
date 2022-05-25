@@ -175,12 +175,12 @@ The shortcuts use no formal testing framework, however, tests were run to make s
 
 ## Extended Filters 
 ### Contributors:
-- 
+- Mahfuz Bin Abdul Razak
 
 ### Accessible via:
-- 
+- All filters using a kernel to opperate
 ### Testing
-
+The extended filters used no formal testing however, tests were run to make sure that the filter covered the entire image. We eliminated the border and solced the issue where it would only apply the filter to the center of the image
 
 ### Issues:
 - 
@@ -261,12 +261,12 @@ The Drawing function has formal testing framework. It was tested on images of al
 ---
 ## Macros for record and replay of operations
 ### Contributors:
-- 
+- Mahfuz Bin Abdul Razak
 
 ### Accessible via:
-- 
+- Shortcuts or the menu, saves current operation and reapplies it to image, there is a shortcut to save, apply and clear current macros
 ### Testing
-
+- There has been no formal testing however, we have saved and applied macros multiple times without error using different functions and filters in different combiinations
 
 ### Issues:
 - 
@@ -314,6 +314,9 @@ These include:
 - Zoom Out (`_`)
 - Rotate (`R`)
 - Flip (`F`)
+- Save Macro (`M`)
+- Apply Macro (`A`)
+- Clear Macro (`C`)
 We felt that these keyboard shortcuts provided enough flexibility increase the speed and ease that users experience while using the program, without having too many options and causing confusion.
 
 ---
