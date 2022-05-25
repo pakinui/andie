@@ -55,6 +55,9 @@ class EditableImage {
     /** The file where the operation sequence is stored. */
     private String opsFilename;
 
+    private Stack<ImageOperation> macro;
+    private Stack<ImageOperation> spareMacro;
+
     /**
      * <p>
      * Create a new EditableImage.
@@ -68,6 +71,8 @@ class EditableImage {
     public EditableImage() {
         original = null;
         current = null;
+        macro = new Stack<ImageOperation>();
+        spareMacro = new Stack<ImageOperation>();
         ops = new Stack<ImageOperation>();
         redoOps = new Stack<ImageOperation>();
         imageFilename = null;
@@ -266,8 +271,7 @@ class EditableImage {
             if (ops.empty()) {
                 JOptionPane.showMessageDialog(null, "Nothing to undo");
             } else {
-                try{
-                    System.out.println(ops.toString());
+                try {
                     String s = ops.peek().toString();
                     if (s.contains("Sticker")) {// to undo a group of sticker operations that are in a row
 
@@ -284,9 +288,9 @@ class EditableImage {
                         redoOps.push(ops.pop());
                     }
                     refresh();
-                }catch(Exception e){
-                    refresh();//if sticker is the only thing on ops itll throw an exception
-                                //rather than remove it so this just refreshes and stickers are gone
+                } catch (Exception e) {
+                    refresh();// if sticker is the only thing on ops itll throw an exception
+                              // rather than remove it so this just refreshes and stickers are gone
                 }
             }
         }
@@ -344,9 +348,9 @@ class EditableImage {
             if (redoOps.empty()) {
                 JOptionPane.showMessageDialog(null, "Nothing to redo");
             } else {
-                try{
+                try {
                     String s = redoOps.peek().toString();
-                    
+
                     if (s.contains("Sticker")) {// to redo a group of sticker operations that are in a row
 
                         while (redoOps.peek().toString().contains("Sticker")) {// while there is a sticker operation
@@ -398,6 +402,35 @@ class EditableImage {
                 }
 
             }
+        }
+    }
+
+    public void saveMacro() {
+        if (!ops.empty()) {
+            this.macro = (Stack<ImageOperation>) ops.clone();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no operation to be saved");
+        }
+    }
+
+    public void applyMacro() {
+        if (!macro.empty()) {
+            this.spareMacro = (Stack<ImageOperation>) macro.clone();
+            while (!spareMacro.empty()) {
+                apply(spareMacro.pop());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no saved macro");
+        }
+    }
+
+    public void clearMacro() {
+        if (!macro.empty()) {
+            macro.clear();
+            spareMacro.clear();
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no saved Macro");
         }
     }
 
