@@ -713,6 +713,7 @@ public class TransformActions {
      * 
      */
     public class PaintAction extends ImageAction {
+        boolean painting;//if paint is open
 
         MyPanel pan;
         JFrame frame;
@@ -758,6 +759,7 @@ public class TransformActions {
             super(name, icon, desc, mnemonic);
             transparent = new Color(0, 0, 0, 0);
             dashSwitch = false;
+            painting = false;
         }
         
         /**
@@ -952,24 +954,25 @@ public class TransformActions {
             target.addMouseMotionListener(new MouseAdapter() {
 
                 public void mouseDragged(MouseEvent e) {
-
-                    coords.setText("(" + e.getX() + ", " + e.getY() + ")");
-                    line.add(e.getPoint());
-                    if (dashed.isSelected()) {//switching colours if dash is selected
-                        if (lineColour.size() % getDash() == 0) {
-                            if (dashSwitch) dashSwitch = false;
-                            else dashSwitch = true;
+                    if(painting){
+                        coords.setText("(" + e.getX() + ", " + e.getY() + ")");
+                        line.add(e.getPoint());
+                        if (dashed.isSelected()) {//switching colours if dash is selected
+                            if (lineColour.size() % getDash() == 0) {
+                                if (dashSwitch) dashSwitch = false;
+                                else dashSwitch = true;
+                            }
                         }
+                        if (dashSwitch) lineColour.add(transparent);   
+                        else lineColour.add(backgroundColour);
+                        pan.repaint();
+                        target.repaint();
                     }
-                    if (dashSwitch) lineColour.add(transparent);   
-                    else lineColour.add(backgroundColour);
-                    pan.repaint();
-                    target.repaint();
                 }
 
                 public void mouseMoved(MouseEvent e) {
 
-                    coords.setText("(" + e.getX() + ", " + e.getY() + ")");
+                    if(painting)coords.setText("(" + e.getX() + ", " + e.getY() + ")");
                 }
             });
 
@@ -977,10 +980,12 @@ public class TransformActions {
 
                 public void mouseReleased(MouseEvent e) {
                     try {//paints line if mouse is released
-                        target.getImage().apply(new Paint(pan));
-                        target.repaint();
-                        target.getParent().revalidate();
-                        resetPanel();
+                        if(painting){
+                            target.getImage().apply(new Paint(pan));
+                            target.repaint();
+                            target.getParent().revalidate();
+                            resetPanel();
+                        }
                     } catch (Exception ex) {
                         System.out.println("error");
                         // ex.printStackTrace();
@@ -1050,6 +1055,7 @@ public class TransformActions {
             target.add(pan);
             line.clear();
             lineColour.clear();
+            painting = false;
         }
 
         /**
@@ -1104,7 +1110,7 @@ public class TransformActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            painting = true;
             createMenuFrame();
             addOverlay();
             createListeners();
@@ -1174,6 +1180,7 @@ public class TransformActions {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            
             fin = false;
 
             JFrame frame = new JFrame();
