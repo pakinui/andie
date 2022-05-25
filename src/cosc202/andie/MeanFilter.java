@@ -1,5 +1,6 @@
 package cosc202.andie;
 
+import java.awt.Graphics2D;
 import java.awt.image.*;
 import java.util.*;
 
@@ -83,12 +84,25 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
         try {
             int size = (2 * radius + 1) * (2 * radius + 1);
             float[] array = new float[size];
+
+            int kernelWidth = 3;
+            int kernelHeight = 3;
+
+            int xOffset = (kernelWidth - 1) / 2;
+            int yOffset = (kernelHeight - 1) / 2;
+
             Arrays.fill(array, 1.0f / size);
 
+            BufferedImage modInput = new BufferedImage(input.getWidth() + kernelWidth - 1,
+                    input.getHeight() + kernelHeight - 1, BufferedImage.TYPE_INT_ARGB);
             Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
             ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
             BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
                     input.isAlphaPremultiplied(), null);
+
+            Graphics2D g2 = modInput.createGraphics();
+            g2.drawImage(input, xOffset, yOffset, null);
+            g2.dispose();
             convOp.filter(input, output);
 
             return output;
