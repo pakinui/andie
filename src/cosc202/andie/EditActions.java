@@ -42,7 +42,8 @@ public class EditActions {
         actions.add(new UndoAction("Undo", null, "Undo", Integer.valueOf(KeyEvent.VK_Z)));
         actions.add(new RedoAction("Redo", null, "Redo", Integer.valueOf(KeyEvent.VK_Y)));
         actions.add(new SaveMacroAction("Save Macro", null, "Save Macro", Integer.valueOf(KeyEvent.VK_M)));
-        actions.add(new ApplyMacroAction("Apply Macro", null, "Apply Macro", Integer.valueOf(KeyEvent.VK_Y)));
+        actions.add(new ApplyMacroAction("Apply Macro", null, "Apply Macro", Integer.valueOf(KeyEvent.VK_A)));
+        actions.add(new ClearMacroAction("Clear Macro", null, "Clear Macro", Integer.valueOf(KeyEvent.VK_C)));
     }
 
     /**
@@ -228,6 +229,41 @@ public class EditActions {
          */
         public void actionPerformed(ActionEvent e) {
             target.getImage().applyMacro();
+            target.repaint();
+            target.getParent().revalidate();
+        }
+    }
+
+    public class ClearMacroAction extends ImageAction {
+
+        /**
+         * <p>
+         * Creat a new clear macro action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        ClearMacroAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for clear macro action is called.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the apply macro is triggered.
+         * Clears all saved operations onto the image.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        public void actionPerformed(ActionEvent e) {
+            target.getImage().clearMacro();
             target.repaint();
             target.getParent().revalidate();
         }
