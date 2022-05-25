@@ -52,6 +52,8 @@ public class FilterActions {
         actions.add(new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", null));
 
         actions.add(new EmbossAction("Emboss", null, "Emboss image filter", null));
+        actions.add(new SobelHAction("Horizontal Sobel", null, "Emboss image filter", null));
+        actions.add(new SobelVAction("Veritcal Sobel", null, "Emboss image filter", null));
     }
 
     /**
@@ -334,6 +336,57 @@ public class EmbossAction extends ImageAction {
 
         // Create and apply the filter
         target.getImage().apply(new Emboss(filterNo));
+        target.repaint();
+        target.getParent().revalidate();
+    }
+
+}
+
+public class SobelHAction extends ImageAction {
+
+    /**
+     * <p>
+     * Create a new convert-to-grey action.
+     * </p>
+     * 
+     * @param name The name of the action (ignored if null).
+     * @param icon An icon to use to represent the action (ignored if null).
+     * @param desc A brief description of the action  (ignored if null).
+     * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+     */
+    SobelHAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        super(name, icon, desc, mnemonic);
+    }
+    public void actionPerformed(ActionEvent e) {
+
+        // Create and apply the filter
+        target.getImage().apply(new Emboss(10));
+        target.repaint();
+        target.getParent().revalidate();
+    }
+
+}
+
+public class SobelVAction extends ImageAction {
+
+    /**
+     * <p>
+     * Create a new convert-to-grey action.
+     * </p>
+     * 
+     * @param name The name of the action (ignored if null).
+     * @param icon An icon to use to represent the action (ignored if null).
+     * @param desc A brief description of the action  (ignored if null).
+     * @param mnemonic A mnemonic key to use as a shortcut  (ignored if null).
+     */
+    SobelVAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+        super(name, icon, desc, mnemonic);
+    }
+    public void actionPerformed(ActionEvent e) {
+
+        
+        // Create and apply the filter
+        target.getImage().apply(new Emboss(9));
         target.repaint();
         target.getParent().revalidate();
     }

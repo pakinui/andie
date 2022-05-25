@@ -1,6 +1,19 @@
 package cosc202.andie;
 
 import java.awt.image.BufferedImage;
+/**
+ * <p>
+ * ImageOperation to invert image colors.
+ * </p>
+ * 
+ * <p>
+ * Gets and changes the color channels of the image. 
+ * {@link BufferedImage} class. 
+ * </p>
+ * 
+ * @author Pippi Priestley King
+ * @version 1.0
+ */
 
     public class Inverse implements ImageOperation{
 
