@@ -52,6 +52,7 @@ public class FilterActions {
         actions.add(new SharpenFilterAction("Sharpen filter", null, "Apply a sharpen filter", null));
 
         actions.add(new EmbossAction("Emboss", null, "Emboss image filter", null));
+        actions.add(new NewEmbossAction("New Emboss", null, "New Emboss image filter", null));
     }
 
     /**
@@ -298,9 +299,48 @@ public class FilterActions {
 
     }
 
+    public class NewEmbossAction extends ImageAction {
+
+        /**
+         * <p>
+         * Create a new sharpen-filter action.
+         * </p>
+         * 
+         * @param name     The name of the action (ignored if null).
+         * @param icon     An icon to use to represent the action (ignored if null).
+         * @param desc     A brief description of the action (ignored if null).
+         * @param mnemonic A mnemonic key to use as a shortcut (ignored if null).
+         */
+        NewEmbossAction(String name, ImageIcon icon, String desc, Integer mnemonic) {
+            super(name, icon, desc, mnemonic);
+        }
+
+        /**
+         * <p>
+         * Callback for when the sharpen-filter action is triggered.
+         * </p>
+         * 
+         * <p>
+         * This method is called whenever the SharpenFilterAction is triggered.
+         * It applys an appropriately sized {@link SharpenFilter}.
+         * </p>
+         * 
+         * @param e The event triggering this callback.
+         */
+        public void actionPerformed(ActionEvent e) {
+
+            // Create and apply the filter
+            target.getImage().apply(new NewEmboss());
+            target.repaint();
+            target.getParent().revalidate();
+        }
+
+    }
+
     public class EmbossAction extends ImageAction {
 
         int filterNo;
+
         /**
          * <p>
          * Create a new convert-to-grey action.
@@ -315,62 +355,65 @@ public class FilterActions {
             super(name, icon, desc, mnemonic);
         }
 
-    public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
 
-        // Determine what emboss we are going to use - ask the user.
-        filterNo = 0;
+            // Determine what emboss we are going to use - ask the user.
+            filterNo = 0;
 
-        // Pop-up dialog box to ask for the filter no value.
-        // SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 8, 1);
-        // JSpinner radiusSpinner = new JSpinner(radiusModel);
-        // int option = JOptionPane.showOptionDialog(null, radiusSpinner, "Enter what emboss you want (1-8)",
-        //         JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            // Pop-up dialog box to ask for the filter no value.
+            // SpinnerNumberModel radiusModel = new SpinnerNumberModel(1, 1, 8, 1);
+            // JSpinner radiusSpinner = new JSpinner(radiusModel);
+            // int option = JOptionPane.showOptionDialog(null, radiusSpinner, "Enter what
+            // emboss you want (1-8)",
+            // JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null,
+            // null);
 
+            JFrame f = new JFrame("Emboss Filters");
+            f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            f.setLocation(500, 0);
+            f.setLayout(new BorderLayout());
+            JPanel buttonPanel = new JPanel();
 
-        JFrame f = new JFrame("Emboss Filters");
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        f.setLocation(500,0);
-        f.setLayout(new BorderLayout());
-        JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new GridLayout(5, 2));
+            JButton[] buttons = new JButton[] { new JButton("1"), new JButton("2"), new JButton("3"), new JButton("4"),
+                    new JButton("5"), new JButton("6"), new JButton("7"), new JButton("8"), new JButton("9"),
+                    new JButton("10") };
+            ButtonGroup bg = new ButtonGroup();
+            for (JButton b : buttons) {
+                bg.add(b);
+                buttonPanel.add(b);
+                b.addActionListener(new ActionListener() {
 
-        buttonPanel.setLayout(new GridLayout(5,2));
-        JButton[] buttons = new JButton[]{new JButton("1"), new JButton("2"), new JButton("3"), new JButton("4"), new JButton("5"), new JButton("6"), new JButton("7"), new JButton("8"), new JButton("9"), new JButton("10")};
-        ButtonGroup bg = new ButtonGroup();
-        for(JButton b : buttons){
-            bg.add(b);
-            buttonPanel.add(b);
-            b.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterNo = Integer.parseInt(b.getText());
+                        target.getImage().apply(new Emboss(filterNo));
+                        target.repaint();
+                        target.getParent().revalidate();
+                        f.dispose();
+                    }
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    filterNo = Integer.parseInt(b.getText());
-                    target.getImage().apply(new Emboss(filterNo));
-                    target.repaint();
-                    target.getParent().revalidate();
-                    f.dispose();
-                }
+                });
+            }
+            JLabel label = new JLabel("Pick an Emboss Filter.");
+            f.add(label, BorderLayout.NORTH);
+            f.add(buttonPanel, BorderLayout.SOUTH);
 
-            });
+            f.setVisible(true);
+            f.pack();
+
+            // Check the return value from the dialog box.
+            // if (option == JOptionPane.CANCEL_OPTION) {
+            // return;
+            // } else if (option == JOptionPane.OK_OPTION) {
+            // filterNo = radiusModel.getNumber().intValue();
+            // }
+
+            // // Create and apply the filter
+            // target.getImage().apply(new Emboss(filterNo));
+            // target.repaint();
+            // target.getParent().revalidate();
         }
-        JLabel label = new JLabel("Pick an Emboss Filter.");
-        f.add(label, BorderLayout.NORTH);
-        f.add(buttonPanel, BorderLayout.SOUTH);
-
-        f.setVisible(true);
-        f.pack();
-        
-        // Check the return value from the dialog box.
-        // if (option == JOptionPane.CANCEL_OPTION) {
-        //     return;
-        // } else if (option == JOptionPane.OK_OPTION) {
-        //     filterNo = radiusModel.getNumber().intValue();
-        // }
-
-        // // Create and apply the filter
-        // target.getImage().apply(new Emboss(filterNo));
-        // target.repaint();
-        // target.getParent().revalidate();
-    }
 
     }
 
