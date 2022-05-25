@@ -183,23 +183,12 @@ The shortcuts use no formal testing framework, however, tests were run to make s
 The extended filters used no formal testing however, tests were run to make sure that the filter covered the entire image. We eliminated the border and solced the issue where it would only apply the filter to the center of the image
 
 ### Issues:
-- 
+- No known issues.
 ---
-## Filters with negative results
-### Contributors:
-- 
 
-### Accessible via:
-- 
-### Testing
-
-
-### Issues:
-- 
----
 ## Emboss and edge detection filters
 ### Contributors:
-- 
+- Pippi Priestly King
 
 ### Accessible via:
 - 
@@ -214,36 +203,24 @@ The extended filters used no formal testing however, tests were run to make sure
 - Poppy Schlaadt
 
 ### Accessible via:
-- Filter Menu (Posterise)
+- Colour Menu (Posterisation)
 ### Testing
-
+The posterise has formal testing framework. It was tested on all image sizes and ratios as well as before and after other operations. All tests produce the expected image.
 
 ### Issues:
-- 
----
-## Mouse Selection of rectangular regions
-### Contributors:
-- Poppy Schlaadt
-
-### Accessible via:
-- 
-### Testing
-
-
-### Issues:
-- 
+- No known issues.
 ---
 ## Crop to selection
 ### Contributors:
 - Poppy Schlaadt
 
 ### Accessible via:
-- Transform Menu (Crop)
+- Transform Menu (Crop Image)
 ### Testing
-
+The Sticker function has formal testing framework. It was tested on all image sizes and ratios as well as before and after other operations. Crop was tested after a prior crop and undo and redo work all as expected.
 
 ### Issues:
-- 
+- Sometimes when there has been a previous crop and your try to crop with 2 clicks the first click doesnt work, but if you try again it works.
 ---
 
 ## Drawing Functions 
@@ -266,10 +243,10 @@ The Drawing function has formal testing framework. It was tested on images of al
 ### Accessible via:
 - Shortcuts or the menu, saves current operation and reapplies it to image, there is a shortcut to save, apply and clear current macros
 ### Testing
-- There has been no formal testing however, we have saved and applied macros multiple times without error using different functions and filters in different combiinations
+There has been no formal testing however, we have saved and applied macros multiple times without error using different functions and filters in different combiinations
 
 ### Issues:
-- 
+- No known issues.
 ---
 ## Sticker (show us something)
 ### Contributors:
@@ -278,10 +255,10 @@ The Drawing function has formal testing framework. It was tested on images of al
 ### Accessible via:
 - Transform Menu (Sticker)
 ### Testing
-The Sticker function has formal testing framework.
+The Sticker function has formal testing framework. It was tested on various image sizes and ratios. It was tested before and after other operations and produced the expected outcome. Tests were run to undo and redo the operation and there are some problems with redo, but undo behaved as expected.
 
 ### Issues:
-- 
+- If you undoing a sticker operation that has changed the size of the sticker and then redo it, the size of the stickers is enlarged.
 ---
 
 
