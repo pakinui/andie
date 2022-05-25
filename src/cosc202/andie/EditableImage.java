@@ -56,6 +56,7 @@ class EditableImage {
     private String opsFilename;
 
     private Stack<ImageOperation> macro;
+    private Stack<ImageOperation> spareMacro;
 
     /**
      * <p>
@@ -71,6 +72,7 @@ class EditableImage {
         original = null;
         current = null;
         macro = new Stack<ImageOperation>();
+        spareMacro = new Stack<ImageOperation>();
         ops = new Stack<ImageOperation>();
         redoOps = new Stack<ImageOperation>();
         imageFilename = null;
@@ -333,6 +335,7 @@ class EditableImage {
     public void saveMacro() {
         if (!ops.empty()) {
             this.macro = (Stack<ImageOperation>) ops.clone();
+
         } else {
             JOptionPane.showMessageDialog(null, "There is no operation to be saved");
         }
@@ -340,9 +343,21 @@ class EditableImage {
 
     public void applyMacro() {
         if (!macro.empty()) {
-            while (!macro.empty()) {
-                apply(macro.pop());
+            this.spareMacro = (Stack<ImageOperation>) macro.clone();
+            while (!spareMacro.empty()) {
+                apply(spareMacro.pop());
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no saved macro");
+        }
+    }
+
+    public void clearMacro() {
+        if (!macro.empty()) {
+            macro.clear();
+            spareMacro.clear();
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no saved Macro");
         }
     }
 
