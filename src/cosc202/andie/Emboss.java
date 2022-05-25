@@ -87,8 +87,8 @@ import java.util.List;
             maxR = r > maxR ? r : maxR;
             minR = r < minR ? r : minR;
         }
-        System.out.println(maxR);
-        System.out.println(minR);
+        // System.out.println(maxR);
+        // System.out.println(minR);
     return image;
     }
 

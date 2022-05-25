@@ -760,6 +760,7 @@ public class TransformActions {
             transparent = new Color(0, 0, 0, 0);
             dashSwitch = false;
             painting = false;
+            createListeners();
         }
         
         /**
@@ -808,11 +809,8 @@ public class TransformActions {
                 public void actionPerformed(ActionEvent e) {
 
                     frame.dispose();
-                    target.getImage().apply(new Paint(pan));
-                    
-                    target.repaint();
-                    target.getParent().revalidate();
                     resetPanel();
+                    painting = false;
                 }
             });
 
@@ -1055,7 +1053,7 @@ public class TransformActions {
             target.add(pan);
             line.clear();
             lineColour.clear();
-            painting = false;
+            
         }
 
         /**
@@ -1113,7 +1111,7 @@ public class TransformActions {
             painting = true;
             createMenuFrame();
             addOverlay();
-            createListeners();
+
         }
     }
 

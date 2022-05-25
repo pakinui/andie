@@ -303,25 +303,25 @@ class EditableImage {
      * 
      */
     public void undoOnce() {
+        
         if (current == null) {
             JOptionPane.showMessageDialog(null, "Please open an image first");
         } else {
-            System.out.println("\n" + ops.toString());
+           
             if (ops.empty()) {
                 JOptionPane.showMessageDialog(null, "Nothing to undo");
             } else if(ops.peek().toString().contains("Paint")){
                 try{
-                    System.out.println(ops.peek().toString());
-                    //S//tring s = ops.peek().toString();
-                    
+                   
                     redoOps.push(ops.pop());
                     refresh();
                 }catch(Exception e){
                     refresh();//if sticker is the only thing on ops itll throw an exception
                                 //rather than remove it so this just refreshes and stickers are gone
+                               
                 }
             }else{
-                System.out.println(ops.peek().toString());
+                
                 JOptionPane.showMessageDialog(null, "No more current paint operations to undo");
                 refresh();
             }
@@ -392,8 +392,6 @@ class EditableImage {
                 JOptionPane.showMessageDialog(null, "Nothing to redo");
             } else {
                 try{
-                    //String s = redoOps.peek().toString();
-                    
                     apply(redoOps.pop());
                     refresh();
                 }catch(Exception e){

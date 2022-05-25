@@ -6,8 +6,15 @@ import java.awt.event.*;
 
 /**
  * <p>
- * 
+ * A class which is used to show the rectangle the user is selecting 
+ * when the crop an image.
  * </p>
+ * 
+ * <p>
+ * This selection can be done via a mouse drag or two clicks of the mouse.
+ * </p>
+ * 
+ * @author Poppy Schlaadt
  */
 public class MouseCrop {
 
@@ -37,31 +44,12 @@ public class MouseCrop {
     
     Rectangle finalRect;
 
-    //for drawing class
-    Color c;
-    int lineWidth;
-    boolean dashed;
-    int dashLength;
 
     MouseCrop(ImagePanel target) {
 
         addOverlay(target);
         addListeners(target);
         
-    }
-
-    MouseCrop(ImagePanel target, Color c, int lineWidth, boolean dashed, int dashLength){
-        
-        addOverlay(target);
-        addListeners(target);
-        this.c = c;
-        this.lineWidth = lineWidth;
-        this.dashed = dashed;
-        this.dashLength = dashLength;
-    }
-
-    protected ImagePanel getPanel(){
-        return pan;
     }
 
     /**
@@ -99,7 +87,7 @@ public class MouseCrop {
         clickOne = false;
         clicked = 0;
 
-        //g = (Graphics2D) target.getGraphics();
+
         g = (Graphics2D) pan.getGraphics();
 
         botR = new int[] { -1, -1 };// 0 = x, 1 = y
@@ -161,7 +149,6 @@ public class MouseCrop {
                         //updates the label for the rectangle location
                         rectLabel = "rectangle from: " + clickRect.x + ", " + clickRect.y + " -> ";
                         if (!cropDone)
-                            //target.repaint();
                             pan.repaint();
                     } else if (clickOne || clicked == 1) {// if its the second click
 
@@ -169,10 +156,7 @@ public class MouseCrop {
                         calcRect(clickRect, clickTop, clickBot);//update rectangle
                         finalRect = clickRect;//create final rectangle to crop
                         reset();// reset all values
-                        // target.repaint();
-                        // target.getParent().revalidate();
                         pan.repaint();
-                        //pan.getParent().revalidate();
                         cropDone = true;
                         rectDone = true;
                     } else {
@@ -199,13 +183,9 @@ public class MouseCrop {
                             height = current.height;
                             finalRect = current;//create final rectangle to crop
                             reset();
-                            // target.repaint();
-                            // target.getParent().revalidate();
                             pan.repaint();
-                            //pan.getParent().revalidate();
                             cropDone = true;
                             rectDone = true;
-                            System.out.println("hmm");
                         }
                     }
                 }catch(Exception ex){
@@ -267,7 +247,6 @@ public class MouseCrop {
                     topL[1] = clickRect.y;
                     botR[0] = (clickRect.width);
                     botR[1] = (clickRect.height);
-                    //target.repaint();
                     pan.repaint();
                 }
             }
@@ -275,7 +254,11 @@ public class MouseCrop {
     }
 
     /**
+     * <p>
+     * A method to access the rectangle which has been selected.
+     * </p>
      * 
+     * @return the selected rectangle to crop.
      */
     protected Rectangle getRect() {
 
@@ -343,8 +326,6 @@ public class MouseCrop {
             topL[1] = newRect.y;
             botR[0] = newRect.width;
             botR[1] = newRect.height;
-
-            //paint();//repaint new rectangle size
             pan.repaint();
        }catch(Exception ex){
 
@@ -376,7 +357,6 @@ public class MouseCrop {
             super.paintComponent(g);
             if (current != null || clickRect != null) {
 
-                if(c == null){//calling from crop class
                     //rectangle
                     g.setXORMode(Color.white);
                     g.drawRect(topL[0], topL[1], botR[0], botR[1]);
@@ -384,21 +364,7 @@ public class MouseCrop {
                     Font fnt = new Font("Ariel", Font.BOLD, 10);
                     g.setFont(fnt);
                     g.drawString(rectLabel, 10, 20);
-
-
-
-                }else{//calling from drawing class
-                    Graphics2D g2 = (Graphics2D) g;
-                    g2.setColor(c);
-                    if(dashed){
-                        g2.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, new float[] {dashLength}, 0));
-                    }else{
-                        g2.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
-                    }
-                    
-                    g.drawRect(topL[0], topL[1], botR[0], botR[1]);
-                }
-                
+  
             }
         }
     }
