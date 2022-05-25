@@ -85,8 +85,8 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
             int size = (2 * radius + 1) * (2 * radius + 1);
             float[] array = new float[size];
 
-            int kernelWidth = 3;
-            int kernelHeight = 3;
+            int kernelWidth = (2 * radius + 1);
+            int kernelHeight = (2 * radius + 1);
 
             int xOffset = (kernelWidth - 1) / 2;
             int yOffset = (kernelHeight - 1) / 2;
@@ -97,13 +97,13 @@ public class MeanFilter implements ImageOperation, java.io.Serializable {
                     input.getHeight() + kernelHeight - 1, BufferedImage.TYPE_INT_ARGB);
             Kernel kernel = new Kernel(2 * radius + 1, 2 * radius + 1, array);
             ConvolveOp convOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-            BufferedImage output = new BufferedImage(input.getColorModel(), input.copyData(null),
-                    input.isAlphaPremultiplied(), null);
 
             Graphics2D g2 = modInput.createGraphics();
             g2.drawImage(input, xOffset, yOffset, null);
             g2.dispose();
-            convOp.filter(input, output);
+            BufferedImage output = new BufferedImage(modInput.getColorModel(), modInput.copyData(null),
+                    modInput.isAlphaPremultiplied(), null);
+            convOp.filter(modInput, output);
 
             return output;
         } catch (Exception e) {
