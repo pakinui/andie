@@ -23,6 +23,7 @@ public class MouseCrop {
     Rectangle drawRect;
     Rectangle newRect;
     Graphics g;
+    MyPanel pan;
 
     // two clicks to select rect
     boolean clickOne;//has the first click happened
@@ -36,10 +37,31 @@ public class MouseCrop {
     
     Rectangle finalRect;
 
+    //for drawing class
+    Color c;
+    int lineWidth;
+    boolean dashed;
+    int dashLength;
+
     MouseCrop(ImagePanel target) {
 
         addOverlay(target);
         addListeners(target);
+        
+    }
+
+    MouseCrop(ImagePanel target, Color c, int lineWidth, boolean dashed, int dashLength){
+        
+        addOverlay(target);
+        addListeners(target);
+        this.c = c;
+        this.lineWidth = lineWidth;
+        this.dashed = dashed;
+        this.dashLength = dashLength;
+    }
+
+    protected ImagePanel getPanel(){
+        return pan;
     }
 
     /**
@@ -66,8 +88,9 @@ public class MouseCrop {
         this.target = target;
 
         // add a transpaernt overlay panel to draw the rect on
-        MyPanel pan = new MyPanel();
+        pan = new MyPanel();
         pan.setOpaque(false);
+        pan.setVisible(true);
         LayoutManager over = new OverlayLayout(target);
         target.setLayout(over);
         pan.setSize(target.getSize());
@@ -76,7 +99,8 @@ public class MouseCrop {
         clickOne = false;
         clicked = 0;
 
-        g = (Graphics2D) target.getGraphics();
+        //g = (Graphics2D) target.getGraphics();
+        g = (Graphics2D) pan.getGraphics();
 
         botR = new int[] { -1, -1 };// 0 = x, 1 = y
         topL = new int[] { -1, -1 };
@@ -137,15 +161,18 @@ public class MouseCrop {
                         //updates the label for the rectangle location
                         rectLabel = "rectangle from: " + clickRect.x + ", " + clickRect.y + " -> ";
                         if (!cropDone)
-                            target.repaint();
+                            //target.repaint();
+                            pan.repaint();
                     } else if (clickOne || clicked == 1) {// if its the second click
 
                         clickBot = new int[] { e.getX(), e.getY() };
                         calcRect(clickRect, clickTop, clickBot);//update rectangle
                         finalRect = clickRect;//create final rectangle to crop
                         reset();// reset all values
-                        target.repaint();
-                        target.getParent().revalidate();
+                        // target.repaint();
+                        // target.getParent().revalidate();
+                        pan.repaint();
+                        //pan.getParent().revalidate();
                         cropDone = true;
                         rectDone = true;
                     } else {
@@ -163,19 +190,26 @@ public class MouseCrop {
              * @param e MouseEvent of mouse release.
              */
             public void mouseReleased(MouseEvent e) {
-                if (current.width != 0) {
-                    if (!cropDone || !rectDone) {
+                try{
+                    if (current.width != 0) {
+                        if (!cropDone || !rectDone) {
 
-                        rectUpdate(e, current);
-                        width = current.width;
-                        height = current.height;
-                        finalRect = current;//create final rectangle to crop
-                        reset();
-                        target.repaint();
-                        target.getParent().revalidate();
-                        cropDone = true;
-                        rectDone = true;
+                            rectUpdate(e, current);
+                            width = current.width;
+                            height = current.height;
+                            finalRect = current;//create final rectangle to crop
+                            reset();
+                            // target.repaint();
+                            // target.getParent().revalidate();
+                            pan.repaint();
+                            //pan.getParent().revalidate();
+                            cropDone = true;
+                            rectDone = true;
+                            System.out.println("hmm");
+                        }
                     }
+                }catch(Exception ex){
+
                 }
             }
         });
@@ -196,11 +230,16 @@ public class MouseCrop {
              * @param e MouseEvent of mouseDragged.
              */
             public void mouseDragged(MouseEvent e) {
-                if (!rectDone) {
-                    updateSize(e);
-                    int botX = current.x + current.width;
-                    int botY = current.y + current.height;
-                    rectLabel = "rectangle from: " + current.x + ", " + current.y + " -> " + botX + ", " + botY;
+                try{
+                    if (!rectDone) {
+                        updateSize(e);
+                        int botX = current.x + current.width;
+                        int botY = current.y + current.height;
+                        rectLabel = "rectangle from: " + current.x + ", " + current.y + " -> " + botX + ", " + botY;
+                        pan.repaint();
+                    }
+                }catch(Exception ex){
+
                 }
             }
 
@@ -228,7 +267,8 @@ public class MouseCrop {
                     topL[1] = clickRect.y;
                     botR[0] = (clickRect.width);
                     botR[1] = (clickRect.height);
-                    target.repaint();
+                    //target.repaint();
+                    pan.repaint();
                 }
             }
         });
@@ -290,19 +330,25 @@ public class MouseCrop {
      * @param e The mouse event with new location to update current
      */
     void updateSize(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        
-        current.setSize(x - current.x, y - current.y);
-        updateRect(x, y);
+       try{
+       
+            int x = e.getX();
+            int y = e.getY();
+            
+            current.setSize(x - current.x, y - current.y);
+            updateRect(x, y);
 
-        newRect = drawRect.union(oldRect); //newRect is a union of draw and old rect
-        topL[0] = newRect.x;
-        topL[1] = newRect.y;
-        botR[0] = newRect.width;
-        botR[1] = newRect.height;
+            newRect = drawRect.union(oldRect); //newRect is a union of draw and old rect
+            topL[0] = newRect.x;
+            topL[1] = newRect.y;
+            botR[0] = newRect.width;
+            botR[1] = newRect.height;
 
-        target.repaint();//repaint new rectangle size
+            //paint();//repaint new rectangle size
+            pan.repaint();
+       }catch(Exception ex){
+
+       }
     }
 
     /**
@@ -329,13 +375,30 @@ public class MouseCrop {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (current != null || clickRect != null) {
-                //rectangle
-                g.setXORMode(Color.white);
-                g.drawRect(topL[0], topL[1], botR[0], botR[1]);
-                //label
-                Font fnt = new Font("Ariel", Font.BOLD, 10);
-                g.setFont(fnt);
-                g.drawString(rectLabel, 10, 20);
+
+                if(c == null){//calling from crop class
+                    //rectangle
+                    g.setXORMode(Color.white);
+                    g.drawRect(topL[0], topL[1], botR[0], botR[1]);
+                    //label
+                    Font fnt = new Font("Ariel", Font.BOLD, 10);
+                    g.setFont(fnt);
+                    g.drawString(rectLabel, 10, 20);
+
+
+
+                }else{//calling from drawing class
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setColor(c);
+                    if(dashed){
+                        g2.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, new float[] {dashLength}, 0));
+                    }else{
+                        g2.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0));
+                    }
+                    
+                    g.drawRect(topL[0], topL[1], botR[0], botR[1]);
+                }
+                
             }
         }
     }

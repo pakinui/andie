@@ -267,12 +267,19 @@ class EditableImage {
                 JOptionPane.showMessageDialog(null, "Nothing to undo");
             } else {
                 try{
+                    System.out.println(ops.toString());
                     String s = ops.peek().toString();
                     if (s.contains("Sticker")) {// to undo a group of sticker operations that are in a row
 
-                        while (ops.peek().toString().contains("Sticker")) {// while there is a sticker operation
+                        while (ops.peek().toString().contains("Sticker") ) {// while there is a sticker operation
                             redoOps.push(ops.pop());
                         }
+                    } else if (s.contains("Paint")) {// to undo a group of sticker operations that are in a row
+
+                        while (ops.peek().toString().contains("Paint")) {// while there is a sticker operation
+                            redoOps.push(ops.pop());
+                        }
+                        
                     } else {// if the operation to undo was not a sticker operation
                         redoOps.push(ops.pop());
                     }
@@ -281,6 +288,38 @@ class EditableImage {
                     refresh();//if sticker is the only thing on ops itll throw an exception
                                 //rather than remove it so this just refreshes and stickers are gone
                 }
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Undo the last (single) {@link ImageOperation} applied to the image.
+     * </p>
+     * 
+     */
+    public void undoOnce() {
+        if (current == null) {
+            JOptionPane.showMessageDialog(null, "Please open an image first");
+        } else {
+            System.out.println("\n" + ops.toString());
+            if (ops.empty()) {
+                JOptionPane.showMessageDialog(null, "Nothing to undo");
+            } else if(ops.peek().toString().contains("Paint")){
+                try{
+                    System.out.println(ops.peek().toString());
+                    //S//tring s = ops.peek().toString();
+                    
+                    redoOps.push(ops.pop());
+                    refresh();
+                }catch(Exception e){
+                    refresh();//if sticker is the only thing on ops itll throw an exception
+                                //rather than remove it so this just refreshes and stickers are gone
+                }
+            }else{
+                System.out.println(ops.peek().toString());
+                JOptionPane.showMessageDialog(null, "No more current paint operations to undo");
+                refresh();
             }
         }
     }
@@ -314,10 +353,45 @@ class EditableImage {
 
                             apply(redoOps.pop());
                         }
-                    } else {// if the operation to redo was not a sticker operation
+                    } else if (s.contains("Paint")) {// to undo a group of sticker operations that are in a row
+
+                        while (redoOps.peek().toString().contains("Paint")) {// while there is a sticker operation
+                            apply(redoOps.pop());
+                            
+                        }
+                        
+                    }else {// if the operation to redo was not a sticker operation
 
                         apply(redoOps.pop());
                     }
+                    refresh();
+                }catch(Exception e){
+                    refresh();//if sticker is the only thing on ops itll throw an exception
+                                //rather than remove it so this just refreshes and stickers are redone
+                }
+
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Reapply the most recently {@link undo}ne {@link ImageOperation} (single) to the image.
+     * </p>
+     * 
+     */
+    public void redoOnce() {
+        if (current == null) {
+            JOptionPane.showMessageDialog(null, "Please open an image first");
+        } else {
+            if (redoOps.empty()) {
+                JOptionPane.showMessageDialog(null, "Nothing to redo");
+            } else {
+                try{
+                    //String s = redoOps.peek().toString();
+                    
+                    apply(redoOps.pop());
+                    refresh();
                 }catch(Exception e){
                     refresh();//if sticker is the only thing on ops itll throw an exception
                                 //rather than remove it so this just refreshes and stickers are redone

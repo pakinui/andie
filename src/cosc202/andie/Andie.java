@@ -138,8 +138,6 @@ public class Andie {
         rightButton.addActionListener(transformActions.actions.get(3));
         toolBar.add(rightButton);
 
-        
-
         frame.setJMenuBar(menuBar);
         frame.pack();
         frame.setVisible(true);
